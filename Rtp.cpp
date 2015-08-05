@@ -1,4 +1,5 @@
 #include "Rtp.h"
+#include "video_capture.h"
 
 using namespace std;
 
@@ -64,7 +65,71 @@ void *Rtp(void *fileName)
 	free(FUHeader);
 }
 
-void createRtpSocket(int *sockFD,sockaddr_in *addrClient)
+void *Rtp_camera(void *came)
+{
+	int sockFD;
+	struct sockaddr_in addrClient;
+	//RtpHeader相關參數
+	int SequenceNumber = 26074;
+	unsigned int timestamp = 2785272748;
+	unsigned int ssrc = 0xc630ebd7;
+	//FileTemp檔相關參數
+	char *FrameStartIndex;
+	int FrameLength = 0;
+	int FileSize;
+
+	struct camera *cam = (struct camera *)came;
+	char *bigbuffer;
+	int bigbuffer_szie;
+	int pic_len;
+	int ret;
+	
+
+	printf("I'm at Rtp()!\n");
+	
+	//建立RtpSocket
+	createRtpSocket(&sockFD,&addrClient);
+	//開啟H.264影像編碼檔並取得檔案大小
+	//FileSize = OpenVideoFile((char*)fileName);
+	//創造與設定RTP標頭檔
+	createRtpHeader();
+	setRtpVersion(); 
+	setRtpPayloadType();
+	setSequenceNumber(SequenceNumber);
+	setTimestamp(timestamp);
+	setSSRC(ssrc);
+
+
+	//camera 
+	v4l2_init(cam);
+	bigbuffer_szie = cam->width*cam->height*3*sizeof(char);
+	bigbuffer = (char *)malloc(bigbuffer_szie);
+
+	printf("Rtplock=%d\n",lock);
+	//for(int i=0;i<FileSize && lock;i++){
+	while(lock){
+		pic_len = 0;
+		ret = read_frame(cam,bigbuffer,&pic_len);
+		if( ret ==0 && pic_len >0){
+			if( pic_len > bigbuffer_szie ){
+				printf("RUAN: get a picture size is %d, bigger than %d \n",pic_len,bigbuffer_szie);
+			}
+			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
+			RtpEncoder(sockFD,addrClient, bigbuffer ,pic_len,&SequenceNumber,&timestamp);
+		}
+	}
+	printf("Rtplock=%d\n",lock);
+	printf("End\n");
+
+	v4l2_exit(cam);
+	close(sockFD);//關閉Socket
+	free(bigbuffer);
+	free(RtpHeader);
+	free(FUIndicator);
+	free(FUHeader);
+}
+
+void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
 {
 	struct sockaddr_in addrServer;
 	int addrClientLen = sizeof(addrClient);
@@ -83,6 +148,8 @@ void createRtpSocket(int *sockFD,sockaddr_in *addrClient)
 	addrClient->sin_family = AF_INET;
 	addrClient->sin_addr.s_addr = RtpParameter.addrClient.sin_addr.s_addr;
 	addrClient->sin_port = htons(RtpParameter.rtpClientPort);
+
+	printf("PORT : rtp send frome S:%d to C:%d\n",RtpParameter.rtpServerPort,RtpParameter.rtpClientPort);
 
 	//printf("IP=%s\n",inet_ntoa(addrClient->sin_addr));
 	//printf("Port=%d\n",ntohs(addrClient->sin_port));
@@ -183,9 +250,11 @@ void setMarker(int marker)
 }
 
 //生成傳輸Rtp封包所需格式
-void RtpEncoder(int sockFD,sockaddr_in addrClient,char *FrameStartIndex,int FrameLength,int *SequenceNumber,unsigned int *timestamp)
+int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,int FrameLength,int *SequenceNumber,unsigned int *timestamp)
 {
 	//先將長度扣除StartCode部分
+	int ret;
+
 	if(*((int*)FrameStartIndex) == 0x01000000) FrameLength -= 4;
 	else  FrameLength -= 3;
 

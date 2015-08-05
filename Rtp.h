@@ -25,6 +25,7 @@
 	};
 	extern struct RtpData RtpParameter;
 	void *Rtp(void *fileName);
+	void *Rtp_camera(void *came);
 	void createRtpSocket(int *serverFD,sockaddr_in *addrClient);
 	int OpenVideoFile(char *fileName);
 	void createRtpHeader();
@@ -34,7 +35,7 @@
 	void setTimestamp(unsigned int timestamp);
 	void setSSRC(unsigned int ssrc);
 	void setMarker(int marker);
-	void RtpEncoder(int sockFD,sockaddr_in addrClient,char *FrameStartCode,int FrameLength,int *SequenceNumber,unsigned int *timestamp);
+	int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartCode,int FrameLength,int *SequenceNumber,unsigned int *timestamp);
 	void setFUIndicator(char *FrameStartIndex);
 	void setFUHeader(char *FrameStartIndex,bool start,bool end);
 #endif
