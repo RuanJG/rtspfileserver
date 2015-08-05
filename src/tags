@@ -1,0 +1,109 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUF_SIZE	Rtsp.h	10;"	d
+CAM_DEVICE	config.h	19;"	d
+CAM_HEIGHT	config.h	17;"	d
+CAM_WIDGH	config.h	16;"	d
+CC	Makefile	/^CC = g++$/;"	m
+CLEAR	video_capture.c	27;"	d	file:
+DESCRIBE_Reply	Rtsp.cpp	/^void DESCRIBE_Reply(int clientFD,char *RtspContentBase)$/;"	f
+FMT_JPEG	video_capture.h	37;"	d
+FMT_YUYV420	video_capture.h	39;"	d
+FMT_YUYV422	video_capture.h	38;"	d
+FUHeader	Rtp.cpp	/^char *FUHeader;$/;"	v
+FUIndicator	Rtp.cpp	/^char *FUIndicator;$/;"	v
+FileTemp	Rtp.cpp	/^char *FileTemp;$/;"	v
+GET_PARAMETER_Reply	Rtsp.cpp	/^void GET_PARAMETER_Reply(int clientFD)$/;"	f
+LIBS	Makefile	/^LIBS    = -lpthread$/;"	m
+OPTIONS_Reply	Rtsp.cpp	/^void OPTIONS_Reply(int clientFD)$/;"	f
+OUTPUT_CAMINFO	config.h	11;"	d
+OpenVideoFile	Rtp.cpp	/^int OpenVideoFile(char *fileName)$/;"	f
+PLAY_Reply	Rtsp.cpp	/^void PLAY_Reply(int clientFD,sockaddr_in addrClient,char *RtspUrl,char *fileName)$/;"	f
+PayloadType	Rtp.h	17;"	d
+Rtp	Rtp.cpp	/^void *Rtp(void *fileName)$/;"	f
+RtpClientPort	Rtsp.cpp	/^string RtpClientPort;$/;"	v
+RtpData	Rtp.h	/^	 struct RtpData{$/;"	s
+RtpEncoder	Rtp.cpp	/^void RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,int FrameLength,int *SequenceNumber,unsigned int *timestamp)$/;"	f
+RtpHeader	Rtp.cpp	/^char *RtpHeader;$/;"	v
+RtpParameter	Rtsp.cpp	/^struct RtpData RtpParameter;$/;"	v	typeref:struct:RtpData
+RtpServerPort	Rtsp.h	12;"	d
+Rtp_camera	Rtp.cpp	/^void *Rtp_camera(void *came)$/;"	f
+Rtsp	Rtsp.cpp	/^void Rtsp(char *fileName)$/;"	f
+RtspCachControl	Rtsp.cpp	/^char *RtspCachControl = "Cache-Control: no-cache\\r\\n";$/;"	v
+RtspContentLength	Rtsp.cpp	/^string RtspContentLength = "Content-Length: \\r\\n";$/;"	v
+RtspCseq	Rtsp.cpp	/^string RtspCseq = "Cseq: \\r\\n";$/;"	v
+RtspCseqNumber	Rtsp.cpp	/^int RtspCseqNumber = 2;$/;"	v
+RtspResponse	Rtsp.cpp	/^char *RtspResponse = "RTSP\/1.0 200 OK\\r\\n";$/;"	v
+RtspServer	Rtsp.cpp	/^char *RtspServer = "Server: VLC\\r\\n";$/;"	v
+RtspServerPort	Rtsp.h	11;"	d
+RtspSession	Rtsp.cpp	/^char *RtspSession = "Session: ee62ba70a1ddca;timeout=60\\r\\n";$/;"	v
+SETUP_Reply	Rtsp.cpp	/^void SETUP_Reply(int clientFD)$/;"	f
+TEARDOWN_Reply	Rtsp.cpp	/^void TEARDOWN_Reply(int clientFD)$/;"	f
+USE_CAMERA	config.h	30;"	d
+_CONFIG_H	config.h	9;"	d
+_RTP_H	Rtp.h	14;"	d
+_RTSP_H	Rtsp.h	8;"	d
+_VIDEO_CAPTURE_H	video_capture.h	9;"	d
+addrClient	Rtp.h	/^		sockaddr_in addrClient;$/;"	m	struct:RtpData
+buffer	video_capture.h	/^struct buffer{$/;"	s
+buffers	video_capture.h	/^    struct buffer *buffers;$/;"	m	struct:camera	typeref:struct:camera::buffer
+cam	Rtsp.cpp	/^struct camera cam;$/;"	v	typeref:struct:camera
+camera	video_capture.h	/^struct camera{$/;"	s
+close_camera	video_capture.c	/^static void close_camera(struct camera *cam) $/;"	f	file:
+createRtpHeader	Rtp.cpp	/^void createRtpHeader()$/;"	f
+createRtpSocket	Rtp.cpp	/^void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)$/;"	f
+createRtpThread	Rtsp.cpp	/^void createRtpThread(char* fileName)$/;"	f
+createRtspSocket	Rtsp.cpp	/^void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)$/;"	f
+dbug	config.h	26;"	d
+device_name	video_capture.h	/^    char *device_name;$/;"	m	struct:camera
+display_depth	video_capture.h	/^    int display_depth;$/;"	m	struct:camera
+errno_exit	video_capture.c	/^static  void errno_exit(const char *s)$/;"	f	file:
+exit_camera	video_capture.c	/^static void exit_camera(struct camera *cam)$/;"	f	file:
+fd	video_capture.h	/^    int fd;$/;"	m	struct:camera
+find_string	video_capture.c	/^static int find_string(const char *pSrc, const char *pDst)  $/;"	f	file:
+fps	Rtp.h	18;"	d
+frame_number	video_capture.h	/^    int frame_number;$/;"	m	struct:camera
+getRtpClientPort	Rtsp.cpp	/^string getRtpClientPort()$/;"	f
+height	video_capture.h	/^    int height;$/;"	m	struct:camera
+image_size	video_capture.h	/^    int image_size;$/;"	m	struct:camera
+init_camera	video_capture.c	/^static void init_camera(struct camera*cam)$/;"	f	file:
+int2str	Rtsp.cpp	/^char *int2str(int i)$/;"	f
+length	video_capture.h	/^    size_t length;$/;"	m	struct:buffer
+lock	Rtsp.cpp	/^bool lock;$/;"	v
+main	Main.cpp	/^int main(int args,char *argv[])$/;"	f
+n_buffers	video_capture.h	/^    unsigned int n_buffers;$/;"	m	struct:camera
+open_camera	video_capture.c	/^static void open_camera(struct camera *cam)$/;"	f	file:
+read_frame	video_capture.c	/^int read_frame(struct camera *cam,unsigned char *buffer,int *len\/*数据大小*\/)$/;"	f
+recvBuf	Rtsp.cpp	/^char recvBuf[BUF_SIZE];$/;"	v
+rtpClientPort	Rtp.h	/^		int rtpClientPort;$/;"	m	struct:RtpData
+rtpServerPort	Rtp.h	/^		int rtpServerPort;$/;"	m	struct:RtpData
+sendBuf	Rtsp.cpp	/^char sendBuf[BUF_SIZE];$/;"	v
+setFUHeader	Rtp.cpp	/^void setFUHeader(char *FrameStartIndex,bool start,bool end)$/;"	f
+setFUIndicator	Rtp.cpp	/^void setFUIndicator(char *FrameStartIndex)$/;"	f
+setMarker	Rtp.cpp	/^void setMarker(int marker)$/;"	f
+setRtpPayloadType	Rtp.cpp	/^void setRtpPayloadType()$/;"	f
+setRtpVersion	Rtp.cpp	/^void setRtpVersion()$/;"	f
+setSSRC	Rtp.cpp	/^void setSSRC(unsigned int ssrc)$/;"	f
+setSequenceNumber	Rtp.cpp	/^void setSequenceNumber(int SequenceNumber)$/;"	f
+setTimestamp	Rtp.cpp	/^void setTimestamp(unsigned int timestamp)$/;"	f
+sleepTime	Rtp.h	19;"	d
+start	video_capture.h	/^    void *start;$/;"	m	struct:buffer
+start_capturing	video_capture.c	/^static void start_capturing(struct camera *cam)$/;"	f	file:
+status	video_capture.h	/^    int status; \/\/ if status == -1 , return$/;"	m	struct:camera
+stop_capturing	video_capture.c	/^static void stop_capturing(struct camera *cam)$/;"	f	file:
+str2int	Rtsp.cpp	/^int str2int(string temp)$/;"	f
+support_fmt	video_capture.h	/^    int support_fmt;$/;"	m	struct:camera
+v4l2_cap	video_capture.h	/^    struct v4l2_capability v4l2_cap;$/;"	m	struct:camera	typeref:struct:camera::v4l2_capability
+v4l2_crop	video_capture.h	/^    struct v4l2_crop v4l2_crop;$/;"	m	struct:camera	typeref:struct:camera::v4l2_crop
+v4l2_cropcap	video_capture.h	/^    struct v4l2_cropcap v4l2_cropcap;$/;"	m	struct:camera	typeref:struct:camera::v4l2_cropcap
+v4l2_exit	video_capture.c	/^void v4l2_exit(struct camera *cam)$/;"	f
+v4l2_fmt	video_capture.h	/^    struct v4l2_format v4l2_fmt;$/;"	m	struct:camera	typeref:struct:camera::v4l2_format
+v4l2_fmtdesc	video_capture.h	/^    struct v4l2_fmtdesc v4l2_fmtdesc;$/;"	m	struct:camera	typeref:struct:camera::v4l2_fmtdesc
+v4l2_init	video_capture.c	/^void v4l2_init(struct camera *cam)$/;"	f
+v4l2_setfps	video_capture.h	/^    struct v4l2_streamparm v4l2_setfps;$/;"	m	struct:camera	typeref:struct:camera::v4l2_streamparm
+width	video_capture.h	/^    int width;$/;"	m	struct:camera
+xioctl	video_capture.c	/^static int xioctl(int fd, int request, void *arg) {$/;"	f	file:
