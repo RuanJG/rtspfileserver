@@ -228,7 +228,7 @@ CON:
         exit(EXIT_FAILURE);
     }
 
-    cam->buffers = (buffer*)calloc(req.count, sizeof(*(cam->buffers)));
+    cam->buffers = (struct buffer *)calloc(req.count, sizeof(*(cam->buffers)));
 
     if (!cam->buffers) {
         fprintf(stderr, "Out of memory\n");

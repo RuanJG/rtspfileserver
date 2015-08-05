@@ -275,7 +275,7 @@ void SETUP_Reply(int clientFD)
 	//ZeroMemory(sendBuf,BUF_SIZE);
 	
 }
-void PLAY_Reply(int clientFD,sockaddr_in addrClient,char *RtspUrl,char *fileName)
+void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *fileName)
 {
 	char *RTPInfo = "RTP-Info: url=";
 	char *seq = ";seq=5873;";

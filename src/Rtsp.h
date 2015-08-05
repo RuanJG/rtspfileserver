@@ -14,8 +14,8 @@
 	void OPTIONS_Reply(int clientFD);
 	void DESCRIBE_Reply(int clientFD,char *RtspContentBase);
 	void SETUP_Reply(int clientFD);
-	void PLAY_Reply(int clientFD,sockaddr_in addrClient,char *RtspUrl,char *fileName);
+	void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *fileName);
 	void GET_PARAMETER_Reply(int clientFD);
 	void TEARDOWN_Reply(int clientFD);
-	void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient);
+	void createRtspSocket(int *serverFD,int *clientFD,struct sockaddr_in *addrClient);
 #endif
