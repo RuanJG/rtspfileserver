@@ -8,9 +8,11 @@ BUF_SIZE	Rtsp.h	10;"	d
 CAM_DEVICE	config.h	19;"	d
 CAM_HEIGHT	config.h	17;"	d
 CAM_WIDGH	config.h	16;"	d
-CC	Makefile	/^CC = g++$/;"	m
-CLEAR	video_capture.c	27;"	d	file:
+CLEAR	video_capture.c	26;"	d	file:
+CPLUSPLUS_COMPILER	Makefile	/^CPLUSPLUS_COMPILER =    $(CROSS_COMPILE)g++$/;"	m
+DEP_LIBS	Makefile	/^DEP_LIBS = -L$(TOP_DIR)\/lib\/x86\/lib$/;"	m
 DESCRIBE_Reply	Rtsp.cpp	/^void DESCRIBE_Reply(int clientFD,char *RtspContentBase)$/;"	f
+Encoder	h264encoder.h	/^} Encoder;$/;"	t	typeref:struct:__anon27
 FMT_JPEG	video_capture.h	37;"	d
 FMT_YUYV420	video_capture.h	39;"	d
 FMT_YUYV422	video_capture.h	38;"	d
@@ -18,16 +20,68 @@ FUHeader	Rtp.cpp	/^char *FUHeader;$/;"	v
 FUIndicator	Rtp.cpp	/^char *FUIndicator;$/;"	v
 FileTemp	Rtp.cpp	/^char *FileTemp;$/;"	v
 GET_PARAMETER_Reply	Rtsp.cpp	/^void GET_PARAMETER_Reply(int clientFD)$/;"	f
-LIBS	Makefile	/^LIBS    = -lpthread$/;"	m
+HEADER	Makefile	/^HEADER = -I$(TOP_DIR)\/lib\/x86\/include$/;"	m
+IS_X264_TYPE_B	lib/mips/include/x264.h	243;"	d
+IS_X264_TYPE_B	lib/x86/include/x264.h	243;"	d
+IS_X264_TYPE_I	lib/mips/include/x264.h	242;"	d
+IS_X264_TYPE_I	lib/x86/include/x264.h	242;"	d
+LIBS	Makefile	/^LIBS    = -lpthread -lx264 -lm -ldl$/;"	m
+MY_V4L2_BUFFER_COUNT	config.h	31;"	d
+NAL_AUD	lib/mips/include/x264.h	/^    NAL_AUD         = 9,$/;"	e	enum:nal_unit_type_e
+NAL_AUD	lib/x86/include/x264.h	/^    NAL_AUD         = 9,$/;"	e	enum:nal_unit_type_e
+NAL_FILLER	lib/mips/include/x264.h	/^    NAL_FILLER      = 12,$/;"	e	enum:nal_unit_type_e
+NAL_FILLER	lib/x86/include/x264.h	/^    NAL_FILLER      = 12,$/;"	e	enum:nal_unit_type_e
+NAL_PPS	lib/mips/include/x264.h	/^    NAL_PPS         = 8,$/;"	e	enum:nal_unit_type_e
+NAL_PPS	lib/x86/include/x264.h	/^    NAL_PPS         = 8,$/;"	e	enum:nal_unit_type_e
+NAL_PRIORITY_DISPOSABLE	lib/mips/include/x264.h	/^    NAL_PRIORITY_DISPOSABLE = 0,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_DISPOSABLE	lib/x86/include/x264.h	/^    NAL_PRIORITY_DISPOSABLE = 0,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_HIGH	lib/mips/include/x264.h	/^    NAL_PRIORITY_HIGH       = 2,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_HIGH	lib/x86/include/x264.h	/^    NAL_PRIORITY_HIGH       = 2,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_HIGHEST	lib/mips/include/x264.h	/^    NAL_PRIORITY_HIGHEST    = 3,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_HIGHEST	lib/x86/include/x264.h	/^    NAL_PRIORITY_HIGHEST    = 3,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_LOW	lib/mips/include/x264.h	/^    NAL_PRIORITY_LOW        = 1,$/;"	e	enum:nal_priority_e
+NAL_PRIORITY_LOW	lib/x86/include/x264.h	/^    NAL_PRIORITY_LOW        = 1,$/;"	e	enum:nal_priority_e
+NAL_SEI	lib/mips/include/x264.h	/^    NAL_SEI         = 6,    \/* ref_idc == 0 *\/$/;"	e	enum:nal_unit_type_e
+NAL_SEI	lib/x86/include/x264.h	/^    NAL_SEI         = 6,    \/* ref_idc == 0 *\/$/;"	e	enum:nal_unit_type_e
+NAL_SLICE	lib/mips/include/x264.h	/^    NAL_SLICE       = 1,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE	lib/x86/include/x264.h	/^    NAL_SLICE       = 1,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_DPA	lib/mips/include/x264.h	/^    NAL_SLICE_DPA   = 2,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_DPA	lib/x86/include/x264.h	/^    NAL_SLICE_DPA   = 2,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_DPB	lib/mips/include/x264.h	/^    NAL_SLICE_DPB   = 3,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_DPB	lib/x86/include/x264.h	/^    NAL_SLICE_DPB   = 3,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_DPC	lib/mips/include/x264.h	/^    NAL_SLICE_DPC   = 4,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_DPC	lib/x86/include/x264.h	/^    NAL_SLICE_DPC   = 4,$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_IDR	lib/mips/include/x264.h	/^    NAL_SLICE_IDR   = 5,    \/* ref_idc != 0 *\/$/;"	e	enum:nal_unit_type_e
+NAL_SLICE_IDR	lib/x86/include/x264.h	/^    NAL_SLICE_IDR   = 5,    \/* ref_idc != 0 *\/$/;"	e	enum:nal_unit_type_e
+NAL_SPS	lib/mips/include/x264.h	/^    NAL_SPS         = 7,$/;"	e	enum:nal_unit_type_e
+NAL_SPS	lib/x86/include/x264.h	/^    NAL_SPS         = 7,$/;"	e	enum:nal_unit_type_e
+NAL_UNKNOWN	lib/mips/include/x264.h	/^    NAL_UNKNOWN     = 0,$/;"	e	enum:nal_unit_type_e
+NAL_UNKNOWN	lib/x86/include/x264.h	/^    NAL_UNKNOWN     = 0,$/;"	e	enum:nal_unit_type_e
 OPTIONS_Reply	Rtsp.cpp	/^void OPTIONS_Reply(int clientFD)$/;"	f
 OUTPUT_CAMINFO	config.h	11;"	d
 OpenVideoFile	Rtp.cpp	/^int OpenVideoFile(char *fileName)$/;"	f
-PLAY_Reply	Rtsp.cpp	/^void PLAY_Reply(int clientFD,sockaddr_in addrClient,char *RtspUrl,char *fileName)$/;"	f
+PIC_STRUCT_AUTO	lib/mips/include/x264.h	/^    PIC_STRUCT_AUTO              = 0, \/\/ automatically decide (default)$/;"	e	enum:pic_struct_e
+PIC_STRUCT_AUTO	lib/x86/include/x264.h	/^    PIC_STRUCT_AUTO              = 0, \/\/ automatically decide (default)$/;"	e	enum:pic_struct_e
+PIC_STRUCT_BOTTOM_TOP	lib/mips/include/x264.h	/^    PIC_STRUCT_BOTTOM_TOP        = 5, \/\/ bottom field followed by top$/;"	e	enum:pic_struct_e
+PIC_STRUCT_BOTTOM_TOP	lib/x86/include/x264.h	/^    PIC_STRUCT_BOTTOM_TOP        = 5, \/\/ bottom field followed by top$/;"	e	enum:pic_struct_e
+PIC_STRUCT_BOTTOM_TOP_BOTTOM	lib/mips/include/x264.h	/^    PIC_STRUCT_BOTTOM_TOP_BOTTOM = 7, \/\/ bottom field, top field, bottom field repeated$/;"	e	enum:pic_struct_e
+PIC_STRUCT_BOTTOM_TOP_BOTTOM	lib/x86/include/x264.h	/^    PIC_STRUCT_BOTTOM_TOP_BOTTOM = 7, \/\/ bottom field, top field, bottom field repeated$/;"	e	enum:pic_struct_e
+PIC_STRUCT_DOUBLE	lib/mips/include/x264.h	/^    PIC_STRUCT_DOUBLE            = 8, \/\/ double frame$/;"	e	enum:pic_struct_e
+PIC_STRUCT_DOUBLE	lib/x86/include/x264.h	/^    PIC_STRUCT_DOUBLE            = 8, \/\/ double frame$/;"	e	enum:pic_struct_e
+PIC_STRUCT_PROGRESSIVE	lib/mips/include/x264.h	/^    PIC_STRUCT_PROGRESSIVE       = 1, \/\/ progressive frame$/;"	e	enum:pic_struct_e
+PIC_STRUCT_PROGRESSIVE	lib/x86/include/x264.h	/^    PIC_STRUCT_PROGRESSIVE       = 1, \/\/ progressive frame$/;"	e	enum:pic_struct_e
+PIC_STRUCT_TOP_BOTTOM	lib/mips/include/x264.h	/^    PIC_STRUCT_TOP_BOTTOM        = 4, \/\/ top field followed by bottom$/;"	e	enum:pic_struct_e
+PIC_STRUCT_TOP_BOTTOM	lib/x86/include/x264.h	/^    PIC_STRUCT_TOP_BOTTOM        = 4, \/\/ top field followed by bottom$/;"	e	enum:pic_struct_e
+PIC_STRUCT_TOP_BOTTOM_TOP	lib/mips/include/x264.h	/^    PIC_STRUCT_TOP_BOTTOM_TOP    = 6, \/\/ top field, bottom field, top field repeated$/;"	e	enum:pic_struct_e
+PIC_STRUCT_TOP_BOTTOM_TOP	lib/x86/include/x264.h	/^    PIC_STRUCT_TOP_BOTTOM_TOP    = 6, \/\/ top field, bottom field, top field repeated$/;"	e	enum:pic_struct_e
+PIC_STRUCT_TRIPLE	lib/mips/include/x264.h	/^    PIC_STRUCT_TRIPLE            = 9, \/\/ triple frame$/;"	e	enum:pic_struct_e
+PIC_STRUCT_TRIPLE	lib/x86/include/x264.h	/^    PIC_STRUCT_TRIPLE            = 9, \/\/ triple frame$/;"	e	enum:pic_struct_e
+PLAY_Reply	Rtsp.cpp	/^void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *fileName)$/;"	f
 PayloadType	Rtp.h	17;"	d
 Rtp	Rtp.cpp	/^void *Rtp(void *fileName)$/;"	f
 RtpClientPort	Rtsp.cpp	/^string RtpClientPort;$/;"	v
 RtpData	Rtp.h	/^	 struct RtpData{$/;"	s
-RtpEncoder	Rtp.cpp	/^void RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,int FrameLength,int *SequenceNumber,unsigned int *timestamp)$/;"	f
+RtpEncoder	Rtp.cpp	/^int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,int FrameLength,int *SequenceNumber,unsigned int *timestamp)$/;"	f
 RtpHeader	Rtp.cpp	/^char *RtpHeader;$/;"	v
 RtpParameter	Rtsp.cpp	/^struct RtpData RtpParameter;$/;"	v	typeref:struct:RtpData
 RtpServerPort	Rtsp.h	12;"	d
@@ -44,43 +98,711 @@ RtspSession	Rtsp.cpp	/^char *RtspSession = "Session: ee62ba70a1ddca;timeout=60\\
 SETUP_Reply	Rtsp.cpp	/^void SETUP_Reply(int clientFD)$/;"	f
 TEARDOWN_Reply	Rtsp.cpp	/^void TEARDOWN_Reply(int clientFD)$/;"	f
 USE_CAMERA	config.h	30;"	d
+USE_X264_CODER	config.h	32;"	d
+X264_ANALYSE_BSUB16x16	lib/mips/include/x264.h	169;"	d
+X264_ANALYSE_BSUB16x16	lib/x86/include/x264.h	169;"	d
+X264_ANALYSE_I4x4	lib/mips/include/x264.h	165;"	d
+X264_ANALYSE_I4x4	lib/x86/include/x264.h	165;"	d
+X264_ANALYSE_I8x8	lib/mips/include/x264.h	166;"	d
+X264_ANALYSE_I8x8	lib/x86/include/x264.h	166;"	d
+X264_ANALYSE_PSUB16x16	lib/mips/include/x264.h	167;"	d
+X264_ANALYSE_PSUB16x16	lib/x86/include/x264.h	167;"	d
+X264_ANALYSE_PSUB8x8	lib/mips/include/x264.h	168;"	d
+X264_ANALYSE_PSUB8x8	lib/x86/include/x264.h	168;"	d
+X264_API	lib/mips/include/x264.h	52;"	d
+X264_API	lib/mips/include/x264.h	54;"	d
+X264_API	lib/x86/include/x264.h	52;"	d
+X264_API	lib/x86/include/x264.h	54;"	d
+X264_AQ_AUTOVARIANCE	lib/mips/include/x264.h	188;"	d
+X264_AQ_AUTOVARIANCE	lib/x86/include/x264.h	188;"	d
+X264_AQ_AUTOVARIANCE_BIASED	lib/mips/include/x264.h	189;"	d
+X264_AQ_AUTOVARIANCE_BIASED	lib/x86/include/x264.h	189;"	d
+X264_AQ_NONE	lib/mips/include/x264.h	186;"	d
+X264_AQ_NONE	lib/x86/include/x264.h	186;"	d
+X264_AQ_VARIANCE	lib/mips/include/x264.h	187;"	d
+X264_AQ_VARIANCE	lib/x86/include/x264.h	187;"	d
+X264_BIT_DEPTH	lib/mips/include/x264_config.h	1;"	d
+X264_BIT_DEPTH	lib/x86/include/x264_config.h	1;"	d
+X264_BUILD	lib/mips/include/x264.h	44;"	d
+X264_BUILD	lib/x86/include/x264.h	44;"	d
+X264_B_ADAPT_FAST	lib/mips/include/x264.h	191;"	d
+X264_B_ADAPT_FAST	lib/x86/include/x264.h	191;"	d
+X264_B_ADAPT_NONE	lib/mips/include/x264.h	190;"	d
+X264_B_ADAPT_NONE	lib/x86/include/x264.h	190;"	d
+X264_B_ADAPT_TRELLIS	lib/mips/include/x264.h	192;"	d
+X264_B_ADAPT_TRELLIS	lib/x86/include/x264.h	192;"	d
+X264_B_PYRAMID_NONE	lib/mips/include/x264.h	196;"	d
+X264_B_PYRAMID_NONE	lib/x86/include/x264.h	196;"	d
+X264_B_PYRAMID_NORMAL	lib/mips/include/x264.h	198;"	d
+X264_B_PYRAMID_NORMAL	lib/x86/include/x264.h	198;"	d
+X264_B_PYRAMID_STRICT	lib/mips/include/x264.h	197;"	d
+X264_B_PYRAMID_STRICT	lib/x86/include/x264.h	197;"	d
+X264_CHROMA_FORMAT	lib/mips/include/x264_config.h	4;"	d
+X264_CHROMA_FORMAT	lib/x86/include/x264_config.h	4;"	d
+X264_CPU_ALTIVEC	lib/mips/include/x264.h	153;"	d
+X264_CPU_ALTIVEC	lib/x86/include/x264.h	153;"	d
+X264_CPU_ARMV6	lib/mips/include/x264.h	156;"	d
+X264_CPU_ARMV6	lib/x86/include/x264.h	156;"	d
+X264_CPU_ARMV8	lib/mips/include/x264.h	159;"	d
+X264_CPU_ARMV8	lib/x86/include/x264.h	159;"	d
+X264_CPU_AVX	lib/mips/include/x264.h	129;"	d
+X264_CPU_AVX	lib/x86/include/x264.h	129;"	d
+X264_CPU_AVX2	lib/mips/include/x264.h	133;"	d
+X264_CPU_AVX2	lib/x86/include/x264.h	133;"	d
+X264_CPU_BMI1	lib/mips/include/x264.h	134;"	d
+X264_CPU_BMI1	lib/x86/include/x264.h	134;"	d
+X264_CPU_BMI2	lib/mips/include/x264.h	135;"	d
+X264_CPU_BMI2	lib/x86/include/x264.h	135;"	d
+X264_CPU_CACHELINE_32	lib/mips/include/x264.h	137;"	d
+X264_CPU_CACHELINE_32	lib/x86/include/x264.h	137;"	d
+X264_CPU_CACHELINE_64	lib/mips/include/x264.h	138;"	d
+X264_CPU_CACHELINE_64	lib/x86/include/x264.h	138;"	d
+X264_CPU_CMOV	lib/mips/include/x264.h	118;"	d
+X264_CPU_CMOV	lib/x86/include/x264.h	118;"	d
+X264_CPU_FAST_NEON_MRC	lib/mips/include/x264.h	158;"	d
+X264_CPU_FAST_NEON_MRC	lib/x86/include/x264.h	158;"	d
+X264_CPU_FMA3	lib/mips/include/x264.h	132;"	d
+X264_CPU_FMA3	lib/x86/include/x264.h	132;"	d
+X264_CPU_FMA4	lib/mips/include/x264.h	131;"	d
+X264_CPU_FMA4	lib/x86/include/x264.h	131;"	d
+X264_CPU_LZCNT	lib/mips/include/x264.h	128;"	d
+X264_CPU_LZCNT	lib/x86/include/x264.h	128;"	d
+X264_CPU_MMX	lib/mips/include/x264.h	119;"	d
+X264_CPU_MMX	lib/x86/include/x264.h	119;"	d
+X264_CPU_MMX2	lib/mips/include/x264.h	120;"	d
+X264_CPU_MMX2	lib/x86/include/x264.h	120;"	d
+X264_CPU_MMXEXT	lib/mips/include/x264.h	121;"	d
+X264_CPU_MMXEXT	lib/x86/include/x264.h	121;"	d
+X264_CPU_MSA	lib/mips/include/x264.h	162;"	d
+X264_CPU_MSA	lib/x86/include/x264.h	162;"	d
+X264_CPU_NEON	lib/mips/include/x264.h	157;"	d
+X264_CPU_NEON	lib/x86/include/x264.h	157;"	d
+X264_CPU_SLOW_ATOM	lib/mips/include/x264.h	144;"	d
+X264_CPU_SLOW_ATOM	lib/x86/include/x264.h	144;"	d
+X264_CPU_SLOW_CTZ	lib/mips/include/x264.h	143;"	d
+X264_CPU_SLOW_CTZ	lib/x86/include/x264.h	143;"	d
+X264_CPU_SLOW_PALIGNR	lib/mips/include/x264.h	150;"	d
+X264_CPU_SLOW_PALIGNR	lib/x86/include/x264.h	150;"	d
+X264_CPU_SLOW_PSHUFB	lib/mips/include/x264.h	149;"	d
+X264_CPU_SLOW_PSHUFB	lib/x86/include/x264.h	149;"	d
+X264_CPU_SLOW_SHUFFLE	lib/mips/include/x264.h	141;"	d
+X264_CPU_SLOW_SHUFFLE	lib/x86/include/x264.h	141;"	d
+X264_CPU_SSE	lib/mips/include/x264.h	122;"	d
+X264_CPU_SSE	lib/x86/include/x264.h	122;"	d
+X264_CPU_SSE2	lib/mips/include/x264.h	123;"	d
+X264_CPU_SSE2	lib/x86/include/x264.h	123;"	d
+X264_CPU_SSE2_IS_FAST	lib/mips/include/x264.h	140;"	d
+X264_CPU_SSE2_IS_FAST	lib/x86/include/x264.h	140;"	d
+X264_CPU_SSE2_IS_SLOW	lib/mips/include/x264.h	139;"	d
+X264_CPU_SSE2_IS_SLOW	lib/x86/include/x264.h	139;"	d
+X264_CPU_SSE3	lib/mips/include/x264.h	124;"	d
+X264_CPU_SSE3	lib/x86/include/x264.h	124;"	d
+X264_CPU_SSE4	lib/mips/include/x264.h	126;"	d
+X264_CPU_SSE4	lib/x86/include/x264.h	126;"	d
+X264_CPU_SSE42	lib/mips/include/x264.h	127;"	d
+X264_CPU_SSE42	lib/x86/include/x264.h	127;"	d
+X264_CPU_SSSE3	lib/mips/include/x264.h	125;"	d
+X264_CPU_SSSE3	lib/x86/include/x264.h	125;"	d
+X264_CPU_STACK_MOD4	lib/mips/include/x264.h	142;"	d
+X264_CPU_STACK_MOD4	lib/x86/include/x264.h	142;"	d
+X264_CPU_XOP	lib/mips/include/x264.h	130;"	d
+X264_CPU_XOP	lib/x86/include/x264.h	130;"	d
+X264_CQM_CUSTOM	lib/mips/include/x264.h	181;"	d
+X264_CQM_CUSTOM	lib/x86/include/x264.h	181;"	d
+X264_CQM_FLAT	lib/mips/include/x264.h	179;"	d
+X264_CQM_FLAT	lib/x86/include/x264.h	179;"	d
+X264_CQM_JVT	lib/mips/include/x264.h	180;"	d
+X264_CQM_JVT	lib/x86/include/x264.h	180;"	d
+X264_CSP_BGR	lib/mips/include/x264.h	227;"	d
+X264_CSP_BGR	lib/x86/include/x264.h	227;"	d
+X264_CSP_BGRA	lib/mips/include/x264.h	228;"	d
+X264_CSP_BGRA	lib/x86/include/x264.h	228;"	d
+X264_CSP_HIGH_DEPTH	lib/mips/include/x264.h	232;"	d
+X264_CSP_HIGH_DEPTH	lib/x86/include/x264.h	232;"	d
+X264_CSP_I420	lib/mips/include/x264.h	217;"	d
+X264_CSP_I420	lib/x86/include/x264.h	217;"	d
+X264_CSP_I422	lib/mips/include/x264.h	221;"	d
+X264_CSP_I422	lib/x86/include/x264.h	221;"	d
+X264_CSP_I444	lib/mips/include/x264.h	225;"	d
+X264_CSP_I444	lib/x86/include/x264.h	225;"	d
+X264_CSP_MASK	lib/mips/include/x264.h	215;"	d
+X264_CSP_MASK	lib/x86/include/x264.h	215;"	d
+X264_CSP_MAX	lib/mips/include/x264.h	230;"	d
+X264_CSP_MAX	lib/x86/include/x264.h	230;"	d
+X264_CSP_NONE	lib/mips/include/x264.h	216;"	d
+X264_CSP_NONE	lib/x86/include/x264.h	216;"	d
+X264_CSP_NV12	lib/mips/include/x264.h	219;"	d
+X264_CSP_NV12	lib/x86/include/x264.h	219;"	d
+X264_CSP_NV16	lib/mips/include/x264.h	223;"	d
+X264_CSP_NV16	lib/x86/include/x264.h	223;"	d
+X264_CSP_NV21	lib/mips/include/x264.h	220;"	d
+X264_CSP_NV21	lib/x86/include/x264.h	220;"	d
+X264_CSP_RGB	lib/mips/include/x264.h	229;"	d
+X264_CSP_RGB	lib/x86/include/x264.h	229;"	d
+X264_CSP_V210	lib/mips/include/x264.h	224;"	d
+X264_CSP_V210	lib/x86/include/x264.h	224;"	d
+X264_CSP_VFLIP	lib/mips/include/x264.h	231;"	d
+X264_CSP_VFLIP	lib/x86/include/x264.h	231;"	d
+X264_CSP_YV12	lib/mips/include/x264.h	218;"	d
+X264_CSP_YV12	lib/x86/include/x264.h	218;"	d
+X264_CSP_YV16	lib/mips/include/x264.h	222;"	d
+X264_CSP_YV16	lib/x86/include/x264.h	222;"	d
+X264_CSP_YV24	lib/mips/include/x264.h	226;"	d
+X264_CSP_YV24	lib/x86/include/x264.h	226;"	d
+X264_DIRECT_PRED_AUTO	lib/mips/include/x264.h	173;"	d
+X264_DIRECT_PRED_AUTO	lib/x86/include/x264.h	173;"	d
+X264_DIRECT_PRED_NONE	lib/mips/include/x264.h	170;"	d
+X264_DIRECT_PRED_NONE	lib/x86/include/x264.h	170;"	d
+X264_DIRECT_PRED_SPATIAL	lib/mips/include/x264.h	171;"	d
+X264_DIRECT_PRED_SPATIAL	lib/x86/include/x264.h	171;"	d
+X264_DIRECT_PRED_TEMPORAL	lib/mips/include/x264.h	172;"	d
+X264_DIRECT_PRED_TEMPORAL	lib/x86/include/x264.h	172;"	d
+X264_GPL	lib/mips/include/x264_config.h	2;"	d
+X264_GPL	lib/x86/include/x264_config.h	2;"	d
+X264_INTERLACED	lib/mips/include/x264_config.h	3;"	d
+X264_INTERLACED	lib/x86/include/x264_config.h	3;"	d
+X264_KEYINT_MAX_INFINITE	lib/mips/include/x264.h	200;"	d
+X264_KEYINT_MAX_INFINITE	lib/x86/include/x264.h	200;"	d
+X264_KEYINT_MIN_AUTO	lib/mips/include/x264.h	199;"	d
+X264_KEYINT_MIN_AUTO	lib/x86/include/x264.h	199;"	d
+X264_LOG_DEBUG	lib/mips/include/x264.h	250;"	d
+X264_LOG_DEBUG	lib/x86/include/x264.h	250;"	d
+X264_LOG_ERROR	lib/mips/include/x264.h	247;"	d
+X264_LOG_ERROR	lib/x86/include/x264.h	247;"	d
+X264_LOG_INFO	lib/mips/include/x264.h	249;"	d
+X264_LOG_INFO	lib/x86/include/x264.h	249;"	d
+X264_LOG_NONE	lib/mips/include/x264.h	246;"	d
+X264_LOG_NONE	lib/x86/include/x264.h	246;"	d
+X264_LOG_WARNING	lib/mips/include/x264.h	248;"	d
+X264_LOG_WARNING	lib/x86/include/x264.h	248;"	d
+X264_MBINFO_CONSTANT	lib/mips/include/x264.h	778;"	d
+X264_MBINFO_CONSTANT	lib/x86/include/x264.h	778;"	d
+X264_ME_DIA	lib/mips/include/x264.h	174;"	d
+X264_ME_DIA	lib/x86/include/x264.h	174;"	d
+X264_ME_ESA	lib/mips/include/x264.h	177;"	d
+X264_ME_ESA	lib/x86/include/x264.h	177;"	d
+X264_ME_HEX	lib/mips/include/x264.h	175;"	d
+X264_ME_HEX	lib/x86/include/x264.h	175;"	d
+X264_ME_TESA	lib/mips/include/x264.h	178;"	d
+X264_ME_TESA	lib/x86/include/x264.h	178;"	d
+X264_ME_UMH	lib/mips/include/x264.h	176;"	d
+X264_ME_UMH	lib/x86/include/x264.h	176;"	d
+X264_NAL_HRD_CBR	lib/mips/include/x264.h	259;"	d
+X264_NAL_HRD_CBR	lib/x86/include/x264.h	259;"	d
+X264_NAL_HRD_NONE	lib/mips/include/x264.h	257;"	d
+X264_NAL_HRD_NONE	lib/x86/include/x264.h	257;"	d
+X264_NAL_HRD_VBR	lib/mips/include/x264.h	258;"	d
+X264_NAL_HRD_VBR	lib/x86/include/x264.h	258;"	d
+X264_PARAM_BAD_NAME	lib/mips/include/x264.h	593;"	d
+X264_PARAM_BAD_NAME	lib/x86/include/x264.h	593;"	d
+X264_PARAM_BAD_VALUE	lib/mips/include/x264.h	594;"	d
+X264_PARAM_BAD_VALUE	lib/x86/include/x264.h	594;"	d
+X264_POINTVER	lib/mips/include/x264_config.h	8;"	d
+X264_POINTVER	lib/x86/include/x264_config.h	8;"	d
+X264_QP_AUTO	lib/mips/include/x264.h	185;"	d
+X264_QP_AUTO	lib/x86/include/x264.h	185;"	d
+X264_RC_ABR	lib/mips/include/x264.h	184;"	d
+X264_RC_ABR	lib/x86/include/x264.h	184;"	d
+X264_RC_CQP	lib/mips/include/x264.h	182;"	d
+X264_RC_CQP	lib/x86/include/x264.h	182;"	d
+X264_RC_CRF	lib/mips/include/x264.h	183;"	d
+X264_RC_CRF	lib/x86/include/x264.h	183;"	d
+X264_REV	lib/mips/include/x264_config.h	5;"	d
+X264_REV	lib/x86/include/x264_config.h	5;"	d
+X264_REV_DIFF	lib/mips/include/x264_config.h	6;"	d
+X264_REV_DIFF	lib/x86/include/x264_config.h	6;"	d
+X264_SYNC_LOOKAHEAD_AUTO	lib/mips/include/x264.h	254;"	d
+X264_SYNC_LOOKAHEAD_AUTO	lib/x86/include/x264.h	254;"	d
+X264_THREADS_AUTO	lib/mips/include/x264.h	253;"	d
+X264_THREADS_AUTO	lib/x86/include/x264.h	253;"	d
+X264_TYPE_AUTO	lib/mips/include/x264.h	235;"	d
+X264_TYPE_AUTO	lib/x86/include/x264.h	235;"	d
+X264_TYPE_B	lib/mips/include/x264.h	240;"	d
+X264_TYPE_B	lib/x86/include/x264.h	240;"	d
+X264_TYPE_BREF	lib/mips/include/x264.h	239;"	d
+X264_TYPE_BREF	lib/x86/include/x264.h	239;"	d
+X264_TYPE_I	lib/mips/include/x264.h	237;"	d
+X264_TYPE_I	lib/x86/include/x264.h	237;"	d
+X264_TYPE_IDR	lib/mips/include/x264.h	236;"	d
+X264_TYPE_IDR	lib/x86/include/x264.h	236;"	d
+X264_TYPE_KEYFRAME	lib/mips/include/x264.h	241;"	d
+X264_TYPE_KEYFRAME	lib/x86/include/x264.h	241;"	d
+X264_TYPE_P	lib/mips/include/x264.h	238;"	d
+X264_TYPE_P	lib/x86/include/x264.h	238;"	d
+X264_VERSION	lib/mips/include/x264_config.h	7;"	d
+X264_VERSION	lib/x86/include/x264_config.h	7;"	d
+X264_WEIGHTP_NONE	lib/mips/include/x264.h	193;"	d
+X264_WEIGHTP_NONE	lib/x86/include/x264.h	193;"	d
+X264_WEIGHTP_SIMPLE	lib/mips/include/x264.h	194;"	d
+X264_WEIGHTP_SIMPLE	lib/x86/include/x264.h	194;"	d
+X264_WEIGHTP_SMART	lib/mips/include/x264.h	195;"	d
+X264_WEIGHTP_SMART	lib/x86/include/x264.h	195;"	d
+X264_X264_H	lib/mips/include/x264.h	29;"	d
+X264_X264_H	lib/x86/include/x264.h	29;"	d
 _CONFIG_H	config.h	9;"	d
+_H264ENCODER_H	h264encoder.h	2;"	d
 _RTP_H	Rtp.h	14;"	d
 _RTSP_H	Rtsp.h	8;"	d
 _VIDEO_CAPTURE_H	video_capture.h	9;"	d
 addrClient	Rtp.h	/^		sockaddr_in addrClient;$/;"	m	struct:RtpData
+analyse	lib/mips/include/x264.h	/^    } analyse;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon4
+analyse	lib/x86/include/x264.h	/^    } analyse;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon17
+b_annexb	lib/mips/include/x264.h	/^    int b_annexb;               \/* if set, place start codes (4 bytes) before NAL units,$/;"	m	struct:x264_param_t
+b_annexb	lib/x86/include/x264.h	/^    int b_annexb;               \/* if set, place start codes (4 bytes) before NAL units,$/;"	m	struct:x264_param_t
+b_aud	lib/mips/include/x264.h	/^    int b_aud;                  \/* generate access unit delimiters *\/$/;"	m	struct:x264_param_t
+b_aud	lib/x86/include/x264.h	/^    int b_aud;                  \/* generate access unit delimiters *\/$/;"	m	struct:x264_param_t
+b_bluray_compat	lib/mips/include/x264.h	/^    int         b_bluray_compat;$/;"	m	struct:x264_param_t
+b_bluray_compat	lib/x86/include/x264.h	/^    int         b_bluray_compat;$/;"	m	struct:x264_param_t
+b_cabac	lib/mips/include/x264.h	/^    int         b_cabac;$/;"	m	struct:x264_param_t
+b_cabac	lib/x86/include/x264.h	/^    int         b_cabac;$/;"	m	struct:x264_param_t
+b_chroma_me	lib/mips/include/x264.h	/^        int          b_chroma_me; \/* chroma ME for subpel and mode decision in P-frames *\/$/;"	m	struct:x264_param_t::__anon4
+b_chroma_me	lib/x86/include/x264.h	/^        int          b_chroma_me; \/* chroma ME for subpel and mode decision in P-frames *\/$/;"	m	struct:x264_param_t::__anon17
+b_constrained_intra	lib/mips/include/x264.h	/^    int         b_constrained_intra;$/;"	m	struct:x264_param_t
+b_constrained_intra	lib/x86/include/x264.h	/^    int         b_constrained_intra;$/;"	m	struct:x264_param_t
+b_cpu_independent	lib/mips/include/x264.h	/^    int         b_cpu_independent; \/* force canonical behavior rather than cpu-dependent optimal algorithms *\/$/;"	m	struct:x264_param_t
+b_cpu_independent	lib/x86/include/x264.h	/^    int         b_cpu_independent; \/* force canonical behavior rather than cpu-dependent optimal algorithms *\/$/;"	m	struct:x264_param_t
+b_dct_decimate	lib/mips/include/x264.h	/^        int          b_dct_decimate; \/* transform coefficient thresholding on P-frames *\/$/;"	m	struct:x264_param_t::__anon4
+b_dct_decimate	lib/x86/include/x264.h	/^        int          b_dct_decimate; \/* transform coefficient thresholding on P-frames *\/$/;"	m	struct:x264_param_t::__anon17
+b_deblocking_filter	lib/mips/include/x264.h	/^    int         b_deblocking_filter;$/;"	m	struct:x264_param_t
+b_deblocking_filter	lib/x86/include/x264.h	/^    int         b_deblocking_filter;$/;"	m	struct:x264_param_t
+b_deterministic	lib/mips/include/x264.h	/^    int         b_deterministic; \/* whether to allow non-deterministic optimizations when threaded *\/$/;"	m	struct:x264_param_t
+b_deterministic	lib/x86/include/x264.h	/^    int         b_deterministic; \/* whether to allow non-deterministic optimizations when threaded *\/$/;"	m	struct:x264_param_t
+b_fake_interlaced	lib/mips/include/x264.h	/^    int b_fake_interlaced;$/;"	m	struct:x264_param_t
+b_fake_interlaced	lib/x86/include/x264.h	/^    int b_fake_interlaced;$/;"	m	struct:x264_param_t
+b_fast_pskip	lib/mips/include/x264.h	/^        int          b_fast_pskip; \/* early SKIP detection on P-frames *\/$/;"	m	struct:x264_param_t::__anon4
+b_fast_pskip	lib/x86/include/x264.h	/^        int          b_fast_pskip; \/* early SKIP detection on P-frames *\/$/;"	m	struct:x264_param_t::__anon17
+b_filler	lib/mips/include/x264.h	/^        int         b_filler;$/;"	m	struct:x264_param_t::__anon5
+b_filler	lib/x86/include/x264.h	/^        int         b_filler;$/;"	m	struct:x264_param_t::__anon18
+b_force_qp	lib/mips/include/x264.h	/^    int b_force_qp; \/* whether to use qp vs bitrate factor *\/$/;"	m	struct:__anon2
+b_force_qp	lib/x86/include/x264.h	/^    int b_force_qp; \/* whether to use qp vs bitrate factor *\/$/;"	m	struct:__anon15
+b_full_recon	lib/mips/include/x264.h	/^    int         b_full_recon;   \/* fully reconstruct frames, even when not necessary for encoding.  Implied by psz_dump_yuv *\/$/;"	m	struct:x264_param_t
+b_full_recon	lib/x86/include/x264.h	/^    int         b_full_recon;   \/* fully reconstruct frames, even when not necessary for encoding.  Implied by psz_dump_yuv *\/$/;"	m	struct:x264_param_t
+b_fullrange	lib/mips/include/x264.h	/^        int         b_fullrange;$/;"	m	struct:x264_param_t::__anon3
+b_fullrange	lib/x86/include/x264.h	/^        int         b_fullrange;$/;"	m	struct:x264_param_t::__anon16
+b_interlaced	lib/mips/include/x264.h	/^    int         b_interlaced;$/;"	m	struct:x264_param_t
+b_interlaced	lib/x86/include/x264.h	/^    int         b_interlaced;$/;"	m	struct:x264_param_t
+b_intra_refresh	lib/mips/include/x264.h	/^    int         b_intra_refresh;    \/* Whether or not to use periodic intra refresh instead of IDR frames. *\/$/;"	m	struct:x264_param_t
+b_intra_refresh	lib/x86/include/x264.h	/^    int         b_intra_refresh;    \/* Whether or not to use periodic intra refresh instead of IDR frames. *\/$/;"	m	struct:x264_param_t
+b_keyframe	lib/mips/include/x264.h	/^    int     b_keyframe;$/;"	m	struct:__anon13
+b_keyframe	lib/x86/include/x264.h	/^    int     b_keyframe;$/;"	m	struct:__anon26
+b_long_startcode	lib/mips/include/x264.h	/^    int b_long_startcode;$/;"	m	struct:__anon1
+b_long_startcode	lib/x86/include/x264.h	/^    int b_long_startcode;$/;"	m	struct:__anon14
+b_mb_info	lib/mips/include/x264.h	/^        int          b_mb_info;            \/* Use input mb_info data in x264_picture_t *\/$/;"	m	struct:x264_param_t::__anon4
+b_mb_info	lib/x86/include/x264.h	/^        int          b_mb_info;            \/* Use input mb_info data in x264_picture_t *\/$/;"	m	struct:x264_param_t::__anon17
+b_mb_info_update	lib/mips/include/x264.h	/^        int          b_mb_info_update; \/* Update the values in mb_info according to the results of encoding. *\/$/;"	m	struct:x264_param_t::__anon4
+b_mb_info_update	lib/x86/include/x264.h	/^        int          b_mb_info_update; \/* Update the values in mb_info according to the results of encoding. *\/$/;"	m	struct:x264_param_t::__anon17
+b_mb_tree	lib/mips/include/x264.h	/^        int         b_mb_tree;      \/* Macroblock-tree ratecontrol. *\/$/;"	m	struct:x264_param_t::__anon5
+b_mb_tree	lib/x86/include/x264.h	/^        int         b_mb_tree;      \/* Macroblock-tree ratecontrol. *\/$/;"	m	struct:x264_param_t::__anon18
+b_mixed_references	lib/mips/include/x264.h	/^        int          b_mixed_references; \/* allow each mb partition to have its own reference number *\/$/;"	m	struct:x264_param_t::__anon4
+b_mixed_references	lib/x86/include/x264.h	/^        int          b_mixed_references; \/* allow each mb partition to have its own reference number *\/$/;"	m	struct:x264_param_t::__anon17
+b_open_gop	lib/mips/include/x264.h	/^    int         b_open_gop;$/;"	m	struct:x264_param_t
+b_open_gop	lib/x86/include/x264.h	/^    int         b_open_gop;$/;"	m	struct:x264_param_t
+b_opencl	lib/mips/include/x264.h	/^    int b_opencl;            \/* use OpenCL when available *\/$/;"	m	struct:x264_param_t
+b_opencl	lib/x86/include/x264.h	/^    int b_opencl;            \/* use OpenCL when available *\/$/;"	m	struct:x264_param_t
+b_pic_struct	lib/mips/include/x264.h	/^    int b_pic_struct;$/;"	m	struct:x264_param_t
+b_pic_struct	lib/x86/include/x264.h	/^    int b_pic_struct;$/;"	m	struct:x264_param_t
+b_psnr	lib/mips/include/x264.h	/^        int          b_psnr;    \/* compute and print PSNR stats *\/$/;"	m	struct:x264_param_t::__anon4
+b_psnr	lib/x86/include/x264.h	/^        int          b_psnr;    \/* compute and print PSNR stats *\/$/;"	m	struct:x264_param_t::__anon17
+b_psy	lib/mips/include/x264.h	/^        int          b_psy; \/* Toggle all psy optimizations *\/$/;"	m	struct:x264_param_t::__anon4
+b_psy	lib/x86/include/x264.h	/^        int          b_psy; \/* Toggle all psy optimizations *\/$/;"	m	struct:x264_param_t::__anon17
+b_pulldown	lib/mips/include/x264.h	/^    int b_pulldown;             \/* use explicity set timebase for CFR *\/$/;"	m	struct:x264_param_t
+b_pulldown	lib/x86/include/x264.h	/^    int b_pulldown;             \/* use explicity set timebase for CFR *\/$/;"	m	struct:x264_param_t
+b_repeat_headers	lib/mips/include/x264.h	/^    int b_repeat_headers;       \/* put SPS\/PPS before each keyframe *\/$/;"	m	struct:x264_param_t
+b_repeat_headers	lib/x86/include/x264.h	/^    int b_repeat_headers;       \/* put SPS\/PPS before each keyframe *\/$/;"	m	struct:x264_param_t
+b_sliced_threads	lib/mips/include/x264.h	/^    int         b_sliced_threads;  \/* Whether to use slice-based threading. *\/$/;"	m	struct:x264_param_t
+b_sliced_threads	lib/x86/include/x264.h	/^    int         b_sliced_threads;  \/* Whether to use slice-based threading. *\/$/;"	m	struct:x264_param_t
+b_ssim	lib/mips/include/x264.h	/^        int          b_ssim;    \/* compute and print SSIM stats *\/$/;"	m	struct:x264_param_t::__anon4
+b_ssim	lib/x86/include/x264.h	/^        int          b_ssim;    \/* compute and print SSIM stats *\/$/;"	m	struct:x264_param_t::__anon17
+b_stat_read	lib/mips/include/x264.h	/^        int         b_stat_read;    \/* Read stat from psz_stat_in and use it *\/$/;"	m	struct:x264_param_t::__anon5
+b_stat_read	lib/x86/include/x264.h	/^        int         b_stat_read;    \/* Read stat from psz_stat_in and use it *\/$/;"	m	struct:x264_param_t::__anon18
+b_stat_write	lib/mips/include/x264.h	/^        int         b_stat_write;   \/* Enable stat writing in psz_stat_out *\/$/;"	m	struct:x264_param_t::__anon5
+b_stat_write	lib/x86/include/x264.h	/^        int         b_stat_write;   \/* Enable stat writing in psz_stat_out *\/$/;"	m	struct:x264_param_t::__anon18
+b_stitchable	lib/mips/include/x264.h	/^    int b_stitchable;$/;"	m	struct:x264_param_t
+b_stitchable	lib/x86/include/x264.h	/^    int b_stitchable;$/;"	m	struct:x264_param_t
+b_tff	lib/mips/include/x264.h	/^    int b_tff;$/;"	m	struct:x264_param_t
+b_tff	lib/x86/include/x264.h	/^    int b_tff;$/;"	m	struct:x264_param_t
+b_transform_8x8	lib/mips/include/x264.h	/^        int          b_transform_8x8;$/;"	m	struct:x264_param_t::__anon4
+b_transform_8x8	lib/x86/include/x264.h	/^        int          b_transform_8x8;$/;"	m	struct:x264_param_t::__anon17
+b_vfr_input	lib/mips/include/x264.h	/^    int b_vfr_input;            \/* VFR input.  If 1, use timebase and timestamps for ratecontrol purposes.$/;"	m	struct:x264_param_t
+b_vfr_input	lib/x86/include/x264.h	/^    int b_vfr_input;            \/* VFR input.  If 1, use timebase and timestamps for ratecontrol purposes.$/;"	m	struct:x264_param_t
+b_weighted_bipred	lib/mips/include/x264.h	/^        int          b_weighted_bipred; \/* implicit weighting for B-frames *\/$/;"	m	struct:x264_param_t::__anon4
+b_weighted_bipred	lib/x86/include/x264.h	/^        int          b_weighted_bipred; \/* implicit weighting for B-frames *\/$/;"	m	struct:x264_param_t::__anon17
+bipred8x8	lib/mips/include/x264.h	/^    int bipred8x8;   \/* limit bipred to >=8x8 *\/$/;"	m	struct:__anon7
+bipred8x8	lib/x86/include/x264.h	/^    int bipred8x8;   \/* limit bipred to >=8x8 *\/$/;"	m	struct:__anon20
+bitrate	lib/mips/include/x264.h	/^    int bitrate;     \/* max bitrate (kbit\/sec) *\/$/;"	m	struct:__anon7
+bitrate	lib/x86/include/x264.h	/^    int bitrate;     \/* max bitrate (kbit\/sec) *\/$/;"	m	struct:__anon20
 buffer	video_capture.h	/^struct buffer{$/;"	s
 buffers	video_capture.h	/^    struct buffer *buffers;$/;"	m	struct:camera	typeref:struct:camera::buffer
 cam	Rtsp.cpp	/^struct camera cam;$/;"	v	typeref:struct:camera
 camera	video_capture.h	/^struct camera{$/;"	s
 close_camera	video_capture.c	/^static void close_camera(struct camera *cam) $/;"	f	file:
+compress_begin	h264encoder.c	/^int compress_begin(Encoder *en, int width, int height) {$/;"	f
+compress_end	h264encoder.c	/^void compress_end(Encoder *en) {$/;"	f
+compress_frame	h264encoder.c	/^int compress_frame(Encoder *en, int type, uint8_t *in, int in_len, uint8_t *out) {$/;"	f
+cpb	lib/mips/include/x264.h	/^    int cpb;         \/* max vbv buffer (kbit) *\/$/;"	m	struct:__anon7
+cpb	lib/x86/include/x264.h	/^    int cpb;         \/* max vbv buffer (kbit) *\/$/;"	m	struct:__anon20
+cpb_final_arrival_time	lib/mips/include/x264.h	/^    double cpb_final_arrival_time;$/;"	m	struct:__anon8
+cpb_final_arrival_time	lib/x86/include/x264.h	/^    double cpb_final_arrival_time;$/;"	m	struct:__anon21
+cpb_initial_arrival_time	lib/mips/include/x264.h	/^    double cpb_initial_arrival_time;$/;"	m	struct:__anon8
+cpb_initial_arrival_time	lib/x86/include/x264.h	/^    double cpb_initial_arrival_time;$/;"	m	struct:__anon21
+cpb_removal_time	lib/mips/include/x264.h	/^    double cpb_removal_time;$/;"	m	struct:__anon8
+cpb_removal_time	lib/x86/include/x264.h	/^    double cpb_removal_time;$/;"	m	struct:__anon21
+cpu	lib/mips/include/x264.h	/^    unsigned int cpu;$/;"	m	struct:x264_param_t
+cpu	lib/x86/include/x264.h	/^    unsigned int cpu;$/;"	m	struct:x264_param_t
+cqm_4ic	lib/mips/include/x264.h	/^    uint8_t     cqm_4ic[16];$/;"	m	struct:x264_param_t
+cqm_4ic	lib/x86/include/x264.h	/^    uint8_t     cqm_4ic[16];$/;"	m	struct:x264_param_t
+cqm_4iy	lib/mips/include/x264.h	/^    uint8_t     cqm_4iy[16];        \/* used only if i_cqm_preset == X264_CQM_CUSTOM *\/$/;"	m	struct:x264_param_t
+cqm_4iy	lib/x86/include/x264.h	/^    uint8_t     cqm_4iy[16];        \/* used only if i_cqm_preset == X264_CQM_CUSTOM *\/$/;"	m	struct:x264_param_t
+cqm_4pc	lib/mips/include/x264.h	/^    uint8_t     cqm_4pc[16];$/;"	m	struct:x264_param_t
+cqm_4pc	lib/x86/include/x264.h	/^    uint8_t     cqm_4pc[16];$/;"	m	struct:x264_param_t
+cqm_4py	lib/mips/include/x264.h	/^    uint8_t     cqm_4py[16];$/;"	m	struct:x264_param_t
+cqm_4py	lib/x86/include/x264.h	/^    uint8_t     cqm_4py[16];$/;"	m	struct:x264_param_t
+cqm_8ic	lib/mips/include/x264.h	/^    uint8_t     cqm_8ic[64];$/;"	m	struct:x264_param_t
+cqm_8ic	lib/x86/include/x264.h	/^    uint8_t     cqm_8ic[64];$/;"	m	struct:x264_param_t
+cqm_8iy	lib/mips/include/x264.h	/^    uint8_t     cqm_8iy[64];$/;"	m	struct:x264_param_t
+cqm_8iy	lib/x86/include/x264.h	/^    uint8_t     cqm_8iy[64];$/;"	m	struct:x264_param_t
+cqm_8pc	lib/mips/include/x264.h	/^    uint8_t     cqm_8pc[64];$/;"	m	struct:x264_param_t
+cqm_8pc	lib/x86/include/x264.h	/^    uint8_t     cqm_8pc[64];$/;"	m	struct:x264_param_t
+cqm_8py	lib/mips/include/x264.h	/^    uint8_t     cqm_8py[64];$/;"	m	struct:x264_param_t
+cqm_8py	lib/x86/include/x264.h	/^    uint8_t     cqm_8py[64];$/;"	m	struct:x264_param_t
 createRtpHeader	Rtp.cpp	/^void createRtpHeader()$/;"	f
 createRtpSocket	Rtp.cpp	/^void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)$/;"	f
 createRtpThread	Rtsp.cpp	/^void createRtpThread(char* fileName)$/;"	f
 createRtspSocket	Rtsp.cpp	/^void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)$/;"	f
+crop_rect	lib/mips/include/x264.h	/^    } crop_rect;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon6
+crop_rect	lib/x86/include/x264.h	/^    } crop_rect;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon19
 dbug	config.h	26;"	d
 device_name	video_capture.h	/^    char *device_name;$/;"	m	struct:camera
+direct8x8	lib/mips/include/x264.h	/^    int direct8x8;   \/* limit b_direct to >=8x8 *\/$/;"	m	struct:__anon7
+direct8x8	lib/x86/include/x264.h	/^    int direct8x8;   \/* limit b_direct to >=8x8 *\/$/;"	m	struct:__anon20
 display_depth	video_capture.h	/^    int display_depth;$/;"	m	struct:camera
+dpb	lib/mips/include/x264.h	/^    int dpb;         \/* max decoded picture buffer (mbs) *\/$/;"	m	struct:__anon7
+dpb	lib/x86/include/x264.h	/^    int dpb;         \/* max decoded picture buffer (mbs) *\/$/;"	m	struct:__anon20
+dpb_output_time	lib/mips/include/x264.h	/^    double dpb_output_time;$/;"	m	struct:__anon8
+dpb_output_time	lib/x86/include/x264.h	/^    double dpb_output_time;$/;"	m	struct:__anon21
 errno_exit	video_capture.c	/^static  void errno_exit(const char *s)$/;"	f	file:
 exit_camera	video_capture.c	/^static void exit_camera(struct camera *cam)$/;"	f	file:
+extra_sei	lib/mips/include/x264.h	/^    x264_sei_t extra_sei;$/;"	m	struct:__anon13
+extra_sei	lib/x86/include/x264.h	/^    x264_sei_t extra_sei;$/;"	m	struct:__anon26
+f_aq_strength	lib/mips/include/x264.h	/^        float       f_aq_strength;$/;"	m	struct:x264_param_t::__anon5
+f_aq_strength	lib/x86/include/x264.h	/^        float       f_aq_strength;$/;"	m	struct:x264_param_t::__anon18
+f_bitrate_factor	lib/mips/include/x264.h	/^    float f_bitrate_factor;$/;"	m	struct:__anon2
+f_bitrate_factor	lib/x86/include/x264.h	/^    float f_bitrate_factor;$/;"	m	struct:__anon15
+f_complexity_blur	lib/mips/include/x264.h	/^        float       f_complexity_blur; \/* temporally blur complexity *\/$/;"	m	struct:x264_param_t::__anon5
+f_complexity_blur	lib/x86/include/x264.h	/^        float       f_complexity_blur; \/* temporally blur complexity *\/$/;"	m	struct:x264_param_t::__anon18
+f_crf_avg	lib/mips/include/x264.h	/^    double f_crf_avg;$/;"	m	struct:__anon12
+f_crf_avg	lib/x86/include/x264.h	/^    double f_crf_avg;$/;"	m	struct:__anon25
+f_ip_factor	lib/mips/include/x264.h	/^        float       f_ip_factor;$/;"	m	struct:x264_param_t::__anon5
+f_ip_factor	lib/x86/include/x264.h	/^        float       f_ip_factor;$/;"	m	struct:x264_param_t::__anon18
+f_pb_factor	lib/mips/include/x264.h	/^        float       f_pb_factor;$/;"	m	struct:x264_param_t::__anon5
+f_pb_factor	lib/x86/include/x264.h	/^        float       f_pb_factor;$/;"	m	struct:x264_param_t::__anon18
+f_psnr	lib/mips/include/x264.h	/^    double f_psnr[3];$/;"	m	struct:__anon12
+f_psnr	lib/x86/include/x264.h	/^    double f_psnr[3];$/;"	m	struct:__anon25
+f_psnr_avg	lib/mips/include/x264.h	/^    double f_psnr_avg;$/;"	m	struct:__anon12
+f_psnr_avg	lib/x86/include/x264.h	/^    double f_psnr_avg;$/;"	m	struct:__anon25
+f_psy_rd	lib/mips/include/x264.h	/^        float        f_psy_rd; \/* Psy RD strength *\/$/;"	m	struct:x264_param_t::__anon4
+f_psy_rd	lib/x86/include/x264.h	/^        float        f_psy_rd; \/* Psy RD strength *\/$/;"	m	struct:x264_param_t::__anon17
+f_psy_trellis	lib/mips/include/x264.h	/^        float        f_psy_trellis; \/* Psy trellis strength *\/$/;"	m	struct:x264_param_t::__anon4
+f_psy_trellis	lib/x86/include/x264.h	/^        float        f_psy_trellis; \/* Psy trellis strength *\/$/;"	m	struct:x264_param_t::__anon17
+f_qblur	lib/mips/include/x264.h	/^        float       f_qblur;        \/* temporally blur quants *\/$/;"	m	struct:x264_param_t::__anon5
+f_qblur	lib/x86/include/x264.h	/^        float       f_qblur;        \/* temporally blur quants *\/$/;"	m	struct:x264_param_t::__anon18
+f_qcompress	lib/mips/include/x264.h	/^        float       f_qcompress;    \/* 0.0 => cbr, 1.0 => constant qp *\/$/;"	m	struct:x264_param_t::__anon5
+f_qcompress	lib/x86/include/x264.h	/^        float       f_qcompress;    \/* 0.0 => cbr, 1.0 => constant qp *\/$/;"	m	struct:x264_param_t::__anon18
+f_rate_tolerance	lib/mips/include/x264.h	/^        float       f_rate_tolerance;$/;"	m	struct:x264_param_t::__anon5
+f_rate_tolerance	lib/x86/include/x264.h	/^        float       f_rate_tolerance;$/;"	m	struct:x264_param_t::__anon18
+f_rf_constant	lib/mips/include/x264.h	/^        float       f_rf_constant;  \/* 1pass VBR, nominal QP *\/$/;"	m	struct:x264_param_t::__anon5
+f_rf_constant	lib/x86/include/x264.h	/^        float       f_rf_constant;  \/* 1pass VBR, nominal QP *\/$/;"	m	struct:x264_param_t::__anon18
+f_rf_constant_max	lib/mips/include/x264.h	/^        float       f_rf_constant_max;  \/* In CRF mode, maximum CRF as caused by VBV *\/$/;"	m	struct:x264_param_t::__anon5
+f_rf_constant_max	lib/x86/include/x264.h	/^        float       f_rf_constant_max;  \/* In CRF mode, maximum CRF as caused by VBV *\/$/;"	m	struct:x264_param_t::__anon18
+f_ssim	lib/mips/include/x264.h	/^    double f_ssim;$/;"	m	struct:__anon12
+f_ssim	lib/x86/include/x264.h	/^    double f_ssim;$/;"	m	struct:__anon25
+f_vbv_buffer_init	lib/mips/include/x264.h	/^        float       f_vbv_buffer_init; \/* <=1: fraction of buffer_size. >1: kbit *\/$/;"	m	struct:x264_param_t::__anon5
+f_vbv_buffer_init	lib/x86/include/x264.h	/^        float       f_vbv_buffer_init; \/* <=1: fraction of buffer_size. >1: kbit *\/$/;"	m	struct:x264_param_t::__anon18
 fd	video_capture.h	/^    int fd;$/;"	m	struct:camera
 find_string	video_capture.c	/^static int find_string(const char *pSrc, const char *pDst)  $/;"	f	file:
 fps	Rtp.h	18;"	d
 frame_number	video_capture.h	/^    int frame_number;$/;"	m	struct:camera
+frame_only	lib/mips/include/x264.h	/^    int frame_only;  \/* forbid interlacing *\/$/;"	m	struct:__anon7
+frame_only	lib/x86/include/x264.h	/^    int frame_only;  \/* forbid interlacing *\/$/;"	m	struct:__anon20
+frame_size	lib/mips/include/x264.h	/^    int frame_size;  \/* max frame size (macroblocks) *\/$/;"	m	struct:__anon7
+frame_size	lib/x86/include/x264.h	/^    int frame_size;  \/* max frame size (macroblocks) *\/$/;"	m	struct:__anon20
+g_x264_coder	video_capture.c	/^Encoder g_x264_coder;$/;"	v
 getRtpClientPort	Rtsp.cpp	/^string getRtpClientPort()$/;"	f
+handle	h264encoder.h	/^	x264_t *handle;$/;"	m	struct:__anon27
 height	video_capture.h	/^    int height;$/;"	m	struct:camera
+hrd_timing	lib/mips/include/x264.h	/^    x264_hrd_t hrd_timing;$/;"	m	struct:__anon13
+hrd_timing	lib/x86/include/x264.h	/^    x264_hrd_t hrd_timing;$/;"	m	struct:__anon26
+i_aq_mode	lib/mips/include/x264.h	/^        int         i_aq_mode;      \/* psy adaptive QP. (X264_AQ_*) *\/$/;"	m	struct:x264_param_t::__anon5
+i_aq_mode	lib/x86/include/x264.h	/^        int         i_aq_mode;      \/* psy adaptive QP. (X264_AQ_*) *\/$/;"	m	struct:x264_param_t::__anon18
+i_avcintra_class	lib/mips/include/x264.h	/^    int         i_avcintra_class;$/;"	m	struct:x264_param_t
+i_avcintra_class	lib/x86/include/x264.h	/^    int         i_avcintra_class;$/;"	m	struct:x264_param_t
+i_bframe	lib/mips/include/x264.h	/^    int         i_bframe;   \/* how many b-frame between 2 references pictures *\/$/;"	m	struct:x264_param_t
+i_bframe	lib/x86/include/x264.h	/^    int         i_bframe;   \/* how many b-frame between 2 references pictures *\/$/;"	m	struct:x264_param_t
+i_bframe_adaptive	lib/mips/include/x264.h	/^    int         i_bframe_adaptive;$/;"	m	struct:x264_param_t
+i_bframe_adaptive	lib/x86/include/x264.h	/^    int         i_bframe_adaptive;$/;"	m	struct:x264_param_t
+i_bframe_bias	lib/mips/include/x264.h	/^    int         i_bframe_bias;$/;"	m	struct:x264_param_t
+i_bframe_bias	lib/x86/include/x264.h	/^    int         i_bframe_bias;$/;"	m	struct:x264_param_t
+i_bframe_pyramid	lib/mips/include/x264.h	/^    int         i_bframe_pyramid;   \/* Keep some B-frames as references: 0=off, 1=strict hierarchical, 2=normal *\/$/;"	m	struct:x264_param_t
+i_bframe_pyramid	lib/x86/include/x264.h	/^    int         i_bframe_pyramid;   \/* Keep some B-frames as references: 0=off, 1=strict hierarchical, 2=normal *\/$/;"	m	struct:x264_param_t
+i_bitrate	lib/mips/include/x264.h	/^        int         i_bitrate;$/;"	m	struct:x264_param_t::__anon5
+i_bitrate	lib/x86/include/x264.h	/^        int         i_bitrate;$/;"	m	struct:x264_param_t::__anon18
+i_bottom	lib/mips/include/x264.h	/^        unsigned int i_bottom;$/;"	m	struct:x264_param_t::__anon6
+i_bottom	lib/x86/include/x264.h	/^        unsigned int i_bottom;$/;"	m	struct:x264_param_t::__anon19
+i_cabac_init_idc	lib/mips/include/x264.h	/^    int         i_cabac_init_idc;$/;"	m	struct:x264_param_t
+i_cabac_init_idc	lib/x86/include/x264.h	/^    int         i_cabac_init_idc;$/;"	m	struct:x264_param_t
+i_chroma_loc	lib/mips/include/x264.h	/^        int         i_chroma_loc;    \/* both top & bottom *\/$/;"	m	struct:x264_param_t::__anon3
+i_chroma_loc	lib/x86/include/x264.h	/^        int         i_chroma_loc;    \/* both top & bottom *\/$/;"	m	struct:x264_param_t::__anon16
+i_chroma_qp_offset	lib/mips/include/x264.h	/^        int          i_chroma_qp_offset;$/;"	m	struct:x264_param_t::__anon4
+i_chroma_qp_offset	lib/x86/include/x264.h	/^        int          i_chroma_qp_offset;$/;"	m	struct:x264_param_t::__anon17
+i_colmatrix	lib/mips/include/x264.h	/^        int         i_colmatrix;$/;"	m	struct:x264_param_t::__anon3
+i_colmatrix	lib/x86/include/x264.h	/^        int         i_colmatrix;$/;"	m	struct:x264_param_t::__anon16
+i_colorprim	lib/mips/include/x264.h	/^        int         i_colorprim;$/;"	m	struct:x264_param_t::__anon3
+i_colorprim	lib/x86/include/x264.h	/^        int         i_colorprim;$/;"	m	struct:x264_param_t::__anon16
+i_cqm_preset	lib/mips/include/x264.h	/^    int         i_cqm_preset;$/;"	m	struct:x264_param_t
+i_cqm_preset	lib/x86/include/x264.h	/^    int         i_cqm_preset;$/;"	m	struct:x264_param_t
+i_csp	lib/mips/include/x264.h	/^    int         i_csp;         \/* CSP of encoded bitstream *\/$/;"	m	struct:x264_param_t
+i_csp	lib/mips/include/x264.h	/^    int     i_csp;       \/* Colorspace *\/$/;"	m	struct:__anon11
+i_csp	lib/x86/include/x264.h	/^    int         i_csp;         \/* CSP of encoded bitstream *\/$/;"	m	struct:x264_param_t
+i_csp	lib/x86/include/x264.h	/^    int     i_csp;       \/* Colorspace *\/$/;"	m	struct:__anon24
+i_deblocking_filter_alphac0	lib/mips/include/x264.h	/^    int         i_deblocking_filter_alphac0;    \/* [-6, 6] -6 light filter, 6 strong *\/$/;"	m	struct:x264_param_t
+i_deblocking_filter_alphac0	lib/x86/include/x264.h	/^    int         i_deblocking_filter_alphac0;    \/* [-6, 6] -6 light filter, 6 strong *\/$/;"	m	struct:x264_param_t
+i_deblocking_filter_beta	lib/mips/include/x264.h	/^    int         i_deblocking_filter_beta;       \/* [-6, 6]  idem *\/$/;"	m	struct:x264_param_t
+i_deblocking_filter_beta	lib/x86/include/x264.h	/^    int         i_deblocking_filter_beta;       \/* [-6, 6]  idem *\/$/;"	m	struct:x264_param_t
+i_direct_mv_pred	lib/mips/include/x264.h	/^        int          i_direct_mv_pred; \/* spatial vs temporal mv prediction *\/$/;"	m	struct:x264_param_t::__anon4
+i_direct_mv_pred	lib/x86/include/x264.h	/^        int          i_direct_mv_pred; \/* spatial vs temporal mv prediction *\/$/;"	m	struct:x264_param_t::__anon17
+i_dpb_size	lib/mips/include/x264.h	/^    int         i_dpb_size;         \/* Force a DPB size larger than that implied by B-frames and reference frames.$/;"	m	struct:x264_param_t
+i_dpb_size	lib/x86/include/x264.h	/^    int         i_dpb_size;         \/* Force a DPB size larger than that implied by B-frames and reference frames.$/;"	m	struct:x264_param_t
+i_dts	lib/mips/include/x264.h	/^    int64_t i_dts;$/;"	m	struct:__anon13
+i_dts	lib/x86/include/x264.h	/^    int64_t i_dts;$/;"	m	struct:__anon26
+i_end	lib/mips/include/x264.h	/^    int i_start, i_end; \/* range of frame numbers *\/$/;"	m	struct:__anon2
+i_end	lib/x86/include/x264.h	/^    int i_start, i_end; \/* range of frame numbers *\/$/;"	m	struct:__anon15
+i_first_mb	lib/mips/include/x264.h	/^    int i_first_mb; \/* If this NAL is a slice, the index of the first MB in the slice. *\/$/;"	m	struct:__anon1
+i_first_mb	lib/x86/include/x264.h	/^    int i_first_mb; \/* If this NAL is a slice, the index of the first MB in the slice. *\/$/;"	m	struct:__anon14
+i_fps_den	lib/mips/include/x264.h	/^    uint32_t i_fps_den;$/;"	m	struct:x264_param_t
+i_fps_den	lib/x86/include/x264.h	/^    uint32_t i_fps_den;$/;"	m	struct:x264_param_t
+i_fps_num	lib/mips/include/x264.h	/^    uint32_t i_fps_num;$/;"	m	struct:x264_param_t
+i_fps_num	lib/x86/include/x264.h	/^    uint32_t i_fps_num;$/;"	m	struct:x264_param_t
+i_frame_packing	lib/mips/include/x264.h	/^    int i_frame_packing;$/;"	m	struct:x264_param_t
+i_frame_packing	lib/x86/include/x264.h	/^    int i_frame_packing;$/;"	m	struct:x264_param_t
+i_frame_reference	lib/mips/include/x264.h	/^    int         i_frame_reference;  \/* Maximum number of reference frames *\/$/;"	m	struct:x264_param_t
+i_frame_reference	lib/x86/include/x264.h	/^    int         i_frame_reference;  \/* Maximum number of reference frames *\/$/;"	m	struct:x264_param_t
+i_frame_total	lib/mips/include/x264.h	/^    int         i_frame_total; \/* number of frames to encode if known, else 0 *\/$/;"	m	struct:x264_param_t
+i_frame_total	lib/x86/include/x264.h	/^    int         i_frame_total; \/* number of frames to encode if known, else 0 *\/$/;"	m	struct:x264_param_t
+i_height	lib/mips/include/x264.h	/^    int         i_height;$/;"	m	struct:x264_param_t
+i_height	lib/x86/include/x264.h	/^    int         i_height;$/;"	m	struct:x264_param_t
+i_keyint_max	lib/mips/include/x264.h	/^    int         i_keyint_max;       \/* Force an IDR keyframe at this interval *\/$/;"	m	struct:x264_param_t
+i_keyint_max	lib/x86/include/x264.h	/^    int         i_keyint_max;       \/* Force an IDR keyframe at this interval *\/$/;"	m	struct:x264_param_t
+i_keyint_min	lib/mips/include/x264.h	/^    int         i_keyint_min;       \/* Scenecuts closer together than this are coded as I, not IDR. *\/$/;"	m	struct:x264_param_t
+i_keyint_min	lib/x86/include/x264.h	/^    int         i_keyint_min;       \/* Scenecuts closer together than this are coded as I, not IDR. *\/$/;"	m	struct:x264_param_t
+i_last_mb	lib/mips/include/x264.h	/^    int i_last_mb;  \/* If this NAL is a slice, the index of the last MB in the slice. *\/$/;"	m	struct:__anon1
+i_last_mb	lib/x86/include/x264.h	/^    int i_last_mb;  \/* If this NAL is a slice, the index of the last MB in the slice. *\/$/;"	m	struct:__anon14
+i_left	lib/mips/include/x264.h	/^        unsigned int i_left;$/;"	m	struct:x264_param_t::__anon6
+i_left	lib/x86/include/x264.h	/^        unsigned int i_left;$/;"	m	struct:x264_param_t::__anon19
+i_level_idc	lib/mips/include/x264.h	/^    int         i_level_idc;$/;"	m	struct:x264_param_t
+i_level_idc	lib/x86/include/x264.h	/^    int         i_level_idc;$/;"	m	struct:x264_param_t
+i_log_level	lib/mips/include/x264.h	/^    int         i_log_level;$/;"	m	struct:x264_param_t
+i_log_level	lib/x86/include/x264.h	/^    int         i_log_level;$/;"	m	struct:x264_param_t
+i_lookahead	lib/mips/include/x264.h	/^        int         i_lookahead;$/;"	m	struct:x264_param_t::__anon5
+i_lookahead	lib/x86/include/x264.h	/^        int         i_lookahead;$/;"	m	struct:x264_param_t::__anon18
+i_lookahead_threads	lib/mips/include/x264.h	/^    int         i_lookahead_threads; \/* multiple threads for lookahead analysis *\/$/;"	m	struct:x264_param_t
+i_lookahead_threads	lib/x86/include/x264.h	/^    int         i_lookahead_threads; \/* multiple threads for lookahead analysis *\/$/;"	m	struct:x264_param_t
+i_luma_deadzone	lib/mips/include/x264.h	/^        int          i_luma_deadzone[2]; \/* {inter, intra} *\/$/;"	m	struct:x264_param_t::__anon4
+i_luma_deadzone	lib/x86/include/x264.h	/^        int          i_luma_deadzone[2]; \/* {inter, intra} *\/$/;"	m	struct:x264_param_t::__anon17
+i_me_method	lib/mips/include/x264.h	/^        int          i_me_method; \/* motion estimation algorithm to use (X264_ME_*) *\/$/;"	m	struct:x264_param_t::__anon4
+i_me_method	lib/x86/include/x264.h	/^        int          i_me_method; \/* motion estimation algorithm to use (X264_ME_*) *\/$/;"	m	struct:x264_param_t::__anon17
+i_me_range	lib/mips/include/x264.h	/^        int          i_me_range; \/* integer pixel motion estimation search range (from predicted mv) *\/$/;"	m	struct:x264_param_t::__anon4
+i_me_range	lib/x86/include/x264.h	/^        int          i_me_range; \/* integer pixel motion estimation search range (from predicted mv) *\/$/;"	m	struct:x264_param_t::__anon17
+i_mv_range	lib/mips/include/x264.h	/^        int          i_mv_range; \/* maximum length of a mv (in pixels). -1 = auto, based on level *\/$/;"	m	struct:x264_param_t::__anon4
+i_mv_range	lib/x86/include/x264.h	/^        int          i_mv_range; \/* maximum length of a mv (in pixels). -1 = auto, based on level *\/$/;"	m	struct:x264_param_t::__anon17
+i_mv_range_thread	lib/mips/include/x264.h	/^        int          i_mv_range_thread; \/* minimum space between threads. -1 = auto, based on number of threads. *\/$/;"	m	struct:x264_param_t::__anon4
+i_mv_range_thread	lib/x86/include/x264.h	/^        int          i_mv_range_thread; \/* minimum space between threads. -1 = auto, based on number of threads. *\/$/;"	m	struct:x264_param_t::__anon17
+i_nal_hrd	lib/mips/include/x264.h	/^    int         i_nal_hrd;$/;"	m	struct:x264_param_t
+i_nal_hrd	lib/x86/include/x264.h	/^    int         i_nal_hrd;$/;"	m	struct:x264_param_t
+i_noise_reduction	lib/mips/include/x264.h	/^        int          i_noise_reduction; \/* adaptive pseudo-deadzone *\/$/;"	m	struct:x264_param_t::__anon4
+i_noise_reduction	lib/x86/include/x264.h	/^        int          i_noise_reduction; \/* adaptive pseudo-deadzone *\/$/;"	m	struct:x264_param_t::__anon17
+i_opencl_device	lib/mips/include/x264.h	/^    int i_opencl_device;     \/* specify count of GPU devices to skip, for CLI users *\/$/;"	m	struct:x264_param_t
+i_opencl_device	lib/x86/include/x264.h	/^    int i_opencl_device;     \/* specify count of GPU devices to skip, for CLI users *\/$/;"	m	struct:x264_param_t
+i_overscan	lib/mips/include/x264.h	/^        int         i_overscan;    \/* 0=undef, 1=no overscan, 2=overscan *\/$/;"	m	struct:x264_param_t::__anon3
+i_overscan	lib/x86/include/x264.h	/^        int         i_overscan;    \/* 0=undef, 1=no overscan, 2=overscan *\/$/;"	m	struct:x264_param_t::__anon16
+i_padding	lib/mips/include/x264.h	/^    int i_padding;$/;"	m	struct:__anon1
+i_padding	lib/x86/include/x264.h	/^    int i_padding;$/;"	m	struct:__anon14
+i_payload	lib/mips/include/x264.h	/^    int     i_payload;$/;"	m	struct:__anon1
+i_payload	lib/x86/include/x264.h	/^    int     i_payload;$/;"	m	struct:__anon14
+i_pic_struct	lib/mips/include/x264.h	/^    int     i_pic_struct;$/;"	m	struct:__anon13
+i_pic_struct	lib/x86/include/x264.h	/^    int     i_pic_struct;$/;"	m	struct:__anon26
+i_plane	lib/mips/include/x264.h	/^    int     i_plane;     \/* Number of image planes *\/$/;"	m	struct:__anon11
+i_plane	lib/x86/include/x264.h	/^    int     i_plane;     \/* Number of image planes *\/$/;"	m	struct:__anon24
+i_pts	lib/mips/include/x264.h	/^    int64_t i_pts;$/;"	m	struct:__anon13
+i_pts	lib/x86/include/x264.h	/^    int64_t i_pts;$/;"	m	struct:__anon26
+i_qp	lib/mips/include/x264.h	/^    int i_qp;$/;"	m	struct:__anon2
+i_qp	lib/x86/include/x264.h	/^    int i_qp;$/;"	m	struct:__anon15
+i_qp_constant	lib/mips/include/x264.h	/^        int         i_qp_constant;  \/* 0 to (51 + 6*(x264_bit_depth-8)). 0=lossless *\/$/;"	m	struct:x264_param_t::__anon5
+i_qp_constant	lib/x86/include/x264.h	/^        int         i_qp_constant;  \/* 0 to (51 + 6*(x264_bit_depth-8)). 0=lossless *\/$/;"	m	struct:x264_param_t::__anon18
+i_qp_max	lib/mips/include/x264.h	/^        int         i_qp_max;       \/* max allowed QP value *\/$/;"	m	struct:x264_param_t::__anon5
+i_qp_max	lib/x86/include/x264.h	/^        int         i_qp_max;       \/* max allowed QP value *\/$/;"	m	struct:x264_param_t::__anon18
+i_qp_min	lib/mips/include/x264.h	/^        int         i_qp_min;       \/* min allowed QP value *\/$/;"	m	struct:x264_param_t::__anon5
+i_qp_min	lib/x86/include/x264.h	/^        int         i_qp_min;       \/* min allowed QP value *\/$/;"	m	struct:x264_param_t::__anon18
+i_qp_step	lib/mips/include/x264.h	/^        int         i_qp_step;      \/* max QP step between frames *\/$/;"	m	struct:x264_param_t::__anon5
+i_qp_step	lib/x86/include/x264.h	/^        int         i_qp_step;      \/* max QP step between frames *\/$/;"	m	struct:x264_param_t::__anon18
+i_qpplus1	lib/mips/include/x264.h	/^    int     i_qpplus1;$/;"	m	struct:__anon13
+i_qpplus1	lib/x86/include/x264.h	/^    int     i_qpplus1;$/;"	m	struct:__anon26
+i_rc_method	lib/mips/include/x264.h	/^        int         i_rc_method;    \/* X264_RC_* *\/$/;"	m	struct:x264_param_t::__anon5
+i_rc_method	lib/x86/include/x264.h	/^        int         i_rc_method;    \/* X264_RC_* *\/$/;"	m	struct:x264_param_t::__anon18
+i_ref_idc	lib/mips/include/x264.h	/^    int i_ref_idc;  \/* nal_priority_e *\/$/;"	m	struct:__anon1
+i_ref_idc	lib/x86/include/x264.h	/^    int i_ref_idc;  \/* nal_priority_e *\/$/;"	m	struct:__anon14
+i_right	lib/mips/include/x264.h	/^        unsigned int i_right;$/;"	m	struct:x264_param_t::__anon6
+i_right	lib/x86/include/x264.h	/^        unsigned int i_right;$/;"	m	struct:x264_param_t::__anon19
+i_sar_height	lib/mips/include/x264.h	/^        int         i_sar_height;$/;"	m	struct:x264_param_t::__anon3
+i_sar_height	lib/x86/include/x264.h	/^        int         i_sar_height;$/;"	m	struct:x264_param_t::__anon16
+i_sar_width	lib/mips/include/x264.h	/^        int         i_sar_width;$/;"	m	struct:x264_param_t::__anon3
+i_sar_width	lib/x86/include/x264.h	/^        int         i_sar_width;$/;"	m	struct:x264_param_t::__anon16
+i_scenecut_threshold	lib/mips/include/x264.h	/^    int         i_scenecut_threshold; \/* how aggressively to insert extra I frames *\/$/;"	m	struct:x264_param_t
+i_scenecut_threshold	lib/x86/include/x264.h	/^    int         i_scenecut_threshold; \/* how aggressively to insert extra I frames *\/$/;"	m	struct:x264_param_t
+i_slice_count	lib/mips/include/x264.h	/^    int i_slice_count;       \/* Number of slices per frame: forces rectangular slices. *\/$/;"	m	struct:x264_param_t
+i_slice_count	lib/x86/include/x264.h	/^    int i_slice_count;       \/* Number of slices per frame: forces rectangular slices. *\/$/;"	m	struct:x264_param_t
+i_slice_count_max	lib/mips/include/x264.h	/^    int i_slice_count_max;   \/* Absolute cap on slices per frame; stops applying slice-max-size$/;"	m	struct:x264_param_t
+i_slice_count_max	lib/x86/include/x264.h	/^    int i_slice_count_max;   \/* Absolute cap on slices per frame; stops applying slice-max-size$/;"	m	struct:x264_param_t
+i_slice_max_mbs	lib/mips/include/x264.h	/^    int i_slice_max_mbs;     \/* Max number of MBs per slice; overrides i_slice_count. *\/$/;"	m	struct:x264_param_t
+i_slice_max_mbs	lib/x86/include/x264.h	/^    int i_slice_max_mbs;     \/* Max number of MBs per slice; overrides i_slice_count. *\/$/;"	m	struct:x264_param_t
+i_slice_max_size	lib/mips/include/x264.h	/^    int i_slice_max_size;    \/* Max size per slice in bytes; includes estimated NAL overhead. *\/$/;"	m	struct:x264_param_t
+i_slice_max_size	lib/x86/include/x264.h	/^    int i_slice_max_size;    \/* Max size per slice in bytes; includes estimated NAL overhead. *\/$/;"	m	struct:x264_param_t
+i_slice_min_mbs	lib/mips/include/x264.h	/^    int i_slice_min_mbs;     \/* Min number of MBs per slice *\/$/;"	m	struct:x264_param_t
+i_slice_min_mbs	lib/x86/include/x264.h	/^    int i_slice_min_mbs;     \/* Min number of MBs per slice *\/$/;"	m	struct:x264_param_t
+i_sps_id	lib/mips/include/x264.h	/^    int i_sps_id;               \/* SPS and PPS id number *\/$/;"	m	struct:x264_param_t
+i_sps_id	lib/x86/include/x264.h	/^    int i_sps_id;               \/* SPS and PPS id number *\/$/;"	m	struct:x264_param_t
+i_start	lib/mips/include/x264.h	/^    int i_start, i_end; \/* range of frame numbers *\/$/;"	m	struct:__anon2
+i_start	lib/x86/include/x264.h	/^    int i_start, i_end; \/* range of frame numbers *\/$/;"	m	struct:__anon15
+i_stride	lib/mips/include/x264.h	/^    int     i_stride[4]; \/* Strides for each plane *\/$/;"	m	struct:__anon11
+i_stride	lib/x86/include/x264.h	/^    int     i_stride[4]; \/* Strides for each plane *\/$/;"	m	struct:__anon24
+i_subpel_refine	lib/mips/include/x264.h	/^        int          i_subpel_refine; \/* subpixel motion estimation quality *\/$/;"	m	struct:x264_param_t::__anon4
+i_subpel_refine	lib/x86/include/x264.h	/^        int          i_subpel_refine; \/* subpixel motion estimation quality *\/$/;"	m	struct:x264_param_t::__anon17
+i_sync_lookahead	lib/mips/include/x264.h	/^    int         i_sync_lookahead; \/* threaded lookahead buffer *\/$/;"	m	struct:x264_param_t
+i_sync_lookahead	lib/x86/include/x264.h	/^    int         i_sync_lookahead; \/* threaded lookahead buffer *\/$/;"	m	struct:x264_param_t
+i_threads	lib/mips/include/x264.h	/^    int         i_threads;           \/* encode multiple frames in parallel *\/$/;"	m	struct:x264_param_t
+i_threads	lib/x86/include/x264.h	/^    int         i_threads;           \/* encode multiple frames in parallel *\/$/;"	m	struct:x264_param_t
+i_timebase_den	lib/mips/include/x264.h	/^    uint32_t i_timebase_den;    \/* Timebase denominator *\/$/;"	m	struct:x264_param_t
+i_timebase_den	lib/x86/include/x264.h	/^    uint32_t i_timebase_den;    \/* Timebase denominator *\/$/;"	m	struct:x264_param_t
+i_timebase_num	lib/mips/include/x264.h	/^    uint32_t i_timebase_num;    \/* Timebase numerator *\/$/;"	m	struct:x264_param_t
+i_timebase_num	lib/x86/include/x264.h	/^    uint32_t i_timebase_num;    \/* Timebase numerator *\/$/;"	m	struct:x264_param_t
+i_top	lib/mips/include/x264.h	/^        unsigned int i_top;$/;"	m	struct:x264_param_t::__anon6
+i_top	lib/x86/include/x264.h	/^        unsigned int i_top;$/;"	m	struct:x264_param_t::__anon19
+i_transfer	lib/mips/include/x264.h	/^        int         i_transfer;$/;"	m	struct:x264_param_t::__anon3
+i_transfer	lib/x86/include/x264.h	/^        int         i_transfer;$/;"	m	struct:x264_param_t::__anon16
+i_trellis	lib/mips/include/x264.h	/^        int          i_trellis;  \/* trellis RD quantization *\/$/;"	m	struct:x264_param_t::__anon4
+i_trellis	lib/x86/include/x264.h	/^        int          i_trellis;  \/* trellis RD quantization *\/$/;"	m	struct:x264_param_t::__anon17
+i_type	lib/mips/include/x264.h	/^    int     i_type;$/;"	m	struct:__anon13
+i_type	lib/mips/include/x264.h	/^    int i_type;     \/* nal_unit_type_e *\/$/;"	m	struct:__anon1
+i_type	lib/x86/include/x264.h	/^    int     i_type;$/;"	m	struct:__anon26
+i_type	lib/x86/include/x264.h	/^    int i_type;     \/* nal_unit_type_e *\/$/;"	m	struct:__anon14
+i_vbv_buffer_size	lib/mips/include/x264.h	/^        int         i_vbv_buffer_size;$/;"	m	struct:x264_param_t::__anon5
+i_vbv_buffer_size	lib/x86/include/x264.h	/^        int         i_vbv_buffer_size;$/;"	m	struct:x264_param_t::__anon18
+i_vbv_max_bitrate	lib/mips/include/x264.h	/^        int         i_vbv_max_bitrate;$/;"	m	struct:x264_param_t::__anon5
+i_vbv_max_bitrate	lib/x86/include/x264.h	/^        int         i_vbv_max_bitrate;$/;"	m	struct:x264_param_t::__anon18
+i_vidformat	lib/mips/include/x264.h	/^        int         i_vidformat;$/;"	m	struct:x264_param_t::__anon3
+i_vidformat	lib/x86/include/x264.h	/^        int         i_vidformat;$/;"	m	struct:x264_param_t::__anon16
+i_weighted_pred	lib/mips/include/x264.h	/^        int          i_weighted_pred; \/* weighting for P-frames *\/$/;"	m	struct:x264_param_t::__anon4
+i_weighted_pred	lib/x86/include/x264.h	/^        int          i_weighted_pred; \/* weighting for P-frames *\/$/;"	m	struct:x264_param_t::__anon17
+i_width	lib/mips/include/x264.h	/^    int         i_width;$/;"	m	struct:x264_param_t
+i_width	lib/x86/include/x264.h	/^    int         i_width;$/;"	m	struct:x264_param_t
+i_zones	lib/mips/include/x264.h	/^        int         i_zones;        \/* number of zone_t's *\/$/;"	m	struct:x264_param_t::__anon5
+i_zones	lib/x86/include/x264.h	/^        int         i_zones;        \/* number of zone_t's *\/$/;"	m	struct:x264_param_t::__anon18
 image_size	video_capture.h	/^    int image_size;$/;"	m	struct:camera
+img	lib/mips/include/x264.h	/^    x264_image_t img;$/;"	m	struct:__anon13
+img	lib/x86/include/x264.h	/^    x264_image_t img;$/;"	m	struct:__anon26
 init_camera	video_capture.c	/^static void init_camera(struct camera*cam)$/;"	f	file:
 int2str	Rtsp.cpp	/^char *int2str(int i)$/;"	f
-length	video_capture.h	/^    size_t length;$/;"	m	struct:buffer
+inter	lib/mips/include/x264.h	/^        unsigned int inter;     \/* inter partitions *\/$/;"	m	struct:x264_param_t::__anon4
+inter	lib/x86/include/x264.h	/^        unsigned int inter;     \/* inter partitions *\/$/;"	m	struct:x264_param_t::__anon17
+intra	lib/mips/include/x264.h	/^        unsigned int intra;     \/* intra partitions *\/$/;"	m	struct:x264_param_t::__anon4
+intra	lib/x86/include/x264.h	/^        unsigned int intra;     \/* intra partitions *\/$/;"	m	struct:x264_param_t::__anon17
+is_x264_coder_ok	h264encoder.c	/^int is_x264_coder_ok()$/;"	f
+length	video_capture.h	/^    int length;$/;"	m	struct:buffer
+level_idc	lib/mips/include/x264.h	/^    int level_idc;$/;"	m	struct:__anon7
+level_idc	lib/x86/include/x264.h	/^    int level_idc;$/;"	m	struct:__anon20
 lock	Rtsp.cpp	/^bool lock;$/;"	v
+log_msg	config.h	28;"	d
+log_msg	h264encoder.c	6;"	d	file:
 main	Main.cpp	/^int main(int args,char *argv[])$/;"	f
+mb_info	lib/mips/include/x264.h	/^    uint8_t *mb_info;$/;"	m	struct:__anon12
+mb_info	lib/x86/include/x264.h	/^    uint8_t *mb_info;$/;"	m	struct:__anon25
+mb_info_free	lib/mips/include/x264.h	/^    void (*mb_info_free)( void* );$/;"	m	struct:__anon12
+mb_info_free	lib/x86/include/x264.h	/^    void (*mb_info_free)( void* );$/;"	m	struct:__anon25
+mbps	lib/mips/include/x264.h	/^    int mbps;        \/* max macroblock processing rate (macroblocks\/sec) *\/$/;"	m	struct:__anon7
+mbps	lib/x86/include/x264.h	/^    int mbps;        \/* max macroblock processing rate (macroblocks\/sec) *\/$/;"	m	struct:__anon20
+mincr	lib/mips/include/x264.h	/^    int mincr;       \/* min compression ratio *\/$/;"	m	struct:__anon7
+mincr	lib/x86/include/x264.h	/^    int mincr;       \/* min compression ratio *\/$/;"	m	struct:__anon20
+mv_range	lib/mips/include/x264.h	/^    int mv_range;    \/* max vertical mv component range (pixels) *\/$/;"	m	struct:__anon7
+mv_range	lib/x86/include/x264.h	/^    int mv_range;    \/* max vertical mv component range (pixels) *\/$/;"	m	struct:__anon20
+mvs_per_2mb	lib/mips/include/x264.h	/^    int mvs_per_2mb; \/* max mvs per 2 consecutive mbs. *\/$/;"	m	struct:__anon7
+mvs_per_2mb	lib/x86/include/x264.h	/^    int mvs_per_2mb; \/* max mvs per 2 consecutive mbs. *\/$/;"	m	struct:__anon20
 n_buffers	video_capture.h	/^    unsigned int n_buffers;$/;"	m	struct:camera
+nal	h264encoder.h	/^	x264_nal_t *nal;$/;"	m	struct:__anon27
+nal_priority_e	lib/mips/include/x264.h	/^enum nal_priority_e$/;"	g
+nal_priority_e	lib/x86/include/x264.h	/^enum nal_priority_e$/;"	g
+nal_unit_type_e	lib/mips/include/x264.h	/^enum nal_unit_type_e$/;"	g
+nal_unit_type_e	lib/x86/include/x264.h	/^enum nal_unit_type_e$/;"	g
+nalu_process	lib/mips/include/x264.h	/^    void (*nalu_process) ( x264_t *h, x264_nal_t *nal, void *opaque );$/;"	m	struct:x264_param_t
+nalu_process	lib/x86/include/x264.h	/^    void (*nalu_process) ( x264_t *h, x264_nal_t *nal, void *opaque );$/;"	m	struct:x264_param_t
+num_payloads	lib/mips/include/x264.h	/^    int num_payloads;$/;"	m	struct:__anon10
+num_payloads	lib/x86/include/x264.h	/^    int num_payloads;$/;"	m	struct:__anon23
+opaque	lib/mips/include/x264.h	/^    void *opaque;$/;"	m	struct:__anon13
+opaque	lib/x86/include/x264.h	/^    void *opaque;$/;"	m	struct:__anon26
 open_camera	video_capture.c	/^static void open_camera(struct camera *cam)$/;"	f	file:
-read_frame	video_capture.c	/^int read_frame(struct camera *cam,unsigned char *buffer,int *len\/*数据大小*\/)$/;"	f
+opencl_device_id	lib/mips/include/x264.h	/^    void *opencl_device_id;  \/* pass explicit cl_device_id as void*, for API users *\/$/;"	m	struct:x264_param_t
+opencl_device_id	lib/x86/include/x264.h	/^    void *opencl_device_id;  \/* pass explicit cl_device_id as void*, for API users *\/$/;"	m	struct:x264_param_t
+p_log_private	lib/mips/include/x264.h	/^    void        *p_log_private;$/;"	m	struct:x264_param_t
+p_log_private	lib/x86/include/x264.h	/^    void        *p_log_private;$/;"	m	struct:x264_param_t
+p_payload	lib/mips/include/x264.h	/^    uint8_t *p_payload;$/;"	m	struct:__anon1
+p_payload	lib/x86/include/x264.h	/^    uint8_t *p_payload;$/;"	m	struct:__anon14
+param	h264encoder.h	/^	x264_param_t *param;$/;"	m	struct:__anon27
+param	lib/mips/include/x264.h	/^    struct x264_param_t *param;$/;"	m	struct:__anon2	typeref:struct:__anon2::x264_param_t
+param	lib/mips/include/x264.h	/^    x264_param_t *param;$/;"	m	struct:__anon13
+param	lib/x86/include/x264.h	/^    struct x264_param_t *param;$/;"	m	struct:__anon15	typeref:struct:__anon15::x264_param_t
+param	lib/x86/include/x264.h	/^    x264_param_t *param;$/;"	m	struct:__anon26
+param_free	lib/mips/include/x264.h	/^    void (*param_free)( void* );$/;"	m	struct:x264_param_t
+param_free	lib/x86/include/x264.h	/^    void (*param_free)( void* );$/;"	m	struct:x264_param_t
+payload	lib/mips/include/x264.h	/^    uint8_t *payload;$/;"	m	struct:__anon9
+payload	lib/x86/include/x264.h	/^    uint8_t *payload;$/;"	m	struct:__anon22
+payload_size	lib/mips/include/x264.h	/^    int payload_size;$/;"	m	struct:__anon9
+payload_size	lib/x86/include/x264.h	/^    int payload_size;$/;"	m	struct:__anon22
+payload_type	lib/mips/include/x264.h	/^    int payload_type;$/;"	m	struct:__anon9
+payload_type	lib/x86/include/x264.h	/^    int payload_type;$/;"	m	struct:__anon22
+payloads	lib/mips/include/x264.h	/^    x264_sei_payload_t *payloads;$/;"	m	struct:__anon10
+payloads	lib/x86/include/x264.h	/^    x264_sei_payload_t *payloads;$/;"	m	struct:__anon23
+pf_log	lib/mips/include/x264.h	/^    void        (*pf_log)( void *, int i_level, const char *psz, va_list );$/;"	m	struct:x264_param_t
+pf_log	lib/x86/include/x264.h	/^    void        (*pf_log)( void *, int i_level, const char *psz, va_list );$/;"	m	struct:x264_param_t
+pic_struct_e	lib/mips/include/x264.h	/^enum pic_struct_e$/;"	g
+pic_struct_e	lib/x86/include/x264.h	/^enum pic_struct_e$/;"	g
+picture	h264encoder.h	/^	x264_picture_t *picture; \/\/说明一个视频序列中每帧特点$/;"	m	struct:__anon27
+plane	lib/mips/include/x264.h	/^    uint8_t *plane[4];   \/* Pointers to each plane *\/$/;"	m	struct:__anon11
+plane	lib/x86/include/x264.h	/^    uint8_t *plane[4];   \/* Pointers to each plane *\/$/;"	m	struct:__anon24
+prop	lib/mips/include/x264.h	/^    x264_image_properties_t prop;$/;"	m	struct:__anon13
+prop	lib/x86/include/x264.h	/^    x264_image_properties_t prop;$/;"	m	struct:__anon26
+psz_clbin_file	lib/mips/include/x264.h	/^    char *psz_clbin_file;    \/* filename (in UTF-8) of the compiled OpenCL kernel cache file *\/$/;"	m	struct:x264_param_t
+psz_clbin_file	lib/x86/include/x264.h	/^    char *psz_clbin_file;    \/* filename (in UTF-8) of the compiled OpenCL kernel cache file *\/$/;"	m	struct:x264_param_t
+psz_cqm_file	lib/mips/include/x264.h	/^    char        *psz_cqm_file;      \/* filename (in UTF-8) of CQM file, JM format *\/$/;"	m	struct:x264_param_t
+psz_cqm_file	lib/x86/include/x264.h	/^    char        *psz_cqm_file;      \/* filename (in UTF-8) of CQM file, JM format *\/$/;"	m	struct:x264_param_t
+psz_dump_yuv	lib/mips/include/x264.h	/^    char        *psz_dump_yuv;  \/* filename (in UTF-8) for reconstructed frames *\/$/;"	m	struct:x264_param_t
+psz_dump_yuv	lib/x86/include/x264.h	/^    char        *psz_dump_yuv;  \/* filename (in UTF-8) for reconstructed frames *\/$/;"	m	struct:x264_param_t
+psz_stat_in	lib/mips/include/x264.h	/^        char        *psz_stat_in;   \/* input filename (in UTF-8) of the 2pass stats file *\/$/;"	m	struct:x264_param_t::__anon5
+psz_stat_in	lib/x86/include/x264.h	/^        char        *psz_stat_in;   \/* input filename (in UTF-8) of the 2pass stats file *\/$/;"	m	struct:x264_param_t::__anon18
+psz_stat_out	lib/mips/include/x264.h	/^        char        *psz_stat_out;  \/* output filename (in UTF-8) of the 2pass stats file *\/$/;"	m	struct:x264_param_t::__anon5
+psz_stat_out	lib/x86/include/x264.h	/^        char        *psz_stat_out;  \/* output filename (in UTF-8) of the 2pass stats file *\/$/;"	m	struct:x264_param_t::__anon18
+psz_zones	lib/mips/include/x264.h	/^        char        *psz_zones;     \/* alternate method of specifying zones *\/$/;"	m	struct:x264_param_t::__anon5
+psz_zones	lib/x86/include/x264.h	/^        char        *psz_zones;     \/* alternate method of specifying zones *\/$/;"	m	struct:x264_param_t::__anon18
+quant_offsets	lib/mips/include/x264.h	/^    float *quant_offsets;$/;"	m	struct:__anon12
+quant_offsets	lib/x86/include/x264.h	/^    float *quant_offsets;$/;"	m	struct:__anon25
+quant_offsets_free	lib/mips/include/x264.h	/^    void (*quant_offsets_free)( void* );$/;"	m	struct:__anon12
+quant_offsets_free	lib/x86/include/x264.h	/^    void (*quant_offsets_free)( void* );$/;"	m	struct:__anon25
+rc	lib/mips/include/x264.h	/^    } rc;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon5
+rc	lib/x86/include/x264.h	/^    } rc;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon18
+read_encode_frame	video_capture.c	/^int read_encode_frame(struct camera *cam,char *buffer,int *len)$/;"	f
+read_frame	video_capture.c	/^int read_frame(struct camera *cam,char *buffer,int *len\/*数据大小*\/)$/;"	f
 recvBuf	Rtsp.cpp	/^char recvBuf[BUF_SIZE];$/;"	v
 rtpClientPort	Rtp.h	/^		int rtpClientPort;$/;"	m	struct:RtpData
 rtpServerPort	Rtp.h	/^		int rtpServerPort;$/;"	m	struct:RtpData
+sei_free	lib/mips/include/x264.h	/^    void (*sei_free)( void* );$/;"	m	struct:__anon10
+sei_free	lib/x86/include/x264.h	/^    void (*sei_free)( void* );$/;"	m	struct:__anon23
 sendBuf	Rtsp.cpp	/^char sendBuf[BUF_SIZE];$/;"	v
 setFUHeader	Rtp.cpp	/^void setFUHeader(char *FrameStartIndex,bool start,bool end)$/;"	f
 setFUIndicator	Rtp.cpp	/^void setFUIndicator(char *FrameStartIndex)$/;"	f
@@ -91,12 +813,16 @@ setSSRC	Rtp.cpp	/^void setSSRC(unsigned int ssrc)$/;"	f
 setSequenceNumber	Rtp.cpp	/^void setSequenceNumber(int SequenceNumber)$/;"	f
 setTimestamp	Rtp.cpp	/^void setTimestamp(unsigned int timestamp)$/;"	f
 sleepTime	Rtp.h	19;"	d
+slice_rate	lib/mips/include/x264.h	/^    int slice_rate;  \/* ?? *\/$/;"	m	struct:__anon7
+slice_rate	lib/x86/include/x264.h	/^    int slice_rate;  \/* ?? *\/$/;"	m	struct:__anon20
 start	video_capture.h	/^    void *start;$/;"	m	struct:buffer
 start_capturing	video_capture.c	/^static void start_capturing(struct camera *cam)$/;"	f	file:
+status	h264encoder.h	/^	int status; \/\/ 1 ok , 0 no init , -1 error$/;"	m	struct:__anon27
 status	video_capture.h	/^    int status; \/\/ if status == -1 , return$/;"	m	struct:camera
 stop_capturing	video_capture.c	/^static void stop_capturing(struct camera *cam)$/;"	f	file:
 str2int	Rtsp.cpp	/^int str2int(string temp)$/;"	f
 support_fmt	video_capture.h	/^    int support_fmt;$/;"	m	struct:camera
+uint8_t	h264encoder.h	/^typedef unsigned char uint8_t;$/;"	t
 v4l2_cap	video_capture.h	/^    struct v4l2_capability v4l2_cap;$/;"	m	struct:camera	typeref:struct:camera::v4l2_capability
 v4l2_crop	video_capture.h	/^    struct v4l2_crop v4l2_crop;$/;"	m	struct:camera	typeref:struct:camera::v4l2_crop
 v4l2_cropcap	video_capture.h	/^    struct v4l2_cropcap v4l2_cropcap;$/;"	m	struct:camera	typeref:struct:camera::v4l2_cropcap
@@ -105,5 +831,65 @@ v4l2_fmt	video_capture.h	/^    struct v4l2_format v4l2_fmt;$/;"	m	struct:camera	
 v4l2_fmtdesc	video_capture.h	/^    struct v4l2_fmtdesc v4l2_fmtdesc;$/;"	m	struct:camera	typeref:struct:camera::v4l2_fmtdesc
 v4l2_init	video_capture.c	/^void v4l2_init(struct camera *cam)$/;"	f
 v4l2_setfps	video_capture.h	/^    struct v4l2_streamparm v4l2_setfps;$/;"	m	struct:camera	typeref:struct:camera::v4l2_streamparm
+vui	lib/mips/include/x264.h	/^    } vui;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon3
+vui	lib/x86/include/x264.h	/^    } vui;$/;"	m	struct:x264_param_t	typeref:struct:x264_param_t::__anon16
 width	video_capture.h	/^    int width;$/;"	m	struct:camera
+x264_b_pyramid_names	lib/mips/include/x264.h	/^static const char * const x264_b_pyramid_names[] = { "none", "strict", "normal", 0 };$/;"	v
+x264_b_pyramid_names	lib/x86/include/x264.h	/^static const char * const x264_b_pyramid_names[] = { "none", "strict", "normal", 0 };$/;"	v
+x264_colmatrix_names	lib/mips/include/x264.h	/^static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", "", "fcc", "bt470bg", "smpte170m", "smpte240m", "YCgCo", "bt2020nc", "bt2020c", 0 };$/;"	v
+x264_colmatrix_names	lib/x86/include/x264.h	/^static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", "", "fcc", "bt470bg", "smpte170m", "smpte240m", "YCgCo", "bt2020nc", "bt2020c", 0 };$/;"	v
+x264_colorprim_names	lib/mips/include/x264.h	/^static const char * const x264_colorprim_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "film", "bt2020", 0 };$/;"	v
+x264_colorprim_names	lib/x86/include/x264.h	/^static const char * const x264_colorprim_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "film", "bt2020", 0 };$/;"	v
+x264_direct_pred_names	lib/mips/include/x264.h	/^static const char * const x264_direct_pred_names[] = { "none", "spatial", "temporal", "auto", 0 };$/;"	v
+x264_direct_pred_names	lib/x86/include/x264.h	/^static const char * const x264_direct_pred_names[] = { "none", "spatial", "temporal", "auto", 0 };$/;"	v
+x264_encoder_glue1	lib/mips/include/x264.h	858;"	d
+x264_encoder_glue1	lib/x86/include/x264.h	858;"	d
+x264_encoder_glue2	lib/mips/include/x264.h	859;"	d
+x264_encoder_glue2	lib/x86/include/x264.h	859;"	d
+x264_encoder_open	lib/mips/include/x264.h	860;"	d
+x264_encoder_open	lib/x86/include/x264.h	860;"	d
+x264_fullrange_names	lib/mips/include/x264.h	/^static const char * const x264_fullrange_names[] = { "off", "on", 0 };$/;"	v
+x264_fullrange_names	lib/x86/include/x264.h	/^static const char * const x264_fullrange_names[] = { "off", "on", 0 };$/;"	v
+x264_hrd_t	lib/mips/include/x264.h	/^} x264_hrd_t;$/;"	t	typeref:struct:__anon8
+x264_hrd_t	lib/x86/include/x264.h	/^} x264_hrd_t;$/;"	t	typeref:struct:__anon21
+x264_image_properties_t	lib/mips/include/x264.h	/^} x264_image_properties_t;$/;"	t	typeref:struct:__anon12
+x264_image_properties_t	lib/x86/include/x264.h	/^} x264_image_properties_t;$/;"	t	typeref:struct:__anon25
+x264_image_t	lib/mips/include/x264.h	/^} x264_image_t;$/;"	t	typeref:struct:__anon11
+x264_image_t	lib/x86/include/x264.h	/^} x264_image_t;$/;"	t	typeref:struct:__anon24
+x264_level_t	lib/mips/include/x264.h	/^} x264_level_t;$/;"	t	typeref:struct:__anon7
+x264_level_t	lib/x86/include/x264.h	/^} x264_level_t;$/;"	t	typeref:struct:__anon20
+x264_motion_est_names	lib/mips/include/x264.h	/^static const char * const x264_motion_est_names[] = { "dia", "hex", "umh", "esa", "tesa", 0 };$/;"	v
+x264_motion_est_names	lib/x86/include/x264.h	/^static const char * const x264_motion_est_names[] = { "dia", "hex", "umh", "esa", "tesa", 0 };$/;"	v
+x264_nal_hrd_names	lib/mips/include/x264.h	/^static const char * const x264_nal_hrd_names[] = { "none", "vbr", "cbr", 0 };$/;"	v
+x264_nal_hrd_names	lib/x86/include/x264.h	/^static const char * const x264_nal_hrd_names[] = { "none", "vbr", "cbr", 0 };$/;"	v
+x264_nal_t	lib/mips/include/x264.h	/^} x264_nal_t;$/;"	t	typeref:struct:__anon1
+x264_nal_t	lib/x86/include/x264.h	/^} x264_nal_t;$/;"	t	typeref:struct:__anon14
+x264_overscan_names	lib/mips/include/x264.h	/^static const char * const x264_overscan_names[] = { "undef", "show", "crop", 0 };$/;"	v
+x264_overscan_names	lib/x86/include/x264.h	/^static const char * const x264_overscan_names[] = { "undef", "show", "crop", 0 };$/;"	v
+x264_param_t	lib/mips/include/x264.h	/^typedef struct x264_param_t$/;"	s
+x264_param_t	lib/mips/include/x264.h	/^} x264_param_t;$/;"	t	typeref:struct:x264_param_t
+x264_param_t	lib/x86/include/x264.h	/^typedef struct x264_param_t$/;"	s
+x264_param_t	lib/x86/include/x264.h	/^} x264_param_t;$/;"	t	typeref:struct:x264_param_t
+x264_picture_t	lib/mips/include/x264.h	/^} x264_picture_t;$/;"	t	typeref:struct:__anon13
+x264_picture_t	lib/x86/include/x264.h	/^} x264_picture_t;$/;"	t	typeref:struct:__anon26
+x264_preset_names	lib/mips/include/x264.h	/^static const char * const x264_preset_names[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo", 0 };$/;"	v
+x264_preset_names	lib/x86/include/x264.h	/^static const char * const x264_preset_names[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo", 0 };$/;"	v
+x264_profile_names	lib/mips/include/x264.h	/^static const char * const x264_profile_names[] = { "baseline", "main", "high", "high10", "high422", "high444", 0 };$/;"	v
+x264_profile_names	lib/x86/include/x264.h	/^static const char * const x264_profile_names[] = { "baseline", "main", "high", "high10", "high422", "high444", 0 };$/;"	v
+x264_sei_payload_t	lib/mips/include/x264.h	/^} x264_sei_payload_t;$/;"	t	typeref:struct:__anon9
+x264_sei_payload_t	lib/x86/include/x264.h	/^} x264_sei_payload_t;$/;"	t	typeref:struct:__anon22
+x264_sei_t	lib/mips/include/x264.h	/^} x264_sei_t;$/;"	t	typeref:struct:__anon10
+x264_sei_t	lib/x86/include/x264.h	/^} x264_sei_t;$/;"	t	typeref:struct:__anon23
+x264_t	lib/mips/include/x264.h	/^typedef struct x264_t x264_t;$/;"	t	typeref:struct:x264_t
+x264_t	lib/x86/include/x264.h	/^typedef struct x264_t x264_t;$/;"	t	typeref:struct:x264_t
+x264_transfer_names	lib/mips/include/x264.h	/^static const char * const x264_transfer_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "linear", "log100", "log316",$/;"	v
+x264_transfer_names	lib/x86/include/x264.h	/^static const char * const x264_transfer_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "linear", "log100", "log316",$/;"	v
+x264_tune_names	lib/mips/include/x264.h	/^static const char * const x264_tune_names[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim", "fastdecode", "zerolatency", 0 };$/;"	v
+x264_tune_names	lib/x86/include/x264.h	/^static const char * const x264_tune_names[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim", "fastdecode", "zerolatency", 0 };$/;"	v
+x264_vidformat_names	lib/mips/include/x264.h	/^static const char * const x264_vidformat_names[] = { "component", "pal", "ntsc", "secam", "mac", "undef", 0 };$/;"	v
+x264_vidformat_names	lib/x86/include/x264.h	/^static const char * const x264_vidformat_names[] = { "component", "pal", "ntsc", "secam", "mac", "undef", 0 };$/;"	v
+x264_zone_t	lib/mips/include/x264.h	/^} x264_zone_t;$/;"	t	typeref:struct:__anon2
+x264_zone_t	lib/x86/include/x264.h	/^} x264_zone_t;$/;"	t	typeref:struct:__anon15
 xioctl	video_capture.c	/^static int xioctl(int fd, int request, void *arg) {$/;"	f	file:
+zones	lib/mips/include/x264.h	/^        x264_zone_t *zones;         \/* ratecontrol overrides *\/$/;"	m	struct:x264_param_t::__anon5
+zones	lib/x86/include/x264.h	/^        x264_zone_t *zones;         \/* ratecontrol overrides *\/$/;"	m	struct:x264_param_t::__anon18

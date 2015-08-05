@@ -22,9 +22,9 @@
 #include <dirent.h>
 #include "video_capture.h"
 #include "config.h"
-
-
+#include "h264encoder.h"
 #define CLEAR(x) memset (&(x), 0, sizeof (x))
+Encoder g_x264_coder;
 
 /*辅助函数*/
 static  void errno_exit(const char *s)
@@ -210,7 +210,7 @@ CON:
     
     /*分配内存，映射内存*/
     CLEAR(req);
-    req.count = 4;
+    req.count = MY_V4L2_BUFFER_COUNT;
     req.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     req.memory = V4L2_MEMORY_MMAP;
     
@@ -306,6 +306,7 @@ void v4l2_init(struct camera *cam)
 
     open_camera(cam);
     init_camera(cam);
+    compress_begin( &g_x264_coder, cam->width, cam->height );
     start_capturing(cam);
 }
 void v4l2_exit(struct camera *cam)
@@ -313,7 +314,7 @@ void v4l2_exit(struct camera *cam)
     stop_capturing(cam);
     exit_camera(cam);
     close_camera(cam);
-    //free(cam);
+    compress_end(&g_x264_coder);
 }
 /*JPEG 和YUYV422、YUV420格式应该不一样读取函数应该由差别
 * 以下为yuyv422 和yuv420采集方式
@@ -366,4 +367,54 @@ int read_frame(struct camera *cam,char *buffer,int *len/*数据大小*/)
     return 0;//成功
 }
 
+int read_encode_frame(struct camera *cam,char *buffer,int *len)
+{
+    fd_set fds;
+    struct timeval tv;
+    int r;
+    struct v4l2_buffer buf;
+    
+    
+    FD_ZERO(&fds);
+    FD_SET(cam->fd,&fds);
 
+    tv.tv_sec  = 0;
+    tv.tv_usec = 40000;//40ms
+
+    r = select(cam->fd+1,&fds,NULL,NULL,&tv);
+    if(-1 == r){
+        if(EINTR == errno)
+            return 0;//表示应该继续读
+        return -1;
+    }
+    if(0 == r){
+        fprintf(stderr,"select timeout");
+        return 0;
+    }
+    
+    CLEAR(buf);
+    
+    buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    buf.memory = V4L2_MEMORY_MMAP;
+    if (-1 == xioctl(cam->fd, VIDIOC_DQBUF, &buf)) {
+	    log_msg("read_encode_frame : get camera buffer error : %s\n",strerror(errno));
+            return -1;
+    }
+#ifdef USE_X264_CODER
+    if( is_x264_coder_ok(&g_x264_coder) ){
+    	if( 0 > compress_frame(&g_x264_coder, -1, (char *)cam->buffers[buf.index].start ,buf.bytesused, buffer) )
+		return 0;
+    }else{
+    	memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
+    }
+#else
+    memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
+#endif
+    *len = buf.bytesused;
+
+    //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
+    if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
+        log_msg("VIDIOC_QBUF error , ignore?");
+
+    return 1;//成功
+}

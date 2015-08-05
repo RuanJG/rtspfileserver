@@ -1,5 +1,6 @@
 #include "Rtp.h"
 #include "video_capture.h"
+#include "config.h"
 
 using namespace std;
 
@@ -7,6 +8,7 @@ char *FileTemp;
 char *RtpHeader;
 char *FUIndicator;
 char *FUHeader;
+
 
 void *Rtp(void *fileName)
 {
@@ -102,20 +104,57 @@ void *Rtp_camera(void *came)
 
 	//camera 
 	v4l2_init(cam);
-	bigbuffer_szie = cam->width*cam->height*3*sizeof(char);
+	bigbuffer_szie = cam->width*cam->height*MY_V4L2_BUFFER_COUNT*sizeof(char);
 	bigbuffer = (char *)malloc(bigbuffer_szie);
 
 	printf("Rtplock=%d\n",lock);
 	//for(int i=0;i<FileSize && lock;i++){
 	while(lock){
 		pic_len = 0;
+#ifdef USE_X264_CODER
+		ret = read_encode_frame(cam,bigbuffer,&pic_len);
+#else
 		ret = read_frame(cam,bigbuffer,&pic_len);
-		if( ret ==0 && pic_len >0){
+#endif
+		if( ret == 0 ){
+			continue;
+		}else if( ret < 0 ){
+			break;
+		}
+
+		if( pic_len >0){
 			if( pic_len > bigbuffer_szie ){
-				printf("RUAN: get a picture size is %d, bigger than %d \n",pic_len,bigbuffer_szie);
+				printf("RUAN: get a picture size is %d, bigger than %d  !!!!!!!!!!! \n",pic_len,bigbuffer_szie);
+				pic_len = bigbuffer_szie; //should be error
 			}
 			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
-			RtpEncoder(sockFD,addrClient, bigbuffer ,pic_len,&SequenceNumber,&timestamp);
+
+			FileTemp = bigbuffer;
+			FileSize = pic_len;
+			FrameLength = 0;
+		}else{
+			continue; // should not come here
+		}
+
+		for(int i=0;i<FileSize;i++){
+			//H.264 StartCode 為00 00 00 01或00 00 01
+			if(*((int*)(FileTemp+i))==0x01000000){//轉型為4bytes
+			//if((*((int*)(FileTemp+i))&0x00FFFFFF)==0x00010000) continue;
+				if(FrameLength>0)
+					RtpEncoder(sockFD,addrClient,FrameStartIndex,FrameLength,&SequenceNumber,&timestamp);
+				FrameStartIndex = FileTemp + i;
+				FrameLength = 0;
+				i++;//StartCode(0x00010000)
+				FrameLength++;
+				//printf("FrameStartIndex=%X\n",*((int*)FrameStartIndex));
+			}else if((*((int*)(FileTemp+i))&0x00FFFFFF)==0x00010000){
+				if(FrameLength>0)
+					RtpEncoder(sockFD,addrClient,FrameStartIndex,FrameLength,&SequenceNumber,&timestamp);
+				FrameStartIndex = FileTemp + i;
+				FrameLength = 0;
+				//printf("FrameStartIndex!!!=%X\n",*((int*)FrameStartIndex));
+			}
+			FrameLength++;
 		}
 	}
 	printf("Rtplock=%d\n",lock);

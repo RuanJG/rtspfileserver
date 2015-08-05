@@ -56,6 +56,7 @@ struct camera{
  * 成功返回 0 继续读取返回1 错误返回-1
  *
  * */
+int read_encode_frame(struct camera *cam,char *buffer,int *len);
 int read_frame(struct camera *cam,char *buffer,int *len);
 /*初始化退出总函数*/
 void v4l2_init(struct camera *cam);
