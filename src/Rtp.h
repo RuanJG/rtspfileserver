@@ -38,4 +38,5 @@
 	int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartCode,int FrameLength,int *SequenceNumber,unsigned int *timestamp);
 	void setFUIndicator(char *FrameStartIndex);
 	void setFUHeader(char *FrameStartIndex,bool start,bool end);
+	static int RtpJpegEncoder(int sockfd, struct sockaddr_in addrClient,unsigned char *in,int outsize,int width,int height);
 #endif

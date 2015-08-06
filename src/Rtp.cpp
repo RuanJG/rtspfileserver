@@ -133,41 +133,17 @@ void *Rtp_camera(void *came)
 				pic_len = bigbuffer_szie; //should be error
 			}
 			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
-
-/*
-			FileTemp = bigbuffer;
-			FileSize = pic_len;
-			FrameLength = 0;
-*/
+#ifdef USE_X264_CODER
 			ret = RtpEncoder(sockFD,addrClient,bigbuffer,pic_len,&SequenceNumber,&timestamp);
+#else
+			ret = RtpJpegEncoder(sockFD ,addrClient,( unsigned char *)bigbuffer , pic_len , cam->width, cam->height);
+#endif
 			if( ret < 0 )
 				break;
 		}else{
 			continue; // should not come here
 		}
-/*
-		for(int i=0;i<FileSize;i++){
-			//H.264 StartCode 為00 00 00 01或00 00 01
-			if(*((int*)(FileTemp+i))==0x01000000){//轉型為4bytes
-			//if((*((int*)(FileTemp+i))&0x00FFFFFF)==0x00010000) continue;
-				log_msg("get a StartCode the FrameLength = %d\n",FrameLength);
-				if(FrameLength>0)
-					RtpEncoder(sockFD,addrClient,FrameStartIndex,FrameLength,&SequenceNumber,&timestamp);
-				FrameStartIndex = FileTemp + i;
-				FrameLength = 0;
-				i++;//StartCode(0x00010000)
-				FrameLength++;
-				//printf("FrameStartIndex=%X\n",*((int*)FrameStartIndex));
-			}else if((*((int*)(FileTemp+i))&0x00FFFFFF)==0x00010000){
-				if(FrameLength>0)
-					RtpEncoder(sockFD,addrClient,FrameStartIndex,FrameLength,&SequenceNumber,&timestamp);
-				FrameStartIndex = FileTemp + i;
-				FrameLength = 0;
-				//printf("FrameStartIndex!!!=%X\n",*((int*)FrameStartIndex));
-			}
-			FrameLength++;
-		}
-*/
+
 	}
 	printf("Rtplock=%d\n",lock);
 	printf("End\n");
@@ -436,6 +412,195 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 	}	
 	return 0;
 }
+
+int start_seq = 0;
+unsigned short seq_num = 0;
+unsigned int ts_current = 0;
+unsigned char extractQTable1[64];
+unsigned char extractQTable2[64];
+#define PACKET_SIZE 1400
+#define RTP_JPEG_RESTART 0x40
+#define RTP_HDR_SZ       12
+#define RTP_PT_JPEG      26
+typedef struct {
+        unsigned char cc:4;
+        unsigned char x:1;
+        unsigned char p:1;
+        unsigned char version:2;
+        unsigned char pt:7;
+        unsigned char m:1;
+        unsigned short seq;
+        unsigned int ts;
+        unsigned int ssrc;
+}rtp_hdr_t;
+
+struct jpeghdr {
+    unsigned int tspec:8;   /* type-specific field */
+    unsigned int off:24;    /* fragment byte offset */
+    unsigned char type;            /* id of jpeg decoder params */
+    unsigned char q; /* quantization factor (or table id) */
+    unsigned char width;           /* frame width in 8 pixel blocks */
+    unsigned char height;          /* frame height in 8 pixel blocks */
+
+};
+struct jpeghdr_rst{
+    unsigned short dri;
+    unsigned int f:1;
+    unsigned int l:1;
+    unsigned int count:14;
+ };
+struct jpeghdr_qtable {
+    unsigned char  mbz;
+    unsigned char  precision;
+    unsigned short length;
+
+};
+
+static unsigned int convertToRTPTimestamp(/*struct timeval tv*/)
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned int  timestampIncrement = (90000*tv.tv_sec);
+    timestampIncrement += (unsigned int )((2.0*90000*tv.tv_usec + 1000000.0)/2000000);   
+    unsigned int const rtpTimestamp = timestampIncrement;  
+    return rtpTimestamp;
+}
+unsigned short SendFrame(unsigned short start_seq, 
+                         unsigned int  ts,
+                         unsigned int ssrc,
+                         unsigned char *jpeg_data, 
+                         int len, 
+                         unsigned short type,
+                         unsigned short typespec, 
+                         int width, 
+                         int height, 
+                         unsigned short dri,
+                         unsigned short q,
+			 int sockfd,
+                         struct sockaddr_in addrClient)
+{
+	rtp_hdr_t rtphdr;
+	struct jpeghdr jpghdr;
+	struct jpeghdr_rst rsthdr;
+	struct jpeghdr_qtable qtblhdr;
+	unsigned char packet_buf[PACKET_SIZE];
+	unsigned char *ptr = NULL;
+    unsigned int off = 0;
+	int bytes_left = len;
+	int seq = start_seq;
+	int pkt_len, data_len;
+	/* Initialize RTP header
+	 */
+	rtphdr.version = 2;
+	rtphdr.p = 0;
+	rtphdr.x = 0;
+	rtphdr.cc = 0;
+	rtphdr.m = 0;
+	rtphdr.pt = RTP_PT_JPEG;
+    rtphdr.seq = htons(seq_num);
+	rtphdr.ts = htonl(convertToRTPTimestamp());
+	rtphdr.ssrc = htonl(ssrc);
+
+	/* Initialize JPEG header
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Type-specific |              Fragment Offset                  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |      Type     |       Q       |     Width     |     Height    |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	 */
+	jpghdr.tspec = typespec;
+	jpghdr.off = off;
+	jpghdr.type = type | ((dri != 0) ? RTP_JPEG_RESTART : 0);
+    
+	jpghdr.q = q;
+	jpghdr.width = width/8;
+	jpghdr.height = height/8;
+	/* Initialize DRI header
+    //     0                   1                   2                   3
+    //0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    //|       Restart Interval        |F|L|       Restart Count       |
+    //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+	 */
+	if (dri != 0) {
+		rsthdr.dri = dri;
+		rsthdr.f = 1;        /* This code does not align RIs */
+		rsthdr.l = 1;
+		rsthdr.count = 0x3fff;
+	}
+
+	/* Initialize quantization table header
+	 */
+	if (q >= 80) {
+		qtblhdr.mbz = 0;
+		qtblhdr.precision = 0; /* This code uses 8 bit tables only */
+		qtblhdr.length = 128;  /* 2 64-byte tables */
+	}
+
+
+	while (bytes_left > 0) {
+		ptr = packet_buf + RTP_HDR_SZ;
+		
+        memcpy(ptr, &jpghdr, sizeof(jpghdr));
+      	ptr += sizeof(jpghdr);
+        rtphdr.m = 0;
+        
+        if (dri != 0) {
+            memcpy(ptr, &rsthdr, sizeof(rsthdr));
+            ptr += sizeof(rsthdr);
+        }
+        if (q >= 80 && jpghdr.off == 0) {
+            memcpy(ptr, &qtblhdr, sizeof(qtblhdr));
+            ptr += sizeof(qtblhdr);
+            memcpy(ptr, extractQTable1, 64);
+            ptr += 64;
+            memcpy(ptr, extractQTable2, 64);
+            ptr += 64;
+        }
+
+        data_len = PACKET_SIZE - (ptr - packet_buf);
+        if (data_len >= bytes_left) {
+            data_len = bytes_left;
+            rtphdr.m = 1;
+        }
+        memcpy(packet_buf, &rtphdr, RTP_HDR_SZ);
+        memcpy(ptr, jpeg_data + off, data_len);
+
+        //send(sockfd,packet_buf, (ptr - packet_buf) + data_len,0);
+        //send_sock(packet_buf,(ptr-packet_buf)+data_len);
+	if(sendto(sockfd,packet_buf,(ptr-packet_buf)+data_len,0,(sockaddr *)&addrClient,sizeof(addrClient)) <=0){
+		printf("Sent failed!!\n");
+		close(sockfd);
+		return -1;
+	}
+        off+=data_len;
+        jpghdr.off = htonl(off);
+        //jpghdr.off = convert24bit(off);
+        //jpghdr.off = off;
+        bytes_left -= data_len;
+        rtphdr.seq = htons(++seq_num);
+        
+    }
+    return rtphdr.seq;
+}
+
+static int RtpJpegEncoder(int sockfd, struct sockaddr_in addrClient,unsigned char *in,int outsize,int width,int height)
+{
+    
+    unsigned char typemjpeg = 0;
+    unsigned char typespecmjpeg = 1;
+    unsigned char drimjpeg = 0;
+    unsigned char qmjpeg = 70;
+ //   extractQTable(in,outsize);
+    start_seq = SendFrame(start_seq,ts_current,10, in,outsize,typemjpeg,typespecmjpeg,width,height,drimjpeg,qmjpeg, sockfd , addrClient);
+    if( start_seq == -1 )
+	    return -1;
+
+	return 0;
+}
+
 void setFUIndicator(char *FrameStartIndex)
 {
 	int FUIndicatorType = 28;

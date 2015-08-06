@@ -173,6 +173,7 @@ CON:
     fmt->fmt.pix.width = cam->width;
     fmt->fmt.pix.height = cam->height;
 
+#ifdef USE_X264_CODER
     if((cam->support_fmt & FMT_YUYV422) == FMT_YUYV422){
         fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
         cam->support_fmt = FMT_YUYV422;
@@ -189,6 +190,16 @@ CON:
     }
     else
         errno_exit("no support fmt");
+#else
+    if( (cam->support_fmt & FMT_JPEG) == FMT_JPEG){
+	log_msg("camera use jpeg format\n");
+        fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+        cam->support_fmt = FMT_JPEG;
+    }
+    else
+        errno_exit("no support fmt");
+#endif
+	
 
     fmt->fmt.pix.field = V4L2_FIELD_INTERLACED;
     
@@ -345,12 +356,12 @@ int read_frame(struct camera *cam,char *buffer,int *len/*数据大小*/)
     r = select(cam->fd+1,&fds,NULL,NULL,&tv);
     if(-1 == r){
         if(EINTR == errno)
-            return 1;//表示应该继续读
-        errno_exit("select");
+            return 0;//表示应该继续读
+        return -1;
     }
     if(0 == r){
         fprintf(stderr,"select timeout");
-        exit(EXIT_FAILURE);
+        return 0;
     }
     
     CLEAR(buf);
@@ -359,21 +370,16 @@ int read_frame(struct camera *cam,char *buffer,int *len/*数据大小*/)
     buf.memory = V4L2_MEMORY_MMAP;
 
 	if (-1 == xioctl(cam->fd, VIDIOC_DQBUF, &buf)) {
-	    switch (errno) {
-	        case EAGAIN:
-	            return -1;
-	        case EIO:
-	        default:
-                errno_exit("VIDIOC_DQBUF");
-	    }
+	    log_msg("read__frame : get camera buffer error : %s\n",strerror(errno));
+	           return -1;
 	}
     memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
     //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
     *len = buf.bytesused;
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
-        errno_exit("VIDIOC_QBUF");
+        log_msg("VIDIOC_QBUF error ");
     dbug("video QBUF");
-    return 0;//成功
+    return 1;//成功
 }
 
 int read_encode_frame(struct camera *cam,char *buffer,int *len)
@@ -424,7 +430,7 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
     	memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
     }
 #else
-	log_msg(" get a camera pic and to copy\n");
+	log_msg(" get a camera pic %d B \n",buf.bytesused);
     memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
     *len = buf.bytesused;
 #endif
