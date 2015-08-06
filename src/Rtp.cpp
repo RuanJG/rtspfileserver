@@ -22,6 +22,7 @@ void *Rtp(void *fileName)
 	char *FrameStartIndex;
 	int FrameLength = 0;
 	int FileSize;
+	int ret;
 
 	printf("I'm at Rtp()!\n");
 	
@@ -117,11 +118,14 @@ void *Rtp_camera(void *came)
 		ret = read_frame(cam,bigbuffer,&pic_len);
 #endif
 		if( ret == 0 ){
+			log_msg("read no data frome camera\n");
 			continue;
 		}else if( ret < 0 ){
+			log_msg("read error frome camera\n");
 			break;
 		}
 
+		log_msg("read one data frome camera, size is %d, the bigbuffer_szie=%d\n",pic_len,bigbuffer_szie);
 		if( pic_len >0){
 			if( pic_len > bigbuffer_szie ){
 				printf("RUAN: get a picture size is %d, bigger than %d  !!!!!!!!!!! \n",pic_len,bigbuffer_szie);
@@ -129,17 +133,23 @@ void *Rtp_camera(void *came)
 			}
 			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
 
+/*
 			FileTemp = bigbuffer;
 			FileSize = pic_len;
 			FrameLength = 0;
+*/
+			ret = RtpEncoder(sockFD,addrClient,bigbuffer,pic_len,&SequenceNumber,&timestamp);
+			if( ret < 0 )
+				break;
 		}else{
 			continue; // should not come here
 		}
-
+/*
 		for(int i=0;i<FileSize;i++){
 			//H.264 StartCode 為00 00 00 01或00 00 01
 			if(*((int*)(FileTemp+i))==0x01000000){//轉型為4bytes
 			//if((*((int*)(FileTemp+i))&0x00FFFFFF)==0x00010000) continue;
+				log_msg("get a StartCode the FrameLength = %d\n",FrameLength);
 				if(FrameLength>0)
 					RtpEncoder(sockFD,addrClient,FrameStartIndex,FrameLength,&SequenceNumber,&timestamp);
 				FrameStartIndex = FileTemp + i;
@@ -156,6 +166,7 @@ void *Rtp_camera(void *came)
 			}
 			FrameLength++;
 		}
+*/
 	}
 	printf("Rtplock=%d\n",lock);
 	printf("End\n");
@@ -289,16 +300,20 @@ void setMarker(int marker)
 }
 
 //生成傳輸Rtp封包所需格式
-int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,int FrameLength,int *SequenceNumber,unsigned int *timestamp)
+int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len,int *SequenceNumber,unsigned int *timestamp)
 {
 	//先將長度扣除StartCode部分
 	int ret;
+	int FrameLength = len;
+	char *FrameStartIndex = frame_head;
 
 	if(*((int*)FrameStartIndex) == 0x01000000) FrameLength -= 4;
 	else  FrameLength -= 3;
 
+	
 	//原始封包規格[Start code][NALU][Raw Data]
 	if(FrameLength < 1400){ 
+		log_msg("buff is little than 1400\n");
 		//封包長度小於MTU(減去其他層Header)
 		char *sendBuf = (char*)malloc((FrameLength+12)*sizeof(char));
 		
@@ -324,6 +339,7 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,in
 			printf("Sent failed!!\n");
 			close(sockFD);//關閉Socket
 			free(sendBuf);
+			return -1;
 		}
 		usleep(sleepTime);
 		//封包傳輸序列遞增
@@ -333,6 +349,7 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,in
 		//printf("FrameLength=%d\n",FrameLength);
 		//printf("FrameStartIndex1=%X\n",*((int*)FrameStartIndex));
 	}else{
+		log_msg("buff is bigger than 1400\n");
 		//[RTP Header][FU indicator][FU header][Raw Data]
 		FUIndicator = (char*)malloc(sizeof(char));
 		FUHeader = (char*)malloc(sizeof(char));
@@ -376,11 +393,13 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,in
 				FrameLength -= 1386;
 				FrameStartIndex +=1386;
 				//printf("FrameStartIndex4=%X\n",*((int*)FrameStartIndex));
-
-				if(sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient)) == -1){
+				log_msg("send one package to client, FrameLength=%d\n",FrameLength);
+				if(sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient)) <= 0){
 					printf("Sent failed!!\n");
 					close(sockFD);//關閉Socket
 					free(sendBuf);
+					FrameLength = 0;
+					return -1;
 				}
 				usleep(sleepTime);
 				//封包傳輸序列遞增
@@ -395,10 +414,12 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,in
 				memcpy(sendBuf+12,FUIndicator,1);//[FU indicator]
 				memcpy(sendBuf+13,FUHeader,1);//[FU header]
 				memcpy(sendBuf+14,FrameStartIndex,FrameLength);
-				if(sendto(sockFD,sendBuf,FrameLength+14,0,(sockaddr *)&addrClient,sizeof(addrClient)) == -1){
+				log_msg("send last one package to client\n");
+				if(sendto(sockFD,sendBuf,FrameLength+14,0,(sockaddr *)&addrClient,sizeof(addrClient)) <=0){
 					printf("Sent failed!!\n");
 					close(sockFD);//關閉Socket
 					free(sendBuf);
+					return -1;
 				}
 				usleep(sleepTime);
 				//printf("FrameStartIndex5=%X\n",*((int*)FrameStartIndex));
@@ -412,6 +433,7 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *FrameStartIndex,in
 			free(sendBuf);
 		}
 	}	
+	return 0;
 }
 void setFUIndicator(char *FrameStartIndex)
 {

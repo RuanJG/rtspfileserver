@@ -23,8 +23,9 @@
 #include "video_capture.h"
 #include "config.h"
 #include "h264encoder.h"
+
 #define CLEAR(x) memset (&(x), 0, sizeof (x))
-Encoder g_x264_coder;
+
 
 /*辅助函数*/
 static  void errno_exit(const char *s)
@@ -171,17 +172,17 @@ CON:
     fmt->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     fmt->fmt.pix.width = cam->width;
     fmt->fmt.pix.height = cam->height;
-    if( (cam->support_fmt & FMT_JPEG) == FMT_JPEG){
-        fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
-        cam->support_fmt = FMT_JPEG;
-    }
-    else if((cam->support_fmt & FMT_YUYV422) == FMT_YUYV422){
+
+    if((cam->support_fmt & FMT_YUYV422) == FMT_YUYV422){
         fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
         cam->support_fmt = FMT_YUYV422;
     }
     else if( (cam->support_fmt & FMT_YUYV420 ) == FMT_YUYV420 ){
         fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_YUV420;
         cam->support_fmt = FMT_YUYV420;
+    }else if( (cam->support_fmt & FMT_JPEG) == FMT_JPEG){
+        fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
+        cam->support_fmt = FMT_JPEG;
     }
     else
         errno_exit("no support fmt");
@@ -306,7 +307,7 @@ void v4l2_init(struct camera *cam)
 
     open_camera(cam);
     init_camera(cam);
-    compress_begin( &g_x264_coder, cam->width, cam->height );
+    h264_compress_begin(  cam->width, cam->height );
     start_capturing(cam);
 }
 void v4l2_exit(struct camera *cam)
@@ -314,7 +315,7 @@ void v4l2_exit(struct camera *cam)
     stop_capturing(cam);
     exit_camera(cam);
     close_camera(cam);
-    compress_end(&g_x264_coder);
+    h264_compress_end();
 }
 /*JPEG 和YUYV422、YUV420格式应该不一样读取函数应该由差别
 * 以下为yuyv422 和yuv420采集方式
@@ -378,8 +379,8 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
     FD_ZERO(&fds);
     FD_SET(cam->fd,&fds);
 
-    tv.tv_sec  = 0;
-    tv.tv_usec = 40000;//40ms
+    tv.tv_sec  = 3;
+    tv.tv_usec = 0;//40ms
 
     r = select(cam->fd+1,&fds,NULL,NULL,&tv);
     if(-1 == r){
@@ -388,7 +389,7 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
         return -1;
     }
     if(0 == r){
-        fprintf(stderr,"select timeout");
+        fprintf(stderr,"select timeout\n");
         return 0;
     }
     
@@ -401,16 +402,20 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
             return -1;
     }
 #ifdef USE_X264_CODER
-    if( is_x264_coder_ok(&g_x264_coder) ){
-    	if( 0 > compress_frame(&g_x264_coder, -1, (char *)cam->buffers[buf.index].start ,buf.bytesused, buffer) )
+    if( is_h264_coder_ok() ){
+	log_msg(" get a camera pic and to compress\n");
+    	*len = h264_compress_frame( -1, (char *)cam->buffers[buf.index].start ,buf.bytesused, buffer) ;
+    	if( 0 >= *len )
 		return 0;
     }else{
+	log_msg(" get a camera pic and to copy\n");
     	memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
     }
 #else
+	log_msg(" get a camera pic and to copy\n");
     memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
-#endif
     *len = buf.bytesused;
+#endif
 
     //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))

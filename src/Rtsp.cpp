@@ -21,8 +21,9 @@ struct RtpData RtpParameter;
 char recvBuf[BUF_SIZE];
 char sendBuf[BUF_SIZE];
 struct camera cam;
+bool use_camera;
 
-void Rtsp(char *fileName)
+void Rtsp(int args,char *argv[])
 {
 	//存放OPTIONS DESCRIBE SETUP PLAY TEARDOWN等
 	char *RequestType;
@@ -32,6 +33,11 @@ void Rtsp(char *fileName)
 	struct sockaddr_in addrClient;
 	socklen_t addrClientLen = sizeof(addrClient);
 	int retVal;
+
+	char * fileName = argv[args-1];
+	use_camera = 0;
+	if( args < 2 )
+		use_camera = 1;
 
 	printf("fileName=%s\n",fileName);
 	//RtspSocket
@@ -117,7 +123,7 @@ void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)
 		exit(0);
 	}
 	//接收客戶端請求
-	printf("Server is listening.....");
+	log_msg("Server is listening %d .....",RtspServerPort);
 	*clientFD = accept(*serverFD,(sockaddr*)addrClient,&addrClientLen);
 	if(*clientFD == -1){
 		perror("Accept failed!!\n");
@@ -158,11 +164,12 @@ void createRtpThread(char* fileName)
 	int res;
 	pthread_t tid;
 	void *thread_result;
-#ifdef USE_CAMERA
-	res = pthread_create(&tid,NULL,Rtp_camera,(void*)&cam);
-#else
-	res = pthread_create(&tid,NULL,Rtp,(void*)fileName);
-#endif
+
+	if( use_camera )
+		res = pthread_create(&tid,NULL,Rtp_camera,(void*)&cam);
+	else
+		res = pthread_create(&tid,NULL,Rtp,(void*)fileName);
+
 	if(res!=0){
 		perror("Thread creation failed");
 		exit(EXIT_FAILURE);
@@ -214,15 +221,15 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 	char *SDPFile = "v=0\r\no=- 15409869162442327530 15409869162442327530 IN IP4 ESLab-PC\r\n"
 					"s=Unnamed\r\ni=N/A\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.7\r\n"
 					"a=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://192.168.1.110/trackID=0\r\nm=video 20000 RTP/AVP 96\r\n"
+					"a=control:rtsp://192.168.2.1/trackID=0\r\nm=video 20000 RTP/AVP 96\r\n"
 					"b=RR:0\r\na=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1;profile-level-id=64001f;sprop-parameter-sets=Z2QAH6zZQFAFuwEQACi7EAmJaAjxgjlg,aOvjyyLA;\r\n"
-					"a=control:rtsp://192.168.1.110/trackID=1\r\n";
-				    "Date: Wed, 15 May 2013 12:10:17 GMT\r\nContent-type: application/sdpContent-Base: rtsp://192.168.1.110/\r\n"
+					"a=control:rtsp://192.168.2.1/trackID=1\r\n";
+				    "Date: Wed, 15 May 2013 12:10:17 GMT\r\nContent-type: application/sdpContent-Base: rtsp://192.168.2.1/\r\n"
 					"Content-length: 362Cache-Control: no-cache\r\nCseq: 3\r\n\r\n"
 					"v=0\r\no=- 15365712008849713956 15365712008849713956 IN IP4 User-PC\r\ns=Unnamed\r\ni=N/A\r\n"
 					"c=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.3\r\na=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://192.168.1.110/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 96\r\nb=RR:0\r\n"
-					"a=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1\r\na=control:rtsp://192.168.1.110/trackID=1\r\n";
+					"a=control:rtsp://192.168.2.1/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 96\r\nb=RR:0\r\n"
+					"a=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1\r\na=control:rtsp://192.168.2.1/trackID=1\r\n";
 #endif
 
 	string temp;

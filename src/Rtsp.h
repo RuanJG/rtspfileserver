@@ -10,7 +10,7 @@
 	#define BUF_SIZE 1024
 	#define RtspServerPort 8554
 	#define RtpServerPort 50000
-	void Rtsp(char *fileName);
+	void Rtsp(int args,char *argv[]);
 	void OPTIONS_Reply(int clientFD);
 	void DESCRIBE_Reply(int clientFD,char *RtspContentBase);
 	void SETUP_Reply(int clientFD);
