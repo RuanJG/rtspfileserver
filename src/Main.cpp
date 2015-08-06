@@ -3,8 +3,8 @@
 
 int main(int args,char *argv[])
 {
-	printf("InputFileNumber:%d\n",args-1);
-	printf("InputFileName:%s\n",argv[args-1]);
+// rtspfile 640 480
+// rtspfile test.264
 	Rtsp(args,argv);
 
 	return 0;

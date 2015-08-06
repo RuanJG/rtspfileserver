@@ -108,6 +108,7 @@ void *Rtp_camera(void *came)
 	bigbuffer_szie = cam->width*cam->height*MY_V4L2_BUFFER_COUNT*sizeof(char);
 	bigbuffer = (char *)malloc(bigbuffer_szie);
 
+	log_msg("the bigbuffer_szie=%d\n",bigbuffer_szie);
 	printf("Rtplock=%d\n",lock);
 	//for(int i=0;i<FileSize && lock;i++){
 	while(lock){

@@ -91,7 +91,7 @@ static int find_string(const char *pSrc, const char *pDst)
     return -1;  
 } 
 
-static void init_camera(struct camera*cam)
+static void init_camera(struct camera *cam)
 {
     struct v4l2_capability  *cap        = &(cam->v4l2_cap);
     struct v4l2_cropcap     *cropcap    = &(cam->v4l2_cropcap);
@@ -176,11 +176,14 @@ CON:
     if((cam->support_fmt & FMT_YUYV422) == FMT_YUYV422){
         fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
         cam->support_fmt = FMT_YUYV422;
+	log_msg("camera use yuyu422 format\n");
     }
     else if( (cam->support_fmt & FMT_YUYV420 ) == FMT_YUYV420 ){
+	log_msg("camera use yuv420 format\n");
         fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_YUV420;
         cam->support_fmt = FMT_YUYV420;
     }else if( (cam->support_fmt & FMT_JPEG) == FMT_JPEG){
+	log_msg("camera use jpeg format\n");
         fmt->fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
         cam->support_fmt = FMT_JPEG;
     }
@@ -189,8 +192,9 @@ CON:
 
     fmt->fmt.pix.field = V4L2_FIELD_INTERLACED;
     
-    if (-1 == xioctl(cam->fd,VIDIOC_S_FMT,fmt))
-        errno_exit("VIDIOC_S_FMT fail");
+    if (-1 == xioctl(cam->fd,VIDIOC_S_FMT,fmt)){
+        log_msg("!!!!!!!!!!!! VIDIOC_S_FMT fail");
+    }
         
 #if 1
     CLEAR(*streamparm);
@@ -299,15 +303,19 @@ void v4l2_init(struct camera *cam)
 {
     cam->device_name   = strdup(CAM_DEVICE);
     cam->buffers       = NULL;
-    cam->width         = CAM_WIDGH;
-    cam->height        = CAM_HEIGHT;
     cam->display_depth = 5;
     cam->support_fmt   = 0;//
     cam->status = 0;
+    if( cam->width == 0 || cam->height == 0){
+	    //set it by args
+    	cam->width         = CAM_WIDGH;
+    	cam->height        = CAM_HEIGHT;
+    }
+log_msg("camera use %dX%d\n",cam->width,cam->height);
 
     open_camera(cam);
     init_camera(cam);
-    h264_compress_begin(  cam->width, cam->height );
+    h264_compress_begin( cam->width, cam->height );
     start_capturing(cam);
 }
 void v4l2_exit(struct camera *cam)
@@ -401,12 +409,16 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
 	    log_msg("read_encode_frame : get camera buffer error : %s\n",strerror(errno));
             return -1;
     }
+    r = 1;
 #ifdef USE_X264_CODER
     if( is_h264_coder_ok() ){
-	log_msg(" get a camera pic and to compress\n");
+	log_msg(" get a camera pic %d B and to compress\n",buf.bytesused);
     	*len = h264_compress_frame( -1, (char *)cam->buffers[buf.index].start ,buf.bytesused, buffer) ;
-    	if( 0 >= *len )
-		return 0;
+	log_msg(" compress over\n");
+    	if( 0 >= *len ){
+		*len = 0;
+		r = 0;
+	}
     }else{
 	log_msg(" get a camera pic and to copy\n");
     	memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
@@ -421,5 +433,5 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
         log_msg("VIDIOC_QBUF error , ignore?");
 
-    return 1;//成功
+    return r;//成功
 }

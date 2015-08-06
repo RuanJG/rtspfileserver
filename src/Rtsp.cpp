@@ -34,12 +34,22 @@ void Rtsp(int args,char *argv[])
 	socklen_t addrClientLen = sizeof(addrClient);
 	int retVal;
 
-	char * fileName = argv[args-1];
-	use_camera = 0;
-	if( args < 2 )
-		use_camera = 1;
+	char * fileName = NULL;
 
-	printf("fileName=%s\n",fileName);
+	if( args == 2 ){ 
+		use_camera = 0;
+		fileName = argv[args-1];
+		printf("fileName=%s\n",fileName);	
+	}
+	if( args == 3 ){
+		use_camera = 1;
+		cam.width = atoi(argv[1]);
+		cam.height = atoi(argv[2]);
+		log_msg("camera use pix= %dX%d\n",cam.width,cam.height);
+	}
+
+	
+
 	//RtspSocket
 	createRtspSocket(&serverFD,&clientFD,&addrClient);
 
@@ -92,7 +102,6 @@ void Rtsp(int args,char *argv[])
 		RtspCseqNumber++;
 		free(RequestType);	
 	}
-	free(fileName);
 	system("pause");
 	exit(1);
 
@@ -204,20 +213,8 @@ void OPTIONS_Reply(int clientFD)
 void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 {
 	char *RtspContentType = "Content-type: application/sdp\r\n";
-#if 0
-	char *SDPFile = "v=0\r\no=- 15409869162442327530 15409869162442327530 IN IP4 ESLab-PC\r\n"
-					"s=Unnamed\r\ni=N/A\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.7\r\n"
-					"a=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://10.0.2.15:8554/trackID=0\r\nm=video 20000 RTP/AVP 26\r\n"
-					"b=RR:0\r\na=rtpmap:26 JPEG/90000\r\na=fmtp:26 packetization-mode=1;profile-level-id=64001f;sprop-parameter-sets=Z2QAH6zZQFAFuwEQACi7EAmJaAjxgjlg,aOvjyyLA;\r\n"
-					"a=control:rtsp://10.0.2.15:8554/trackID=1\r\n";
-				    "Date: Wed, 15 May 2013 12:10:17 GMT\r\nContent-type: application/sdpContent-Base: rtsp://10.0.2.15:8554/\r\n"
-					"Content-length: 362Cache-Control: no-cache\r\nCseq: 3\r\n\r\n"
-					"v=0\r\no=- 15365712008849713956 15365712008849713956 IN IP4 User-PC\r\ns=Unnamed\r\ni=N/A\r\n"
-					"c=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.3\r\na=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://10.0.2.15:8554/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 26\r\nb=RR:0\r\n"
-					"a=rtpmap:26 JPEG/90000\r\na=fmtp:26 packetization-mode=1\r\na=control:rtsp://10.0.2.15:8554/trackID=1\r\n";
-#else
+
+#if USE_X264_CODER
 	char *SDPFile = "v=0\r\no=- 15409869162442327530 15409869162442327530 IN IP4 ESLab-PC\r\n"
 					"s=Unnamed\r\ni=N/A\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.7\r\n"
 					"a=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
@@ -230,6 +227,19 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 					"c=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.3\r\na=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
 					"a=control:rtsp://192.168.2.1/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 96\r\nb=RR:0\r\n"
 					"a=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1\r\na=control:rtsp://192.168.2.1/trackID=1\r\n";
+#else
+	char *SDPFile = "v=0\r\no=- 15409869162442327530 15409869162442327530 IN IP4 ESLab-PC\r\n"
+					"s=Unnamed\r\ni=N/A\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.7\r\n"
+					"a=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
+					"a=control:rtsp://10.0.2.15:8554/trackID=0\r\nm=video 20000 RTP/AVP 26\r\n"
+					"b=RR:0\r\na=rtpmap:26 JPEG/90000\r\na=fmtp:26 packetization-mode=1;profile-level-id=64001f;sprop-parameter-sets=Z2QAH6zZQFAFuwEQACi7EAmJaAjxgjlg,aOvjyyLA;\r\n"
+					"a=control:rtsp://10.0.2.15:8554/trackID=1\r\n";
+				    "Date: Wed, 15 May 2013 12:10:17 GMT\r\nContent-type: application/sdpContent-Base: rtsp://10.0.2.15:8554/\r\n"
+					"Content-length: 362Cache-Control: no-cache\r\nCseq: 3\r\n\r\n"
+					"v=0\r\no=- 15365712008849713956 15365712008849713956 IN IP4 User-PC\r\ns=Unnamed\r\ni=N/A\r\n"
+					"c=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.3\r\na=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
+					"a=control:rtsp://10.0.2.15:8554/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 26\r\nb=RR:0\r\n"
+					"a=rtpmap:26 JPEG/90000\r\na=fmtp:26 packetization-mode=1\r\na=control:rtsp://10.0.2.15:8554/trackID=1\r\n";
 #endif
 
 	string temp;

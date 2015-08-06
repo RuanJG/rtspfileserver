@@ -22,6 +22,7 @@ LIBS    = -lpthread -lx264 -lm -ldl
 
 rtspfileserver:Main.cpp Rtsp.cpp Rtp.cpp Rtsp.h Rtp.h config.h video_capture.c video_capture.h h264encoder.h
 	#$(MAKE) -C $(X264_LIB)
+	#@cp $(X264_LIB)/libx264.a ./
 	$(CPLUSPLUS_COMPILER) -o $@ $?  -L. $(LIBS)
 
 
