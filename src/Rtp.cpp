@@ -10,12 +10,15 @@ char *FUIndicator;
 char *FUHeader;
 
 
+
+
+
 void *Rtp(void *fileName)
 {
 	int sockFD;
 	struct sockaddr_in addrClient;
 	//RtpHeader相關參數
-	int SequenceNumber = 26074;
+	int SequenceNumber = 6;
 	unsigned int timestamp = 2785272748;
 	unsigned int ssrc = 0xc630ebd7;
 	//FileTemp檔相關參數
@@ -105,6 +108,7 @@ void *Rtp_camera(void *came)
 
 	//camera 
 	v4l2_init(cam);
+
 	bigbuffer_szie = cam->width*cam->height*MY_V4L2_BUFFER_COUNT*sizeof(char);
 	bigbuffer = (char *)malloc(bigbuffer_szie);
 
@@ -114,7 +118,8 @@ void *Rtp_camera(void *came)
 	while(lock){
 		pic_len = 0;
 #ifdef USE_X264_CODER
-		ret = read_encode_frame(cam,bigbuffer,&pic_len);
+		pic_len = read_encode_frame(cam,bigbuffer,bigbuffer_szie);
+		ret = pic_len;
 #else
 		ret = read_frame(cam,bigbuffer,&pic_len);
 #endif
@@ -149,12 +154,139 @@ void *Rtp_camera(void *came)
 	printf("End\n");
 
 	v4l2_exit(cam);
+
 	close(sockFD);//關閉Socket
 	free(bigbuffer);
 	free(RtpHeader);
 	free(FUIndicator);
 	free(FUHeader);
 }
+
+
+
+void * rtp_worker(void *came)
+{
+	int sockFD;
+	struct sockaddr_in addrClient;
+	//RtpHeader相關參數
+	int SequenceNumber = 26074;
+	unsigned int timestamp = 2785272748;
+	unsigned int ssrc = 0xc630ebd7;
+
+	struct camera *cam = (struct camera *)came;
+	cameraBuffer *camBuff = &cam->camBuff;
+	camera_buffer_t * fram_buff;
+
+	char *bigbuffer;
+	int bigbuffer_szie;
+	int pic_len;
+	int ret;
+	
+
+	printf("I'm at Rtp()!\n");
+	
+	//建立RtpSocket
+	createRtpSocket(&sockFD,&addrClient);
+	//開啟H.264影像編碼檔並取得檔案大小
+	//FileSize = OpenVideoFile((char*)fileName);
+	//創造與設定RTP標頭檔
+	createRtpHeader();
+	setRtpVersion(); 
+	setRtpPayloadType();
+	setSequenceNumber(SequenceNumber);
+	setTimestamp(timestamp);
+	setSSRC(ssrc);
+
+	log_msg("the bigbuffer_szie=%d\n",bigbuffer_szie);
+	printf("Rtplock=%d\n",lock);
+	//for(int i=0;i<FileSize && lock;i++){
+	while(lock){
+
+		fram_buff = camBuff->get_value_buffer();
+		if( fram_buff == NULL ){
+			usleep(5000);
+			continue;
+		}
+		pic_len = fram_buff->data_len;
+		bigbuffer_szie = fram_buff->length;
+		bigbuffer = fram_buff->start;
+
+
+		log_msg("read one data frome camera, size is %d, the bigbuffer_szie=%d\n",pic_len,bigbuffer_szie);
+		if( pic_len >0){
+			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
+#ifdef USE_X264_CODER
+			ret = RtpEncoder(sockFD,addrClient,bigbuffer,pic_len,&SequenceNumber,&timestamp);
+#else
+			ret = RtpJpegEncoder(sockFD ,addrClient,( unsigned char *)bigbuffer , pic_len , cam->width, cam->height);
+#endif
+
+			if( ret < 0 )
+				break;
+		}else{
+			return_buffer(fram_buff);
+			continue; // should not come here
+		}
+		return_buffer(fram_buff);
+
+	}
+	printf("Rtplock=%d\n",lock);
+	printf("End\n");
+
+
+	close(sockFD);//關閉Socket
+	free(RtpHeader);
+	free(FUIndicator);
+	free(FUHeader);
+}
+
+void *camera_worker(void *came)
+{
+	struct camera *cam = (struct camera *)came;
+	char *bigbuffer;
+	int bigbuffer_szie;
+	int pic_len;
+	int ret;
+	cameraBuffer *camBuff = &cam->camBuff;
+	camera_buffer_t * fram_buff=NULL;
+
+	v4l2_init(cam);
+	while( lock){
+		if( fram_buff == NULL )
+			fram_buff = camBuff->get_empty_buffer();
+
+		if( fram_buff == NULL ){
+			usleep(1000);
+			continue;
+		}
+
+		pic_len = 0; //fram_buff->data_len;
+		bigbuffer_szie = fram_buff->length;
+		bigbuffer = fram_buff->start;
+
+#ifdef USE_X264_CODER
+		pic_len = read_encode_frame(cam,bigbuffer,bigbuffer_szie);
+		ret = pic_len;
+#else
+		ret = read_frame(cam,bigbuffer,&pic_len);
+#endif
+
+		if( ret == 0 ){
+			log_msg("read no data frome camera\n");
+			continue;
+		}else if( ret < 0 ){
+			log_msg("read error frome camera\n");
+			break;
+		}
+		
+		fram_buff->data_len = pic_len;
+		camBuff->set_valid_buffer(fram_buff);
+		fram_buff = NULL;
+	}
+
+	v4l2_exit(cam);
+}
+
 
 void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
 {
@@ -308,7 +440,8 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 			setMarker(1);
 			memcpy(sendBuf,RtpHeader,12);
 			//設定timestamp以(90000/fps)遞增
-			(*timestamp) += (90000/fps);
+			//(*timestamp) += (90000/fps);
+			(*timestamp) += convertToRTPTimestamp();
 			setTimestamp(*timestamp);
 		}
 		
@@ -401,7 +534,8 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 				usleep(sleepTime);
 				//printf("FrameStartIndex5=%X\n",*((int*)FrameStartIndex));
 				//設定timestamp以(90000/fps)遞增
-				(*timestamp) += (90000/fps);
+				//(*timestamp) += (90000/fps);
+				(*timestamp) += convertToRTPTimestamp();
 				setTimestamp(*timestamp);
 				//封包傳輸序列遞增
 				(*SequenceNumber)++;

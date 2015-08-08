@@ -39,4 +39,7 @@
 	void setFUIndicator(char *FrameStartIndex);
 	void setFUHeader(char *FrameStartIndex,bool start,bool end);
 	static int RtpJpegEncoder(int sockfd, struct sockaddr_in addrClient,unsigned char *in,int outsize,int width,int height);
+	static unsigned int convertToRTPTimestamp(/*struct timeval tv*/);
+
+
 #endif

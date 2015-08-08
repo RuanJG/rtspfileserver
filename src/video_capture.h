@@ -9,6 +9,196 @@
 #define _VIDEO_CAPTURE_H
 
 #include <linux/videodev2.h>
+
+
+
+struct __cam_buffer{
+	char *start;
+  	int length;
+	int data_len;
+	char is_empty;
+	char id;
+}camera_buffer_t;
+
+class cameraBuffer{
+
+#define BUFF_COUNT 3
+#define UNVALID_INDEX -1
+private:
+	camera_buffer_t buffer[BUFF_COUNT];
+
+	int valid_index_count;
+	int valid_index_list[BUFF_COUNT];
+
+	int status = -1;
+	pthread_mutex_t mutex;
+
+	void free_buff(){
+		int i ;
+		pthread_mutex_lock(&mutex);
+		for ( i=0 ; i< BUFF_COUNT; i++ ){
+			if( buffer[i].start != NULL ) free(buffer[i].start);
+			buffer[i].is_empty = 0;
+		}
+		valid_count = 0;
+		empty_count = 0;
+		status = -1;
+		pthread_mutex_unlock(&mutex);
+	}
+
+	int get_empty_index()
+	{
+		int i;
+		for( i = 0; i< BUFF_COUNT; i ++ ){
+			if( buffer[i].is_empty ){
+				buffer[i].is_empty = 0;
+				return i;
+			}
+		}
+		return UNVALID_INDEX;
+	}
+
+	int get_value_index()
+	{
+		int  index;
+		if( valid_index_count <= 0 ) return UNVALID_INDEX;	
+		index = valid_index_list[0];
+
+		return index;
+	}
+
+	int is_status_ok()
+	{
+		return status == 0 ? 1:0;
+	}
+
+
+public:
+	// camera: get_empty_buffer -> set_valid_buffer
+	// rtp: get_value_buffer -> return_buffer
+	int set_valid_buffer(camera_buffer_t * buff)
+	{
+		int i,ret;
+		pthread_mutex_lock(&mutex);
+		if( !is_status_ok() ){
+			pthread_mutex_unlock(&mutex);
+			return -1;
+		}
+
+		if( valid_index_count > BUFF_COUNT )
+			ret = -1;
+		else{
+			valid_index_count++;
+			valid_index_list[valid_index_count-1] = buff->id;
+			ret = 0;
+		}
+
+		pthread_mutex_unlock(&mutex);
+		return ret;
+	}
+	camera_buffer_t *get_value_buffer()
+	{
+		int index, ret;
+		camera_buffer_t *buff= NULL;
+
+		pthread_mutex_lock(&mutex);
+		if( !is_status_ok() ){
+			pthread_mutex_unlock(&mutex);
+			return NULL;
+		}
+		index = get_value_index();
+		if(index == UNVALID_INDEX ){
+			log_msg("no valid buffer !!!!!\n");
+		}else{
+			buff = & buffer[index];
+			valid_index_count--;
+			for( i = 0; i<  valid_index_count ; i++)
+			{
+				valid_index_list[i] = valid_index_list[i+1];
+			}
+		}
+		pthread_mutex_unlock(&mutex);
+		return buff;
+	}
+	void return_buffer(camera_buffer_t * buff)
+	{
+		int i ;
+
+		pthread_mutex_lock(&mutex);
+		if( !is_status_ok() ){
+			pthread_mutex_unlock(&mutex);
+			return ;
+		}
+		buff->is_empty = 1;
+		pthread_mutex_unlock(&mutex);
+	}
+	camera_buffer_t * get_empty_buffer()
+	{
+		int index,ret;
+		camera_buffer_t * buff=NULL;
+
+		pthread_mutex_lock(&mutex);
+
+		if( !is_status_ok() ){
+			pthread_mutex_unlock(&mutex);
+			return NULL;
+		}
+
+		index = get_empty_index();
+		if( index == UNVALID_INDEX ){
+			log_msg("no empty buffer !!!!!\n");
+		}else{
+			buff = &buffer[index];
+			buff->is_empty = 0;
+		}
+
+		pthread_mutex_unlock(&mutex);
+		return buff;
+	}
+
+	int init(int buff_size)
+	{
+		int i,ret=0;
+
+		valid_index_count = 0;
+		pthread_mutex_init(&mutex,NULL);
+
+		for( i = 0; i< BUFF_COUNT ; i++ ){
+			valid_index_list[i] = UNVALID_INDEX;
+			buffer[i].start = NULL;
+			buffer[i].length = 0;
+			buffer[i].data_len = 0;
+			buffer[i].is_empty = 1;
+			buffer[i].id = i;
+		}
+			
+		for( i = 0; i< BUFF_COUNT ; i++ ){
+			buffer[i].start = (char *)malloc(buff_size);
+			if( buffer[i].start == NULL ){
+				ret = -1;
+				break;
+			}
+			buffer[i].length = buff_size;
+		}
+		if( ret = -1 )
+			free_buff();
+		status = ret;
+		return ret;
+	}
+	
+	void deinit()
+	{
+		if( !is_status_ok() ){
+			return ;
+		}
+		free_buff();
+	}
+
+
+
+};
+
+
 struct buffer{
     void *start;
     int length;
@@ -30,6 +220,8 @@ struct camera{
     struct v4l2_fmtdesc v4l2_fmtdesc;
     struct v4l2_streamparm v4l2_setfps;
     struct buffer *buffers;
+
+    cameraBuffer camBuff;
 
     int status; // if status == -1 , return
 };
@@ -56,7 +248,7 @@ struct camera{
  * 成功返回 0 继续读取返回1 错误返回-1
  *
  * */
-int read_encode_frame(struct camera *cam,char *buffer,int *len);
+int read_encode_frame(struct camera *cam,char *buffer,int len);
 int read_frame(struct camera *cam,char *buffer,int *len);
 /*初始化退出总函数*/
 void v4l2_init(struct camera *cam);

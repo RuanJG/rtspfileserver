@@ -23,6 +23,9 @@ char sendBuf[BUF_SIZE];
 struct camera cam;
 bool use_camera;
 
+pthread_t rtp_tid=0;
+pthread_t cam_tid=0;
+
 void Rtsp(int args,char *argv[])
 {
 	//¶s©ÒOPTIONS DESCRIBE SETUP PLAY TEARDOWNµ•
@@ -47,6 +50,7 @@ void Rtsp(int args,char *argv[])
 		cam.height = atoi(argv[2]);
 		log_msg("camera use pix= %dX%d\n",cam.width,cam.height);
 	}
+
 
 	
 
@@ -168,14 +172,21 @@ string getRtpClientPort()
 
 	return retVal;
 }
+
 void createRtpThread(char* fileName)
 {
 	int res;
 	pthread_t tid;
 	void *thread_result;
 
+	//cam.camBuff.status = -1;
 	if( use_camera )
+#ifdef USE_CAMERA_THREAD
+		res = pthread_create(&cam_tid,NULL,camera_worker,(void*)&cam);
+		res = pthread_create(&rtp_tid,NULL,rtp_worker,(void*)&cam);
+#else
 		res = pthread_create(&tid,NULL,Rtp_camera,(void*)&cam);
+#endif
 	else
 		res = pthread_create(&tid,NULL,Rtp,(void*)fileName);
 

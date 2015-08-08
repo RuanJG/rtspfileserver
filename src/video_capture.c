@@ -324,6 +324,10 @@ void v4l2_init(struct camera *cam)
     }
 log_msg("camera use %dX%d\n",cam->width,cam->height);
 
+#ifdef USE_CAMERA_THREAD
+    cam->camBuff.init(cam->width*2*cam->height);
+#endif
+
     open_camera(cam);
     init_camera(cam);
     h264_compress_begin( cam->width, cam->height );
@@ -335,6 +339,10 @@ void v4l2_exit(struct camera *cam)
     exit_camera(cam);
     close_camera(cam);
     h264_compress_end();
+
+#ifdef USE_CAMERA_THREAD
+    cam->camBuff.deinit();
+#endif
 }
 /*JPEG 和YUYV422、YUV420格式应该不一样读取函数应该由差别
 * 以下为yuyv422 和yuv420采集方式
@@ -382,11 +390,11 @@ int read_frame(struct camera *cam,char *buffer,int *len/*数据大小*/)
     return 1;//成功
 }
 
-int read_encode_frame(struct camera *cam,char *buffer,int *len)
-{
+int read_encode_frame(struct camera *cam,char *buffer,int max_len)
+{//return real size
     fd_set fds;
     struct timeval tv;
-    int r;
+    int r,len;
     struct v4l2_buffer buf;
     
     
@@ -415,29 +423,31 @@ int read_encode_frame(struct camera *cam,char *buffer,int *len)
 	    log_msg("read_encode_frame : get camera buffer error : %s\n",strerror(errno));
             return -1;
     }
-    r = 1;
+    len = buf.bytesused;
+    if( len > max_len ){
+	log_msg("!!!!!!!!!!!!!!  get a camera pic %d B , bigger than bigbuffer size %d\n",buf.bytesused,max_len);
+	len = max_len;
+    }
 #ifdef USE_X264_CODER
     if( is_h264_coder_ok() ){
-	log_msg(" get a camera pic %d B and to compress\n",buf.bytesused);
-    	*len = h264_compress_frame( -1, (char *)cam->buffers[buf.index].start ,buf.bytesused, buffer) ;
+	log_msg(" to compress camera pic %d B \n",len);
+    	len = h264_compress_frame( -1, (char *)cam->buffers[buf.index].start ,len, buffer) ;
 	log_msg(" compress over\n");
-    	if( 0 >= *len ){
-		*len = 0;
-		r = 0;
+    	if( 0 >= len || len > max_len){
+		len = 0;
 	}
     }else{
-	log_msg(" get a camera pic and to copy\n");
-    	memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
+	log_msg("h264encoder status is not ok\n");
+	len = 0;
     }
 #else
-	log_msg(" get a camera pic %d B \n",buf.bytesused);
-    memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
-    *len = buf.bytesused;
+	log_msg(" get a camera pic %d B \n",len);
+    memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,len);
 #endif
 
     //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
         log_msg("VIDIOC_QBUF error , ignore?");
 
-    return r;//成功
+    return len;//成功
 }
