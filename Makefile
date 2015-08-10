@@ -48,6 +48,7 @@ endef
 define Package/rtspfileserver/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rtspfileserver $(1)/bin/
+	$(INSTALL_BIN) ./files/rtspfileserver.sh $(1)/bin/
 endef
 # This line executes the necessary commands to compile our program.
 # The above define directives specify all the information needed, but this
