@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "config.h"
 
 #ifndef _RTP_H
  #define _RTP_H
@@ -26,6 +27,8 @@
 	extern struct RtpData RtpParameter;
 	void *Rtp(void *fileName);
 	void *Rtp_camera(void *came);
+void * rtp_worker(void *came);
+void * camera_worker(void *came);
 	void createRtpSocket(int *serverFD,sockaddr_in *addrClient);
 	int OpenVideoFile(char *fileName);
 	void createRtpHeader();

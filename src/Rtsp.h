@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <netinet/sctp.h>
 #include <arpa/inet.h>
+#include <signal.h>
 
 #ifndef _RTSP_H_
  #define _RTSP_H
@@ -18,4 +19,6 @@
 	void GET_PARAMETER_Reply(int clientFD);
 	void TEARDOWN_Reply(int clientFD);
 	void createRtspSocket(int *serverFD,int *clientFD,struct sockaddr_in *addrClient);
+void do_release_thread();
+void quit_handler( int sig );
 #endif

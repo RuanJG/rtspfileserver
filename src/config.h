@@ -29,8 +29,8 @@
 
 #define MY_V4L2_BUFFER_COUNT 4
 //#define USE_X264_CODER
-//#define USE_CAMERA_THREAD
-
+#define USE_CAMERA_THREAD
+#define FPS 30
 
 
 #endif

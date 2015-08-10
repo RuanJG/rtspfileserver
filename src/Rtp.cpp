@@ -1,6 +1,5 @@
 #include "Rtp.h"
 #include "video_capture.h"
-#include "config.h"
 
 using namespace std;
 
@@ -119,10 +118,11 @@ void *Rtp_camera(void *came)
 		pic_len = 0;
 #ifdef USE_X264_CODER
 		pic_len = read_encode_frame(cam,bigbuffer,bigbuffer_szie);
-		ret = pic_len;
 #else
-		ret = read_frame(cam,bigbuffer,&pic_len);
+		pic_len = read_frame(cam,bigbuffer,bigbuffer_szie);
 #endif
+
+		ret = pic_len;
 		if( ret == 0 ){
 			log_msg("read no data frome camera\n");
 			continue;
@@ -197,14 +197,14 @@ void * rtp_worker(void *came)
 	setTimestamp(timestamp);
 	setSSRC(ssrc);
 
-	log_msg("the bigbuffer_szie=%d\n",bigbuffer_szie);
-	printf("Rtplock=%d\n",lock);
+	log_msg("rtp_worker start \n");
 	//for(int i=0;i<FileSize && lock;i++){
 	while(lock){
 
 		fram_buff = camBuff->get_value_buffer();
 		if( fram_buff == NULL ){
-			usleep(5000);
+			log_msg("rtp_work: can not get value_data\n");
+			usleep(20000);
 			continue;
 		}
 		pic_len = fram_buff->data_len;
@@ -224,10 +224,10 @@ void * rtp_worker(void *came)
 			if( ret < 0 )
 				break;
 		}else{
-			return_buffer(fram_buff);
+			camBuff->return_buffer(fram_buff);
 			continue; // should not come here
 		}
-		return_buffer(fram_buff);
+		camBuff->return_buffer(fram_buff);
 
 	}
 	printf("Rtplock=%d\n",lock);
@@ -250,13 +250,15 @@ void *camera_worker(void *came)
 	cameraBuffer *camBuff = &cam->camBuff;
 	camera_buffer_t * fram_buff=NULL;
 
+	log_msg("camera_worker start \n");
 	v4l2_init(cam);
 	while( lock){
 		if( fram_buff == NULL )
 			fram_buff = camBuff->get_empty_buffer();
 
 		if( fram_buff == NULL ){
-			usleep(1000);
+			log_msg("camera work: can not get the empty buffer\n");
+			usleep(10000);
 			continue;
 		}
 
@@ -266,10 +268,11 @@ void *camera_worker(void *came)
 
 #ifdef USE_X264_CODER
 		pic_len = read_encode_frame(cam,bigbuffer,bigbuffer_szie);
-		ret = pic_len;
 #else
-		ret = read_frame(cam,bigbuffer,&pic_len);
+		pic_len = read_frame(cam,bigbuffer,bigbuffer_szie);
 #endif
+
+		ret = pic_len;
 
 		if( ret == 0 ){
 			log_msg("read no data frome camera\n");

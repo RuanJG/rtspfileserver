@@ -317,16 +317,9 @@ void v4l2_init(struct camera *cam)
     cam->display_depth = 5;
     cam->support_fmt   = 0;//
     cam->status = 0;
-    if( cam->width == 0 || cam->height == 0){
-	    //set it by args
-    	cam->width         = CAM_WIDGH;
-    	cam->height        = CAM_HEIGHT;
-    }
-log_msg("camera use %dX%d\n",cam->width,cam->height);
 
-#ifdef USE_CAMERA_THREAD
-    cam->camBuff.init(cam->width*2*cam->height);
-#endif
+
+
 
     open_camera(cam);
     init_camera(cam);
@@ -340,26 +333,27 @@ void v4l2_exit(struct camera *cam)
     close_camera(cam);
     h264_compress_end();
 
-#ifdef USE_CAMERA_THREAD
-    cam->camBuff.deinit();
-#endif
+
 }
 /*JPEG 和YUYV422、YUV420格式应该不一样读取函数应该由差别
 * 以下为yuyv422 和yuv420采集方式
 * */
-int read_frame(struct camera *cam,char *buffer,int *len/*数据大小*/)
+extern int fps_time_us;
+int read_frame(struct camera *cam,char *buffer,int max_len)
 {
     fd_set fds;
     struct timeval tv;
-    int r;
+    int r,len;
     struct v4l2_buffer buf;
     
     
     FD_ZERO(&fds);
     FD_SET(cam->fd,&fds);
 
-    tv.tv_sec  = 2;
+    tv.tv_sec  = 1;
     tv.tv_usec = 0;
+
+    usleep(fps_time_us);
 
     r = select(cam->fd+1,&fds,NULL,NULL,&tv);
     if(-1 == r){
@@ -381,13 +375,18 @@ int read_frame(struct camera *cam,char *buffer,int *len/*数据大小*/)
 	    log_msg("read__frame : get camera buffer error : %s\n",strerror(errno));
 	           return -1;
 	}
-    memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,buf.bytesused);
+
+    len = buf.bytesused;
+    if( len > max_len ){
+	log_msg("!!!!!!!!!!!!!!  get a camera pic %d B , bigger than bigbuffer size %d\n",buf.bytesused,max_len);
+	len = max_len;
+    }
+    memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,len);
     //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
-    *len = buf.bytesused;
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
         log_msg("VIDIOC_QBUF error ");
     dbug("video QBUF");
-    return 1;//成功
+    return len;//成功
 }
 
 int read_encode_frame(struct camera *cam,char *buffer,int max_len)

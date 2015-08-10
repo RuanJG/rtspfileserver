@@ -9,10 +9,18 @@
 #define _VIDEO_CAPTURE_H
 
 #include <linux/videodev2.h>
+#include "config.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <time.h>
+#include <sys/time.h>
+#include <pthread.h>
+#include <fcntl.h>
 
 
-
-struct __cam_buffer{
+typedef struct __cam_buffer{
 	char *start;
   	int length;
 	int data_len;
@@ -30,7 +38,7 @@ private:
 	int valid_index_count;
 	int valid_index_list[BUFF_COUNT];
 
-	int status = -1;
+	int status ;
 	pthread_mutex_t mutex;
 
 	void free_buff(){
@@ -39,9 +47,9 @@ private:
 		for ( i=0 ; i< BUFF_COUNT; i++ ){
 			if( buffer[i].start != NULL ) free(buffer[i].start);
 			buffer[i].is_empty = 0;
+			buffer[i].start = NULL;
 		}
-		valid_count = 0;
-		empty_count = 0;
+		valid_index_count = 0;
 		status = -1;
 		pthread_mutex_unlock(&mutex);
 	}
@@ -51,7 +59,6 @@ private:
 		int i;
 		for( i = 0; i< BUFF_COUNT; i ++ ){
 			if( buffer[i].is_empty ){
-				buffer[i].is_empty = 0;
 				return i;
 			}
 		}
@@ -94,11 +101,12 @@ public:
 		}
 
 		pthread_mutex_unlock(&mutex);
+		log_msg("add valid Buffer : I have %d valid buffer\n",valid_index_count);
 		return ret;
 	}
 	camera_buffer_t *get_value_buffer()
 	{
-		int index, ret;
+		int index, ret,i;
 		camera_buffer_t *buff= NULL;
 
 		pthread_mutex_lock(&mutex);
@@ -117,6 +125,7 @@ public:
 				valid_index_list[i] = valid_index_list[i+1];
 			}
 		}
+		log_msg("give valid Buffer : I still have %d valid buffer\n",valid_index_count);
 		pthread_mutex_unlock(&mutex);
 		return buff;
 	}
@@ -175,12 +184,13 @@ public:
 		for( i = 0; i< BUFF_COUNT ; i++ ){
 			buffer[i].start = (char *)malloc(buff_size);
 			if( buffer[i].start == NULL ){
+				log_msg("the %d buff is malloc null\n",i);
 				ret = -1;
 				break;
 			}
 			buffer[i].length = buff_size;
 		}
-		if( ret = -1 )
+		if( ret == -1 )
 			free_buff();
 		status = ret;
 		return ret;
@@ -249,7 +259,7 @@ struct camera{
  *
  * */
 int read_encode_frame(struct camera *cam,char *buffer,int len);
-int read_frame(struct camera *cam,char *buffer,int *len);
+int read_frame(struct camera *cam,char *buffer,int max_len);
 /*初始化退出总函数*/
 void v4l2_init(struct camera *cam);
 void v4l2_exit(struct camera *cam);

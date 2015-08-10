@@ -682,8 +682,8 @@ BT	libx264/src/x264.c	240;"	d	file:
 BT	libx264/src/x264.c	256;"	d	file:
 BTB	libx264/src/x264.c	242;"	d	file:
 BTB	libx264/src/x264.c	258;"	d	file:
-BUFF_COUNT	Rtp.h	53;"	d
-BUF_SIZE	Rtsp.h	10;"	d
+BUFF_COUNT	video_capture.h	33;"	d
+BUF_SIZE	Rtsp.h	11;"	d
 BUTTERFLY_4	libx264/src/common/mips/macros.h	1606;"	d
 BUTTERFLY_8	libx264/src/common/mips/macros.h	1620;"	d
 BYTE	libx264/src/extras/avisynth_c.h	/^typedef unsigned char BYTE;$/;"	t
@@ -1721,9 +1721,9 @@ FMA_INSTR	libx264/src/common/x86/x86inc.asm	/^FMA_INSTR  pmacsdd,  pmulld, paddd
 FMA_INSTR	libx264/src/common/x86/x86inc.asm	/^FMA_INSTR  pmacsww,  pmullw, paddw$/;"	l
 FMA_INSTR	libx264/src/common/x86/x86inc.asm	/^FMA_INSTR pmacsdql,  pmuldq, paddq ; sse4 emulation$/;"	l
 FMA_INSTR	libx264/src/common/x86/x86inc.asm	/^FMA_INSTR pmadcswd, pmaddwd, paddd$/;"	l
-FMT_JPEG	video_capture.h	37;"	d
-FMT_YUYV420	video_capture.h	39;"	d
-FMT_YUYV422	video_capture.h	38;"	d
+FMT_JPEG	video_capture.h	238;"	d
+FMT_YUYV420	video_capture.h	240;"	d
+FMT_YUYV422	video_capture.h	239;"	d
 FOREACH_BIT	libx264/src/encoder/macroblock.h	109;"	d
 FPEL	libx264/src/encoder/me.c	178;"	d	file:
 FRAME_INIT_LOWRES	libx264/src/common/x86/mc-a2.asm	/^FRAME_INIT_LOWRES$/;"	l
@@ -2470,7 +2470,7 @@ OPT_VIDEO_FILTER	libx264/src/x264.c	/^    OPT_VIDEO_FILTER,$/;"	e	enum:__anon4	f
 OUTPUT_CAMINFO	config.h	11;"	d
 OpenVideoFile	Rtp.cpp	/^int OpenVideoFile(char *fileName)$/;"	f
 OptionsOPT	libx264/src/x264.c	/^} OptionsOPT;$/;"	t	typeref:enum:__anon4	file:
-PACKET_SIZE	Rtp.cpp	529;"	d	file:
+PACKET_SIZE	Rtp.cpp	558;"	d	file:
 PADH	libx264/src/common/frame.h	32;"	d
 PADV	libx264/src/common/frame.h	33;"	d
 PAD_SIZE	libx264/src/encoder/slicetype.c	503;"	d	file:
@@ -2765,7 +2765,7 @@ P_8x8	libx264/src/common/macroblock.h	/^    P_8x8           = 5,$/;"	e	enum:mb_c
 P_L0	libx264/src/common/macroblock.h	/^    P_L0            = 4,$/;"	e	enum:mb_class_e
 P_SENS_BIAS	libx264/src/encoder/slicetype.c	1650;"	d	file:
 P_SKIP	libx264/src/common/macroblock.h	/^    P_SKIP          = 6,$/;"	e	enum:mb_class_e
-PayloadType	Rtp.h	17;"	d
+PayloadType	Rtp.h	18;"	d
 QP	libx264/src/common/macroblock.h	248;"	d
 QP	libx264/src/common/macroblock.h	271;"	d
 QP_BD_OFFSET	libx264/src/common/common.h	90;"	d
@@ -2822,9 +2822,9 @@ RETURN_IN_ORDER	libx264/src/extras/getopt.c	/^  REQUIRE_ORDER, PERMUTE, RETURN_I
 ROW	libx264/src/common/predict.c	723;"	d	file:
 ROW	libx264/src/common/predict.c	726;"	d	file:
 ROW_SATD	libx264/src/encoder/slicetype.c	510;"	d	file:
-RTP_HDR_SZ	Rtp.cpp	531;"	d	file:
-RTP_JPEG_RESTART	Rtp.cpp	530;"	d	file:
-RTP_PT_JPEG	Rtp.cpp	532;"	d	file:
+RTP_HDR_SZ	Rtp.cpp	560;"	d	file:
+RTP_JPEG_RESTART	Rtp.cpp	559;"	d	file:
+RTP_PT_JPEG	Rtp.cpp	561;"	d	file:
 Regression	libx264/src/tools/test_x264.py	/^class Regression(Case):$/;"	c
 Rtp	Rtp.cpp	/^void *Rtp(void *fileName)$/;"	f
 RtpClientPort	Rtsp.cpp	/^string RtpClientPort;$/;"	v
@@ -2833,7 +2833,7 @@ RtpEncoder	Rtp.cpp	/^int RtpEncoder(int sockFD,struct sockaddr_in addrClient,cha
 RtpHeader	Rtp.cpp	/^char *RtpHeader;$/;"	v
 RtpJpegEncoder	Rtp.cpp	/^static int RtpJpegEncoder(int sockfd, struct sockaddr_in addrClient,unsigned char *in,int outsize,int width,int height)$/;"	f	file:
 RtpParameter	Rtsp.cpp	/^struct RtpData RtpParameter;$/;"	v	typeref:struct:RtpData
-RtpServerPort	Rtsp.h	12;"	d
+RtpServerPort	Rtsp.h	13;"	d
 Rtp_camera	Rtp.cpp	/^void *Rtp_camera(void *came)$/;"	f
 Rtsp	Rtsp.cpp	/^void Rtsp(int args,char *argv[])$/;"	f
 RtspCachControl	Rtsp.cpp	/^char *RtspCachControl = "Cache-Control: no-cache\\r\\n";$/;"	v
@@ -2842,7 +2842,7 @@ RtspCseq	Rtsp.cpp	/^string RtspCseq = "Cseq: \\r\\n";$/;"	v
 RtspCseqNumber	Rtsp.cpp	/^int RtspCseqNumber = 2;$/;"	v
 RtspResponse	Rtsp.cpp	/^char *RtspResponse = "RTSP\/1.0 200 OK\\r\\n";$/;"	v
 RtspServer	Rtsp.cpp	/^char *RtspServer = "Server: VLC\\r\\n";$/;"	v
-RtspServerPort	Rtsp.h	11;"	d
+RtspServerPort	Rtsp.h	12;"	d
 RtspSession	Rtsp.cpp	/^char *RtspSession = "Session: ee62ba70a1ddca;timeout=60\\r\\n";$/;"	v
 SA8D	libx264/src/common/x86/pixel-a.asm	/^SA8D$/;"	l
 SA8D_1D_ALTIVEC	libx264/src/common/ppc/pixel.c	1662;"	d	file:
@@ -3425,9 +3425,10 @@ UNPCK_SH_SW	libx264/src/common/mips/macros.h	1593;"	d
 UNPCK_UB_SH	libx264/src/common/mips/macros.h	1575;"	d
 UNUSED	libx264/src/common/osdep.h	146;"	d
 UNUSED	libx264/src/common/osdep.h	160;"	d
-UNVALID_INDEX	Rtp.h	54;"	d
+UNVALID_INDEX	video_capture.h	34;"	d
 UPDATE_INTERVAL	libx264/src/x264cli.h	33;"	d
 USE_AVXSYNTH	libx264/src/config.h	10;"	d
+USE_CAMERA_THREAD	config.h	32;"	d
 VAR	libx264/src/common/x86/pixel-a.asm	/^VAR$/;"	l
 VAR2_8x8_AVX2	libx264/src/common/x86/pixel-a.asm	/^VAR2_8x8_AVX2  8, 6$/;"	l
 VAR2_8x8_AVX2	libx264/src/common/x86/pixel-a.asm	/^VAR2_8x8_AVX2 16, 7$/;"	l
@@ -4002,8 +4003,8 @@ _ISOC99_SOURCE	libx264/src/encoder/ratecontrol.c	30;"	d	file:
 _LARGEFILE_SOURCE	libx264/src/common/osdep.h	31;"	d
 _MSC_INTTYPES_H_	libx264/src/extras/inttypes.h	37;"	d
 _NO_PROTO	libx264/src/extras/getopt.c	27;"	d	file:
-_RTP_H	Rtp.h	14;"	d
-_RTSP_H	Rtsp.h	8;"	d
+_RTP_H	Rtp.h	15;"	d
+_RTSP_H	Rtsp.h	9;"	d
 _STDINT_H	libx264/src/extras/stdint.h	21;"	d
 _VIDEO_CAPTURE_H	video_capture.h	9;"	d
 _WIN32_WINNT	libx264/src/x264.c	34;"	d	file:
@@ -4047,7 +4048,7 @@ __call__	libx264/src/tools/digress/testing.py	/^    def __call__(self, func):$/;
 __call__	libx264/src/tools/digress/testing.py	/^    def __call__(self, func):$/;"	m	class:comparer	file:
 __call__	libx264/src/tools/digress/testing.py	/^    def __call__(self, func):$/;"	m	class:depends	file:
 __call__	libx264/src/tools/digress/testing.py	/^    def __call__(self, func):$/;"	m	class:disabled	file:
-__cam_buffer	Rtp.h	/^struct __cam_buffer{$/;"	s
+__cam_buffer	video_capture.h	/^typedef struct __cam_buffer{$/;"	s
 __cl_char16	libx264/src/extras/cl_platform.h	/^        typedef __m128i __cl_char16;$/;"	t
 __cl_char16	libx264/src/extras/cl_platform.h	/^        typedef cl_char     __cl_char16     __attribute__((vector_size(16)));$/;"	t
 __cl_char16	libx264/src/extras/cl_platform.h	/^   typedef vector signed char       __cl_char16;$/;"	t
@@ -4799,12 +4800,12 @@ buf1	libx264/src/tools/checkasm.c	/^uint8_t *buf1, *buf2;$/;"	v
 buf2	libx264/src/tools/checkasm.c	/^uint8_t *buf1, *buf2;$/;"	v
 buf3	libx264/src/tools/checkasm.c	/^uint8_t *buf3, *buf4;$/;"	v
 buf4	libx264/src/tools/checkasm.c	/^uint8_t *buf3, *buf4;$/;"	v
-buffer	Rtp.h	/^	camera_buffer_t buffer[BUFF_COUNT];$/;"	m	class:cameraBuffer
 buffer	libx264/src/common/frame.h	/^    pixel *buffer[4];$/;"	m	struct:x264_frame
 buffer	libx264/src/extras/cl.h	/^    cl_mem                  buffer;$/;"	m	struct:_cl_image_desc
 buffer	libx264/src/filters/video/depth.c	/^    cli_pic_t buffer;$/;"	m	struct:__anon287	file:
 buffer	libx264/src/filters/video/fix_vfr_pts.c	/^    cli_pic_t buffer;$/;"	m	struct:__anon289	file:
 buffer	libx264/src/filters/video/resize.c	/^    cli_pic_t buffer;$/;"	m	struct:__anon285	file:
+buffer	video_capture.h	/^	camera_buffer_t buffer[BUFF_COUNT];$/;"	m	class:cameraBuffer
 buffer	video_capture.h	/^struct buffer{$/;"	s
 buffer_allocated	libx264/src/filters/video/fix_vfr_pts.c	/^    int buffer_allocated;$/;"	m	struct:__anon289	file:
 buffer_allocated	libx264/src/filters/video/resize.c	/^    int buffer_allocated;$/;"	m	struct:__anon285	file:
@@ -4854,10 +4855,11 @@ call_c	libx264/src/tools/checkasm.c	282;"	d	file:
 call_c1	libx264/src/tools/checkasm.c	230;"	d	file:
 call_c2	libx264/src/tools/checkasm.c	284;"	d	file:
 cam	Rtsp.cpp	/^struct camera cam;$/;"	v	typeref:struct:camera
+camBuff	video_capture.h	/^    cameraBuffer camBuff;$/;"	m	struct:camera
 cam_tid	Rtsp.cpp	/^pthread_t cam_tid=0;$/;"	v
 camera	video_capture.h	/^struct camera{$/;"	s
-cameraBuffer	Rtp.h	/^class cameraBuffer{$/;"	c
-camera_buffer_t	Rtp.h	/^}camera_buffer_t;$/;"	v	typeref:struct:__cam_buffer
+cameraBuffer	video_capture.h	/^class cameraBuffer{$/;"	c
+camera_buffer_t	video_capture.h	/^}camera_buffer_t;$/;"	t	typeref:struct:__cam_buffer
 camera_worker	Rtp.cpp	/^void *camera_worker(void *came)$/;"	f
 canjump	libx264/src/common/cpu.c	/^static volatile sig_atomic_t canjump = 0;$/;"	v	file:
 cases	libx264/src/tools/digress/testing.py	/^    cases = []$/;"	v	class:Fixture
@@ -5523,6 +5525,7 @@ cli_pic_t	libx264/src/input/input.h	/^} cli_pic_t;$/;"	t	typeref:struct:__anon29
 cli_pulldown_t	libx264/src/x264.c	/^} cli_pulldown_t;$/;"	t	typeref:struct:__anon3	file:
 cli_vid_filter_t	libx264/src/filters/video/video.h	/^struct cli_vid_filter_t$/;"	s
 cli_vid_filter_t	libx264/src/filters/video/video.h	/^typedef struct cli_vid_filter_t cli_vid_filter_t;$/;"	t	typeref:struct:cli_vid_filter_t
+clientFD	Rtsp.cpp	/^int serverFD,clientFD;\/\/Server and Client SocketID$/;"	v
 clip	libx264/src/extras/avisynth_c.h	/^    void * clip; \/\/ do not use directly, use avs_take_clip$/;"	m	union:AVS_Value::__anon279
 clip	libx264/src/extras/avxsynth_c.h	/^    void * clip; \/\/ do not use directly, use avs_take_clip$/;"	m	union:AVS_Value::__anon108
 clip	libx264/src/input/avs.c	/^    AVS_Clip *clip;$/;"	m	struct:__anon290	file:
@@ -5756,6 +5759,7 @@ data	libx264/src/extras/avisynth_c.h	/^  BYTE * data;$/;"	m	struct:AVS_VideoFram
 data	libx264/src/extras/avxsynth_c.h	/^  unsigned char * data;$/;"	m	struct:AVS_VideoFrameBuffer
 data	libx264/src/output/flv_bytestream.h	/^    uint8_t *data;$/;"	m	struct:flv_buffer
 data	libx264/src/output/matroska_ebml.c	/^    void *data;$/;"	m	struct:mk_context	file:
+data_len	video_capture.h	/^	int data_len;$/;"	m	struct:__cam_buffer
 data_size	libx264/src/extras/avisynth_c.h	/^  int data_size;$/;"	m	struct:AVS_VideoFrameBuffer
 data_size	libx264/src/extras/avxsynth_c.h	/^  int data_size;$/;"	m	struct:AVS_VideoFrameBuffer
 db	libx264/src/common/x86/const-a.asm	/^db ((x>>0)&1)+((x>>1)&1)+((x>>2)&1)+((x>>3)&1)+((x>>4)&1)+((x>>5)&1)+((x>>6)&1)+((x>>7)&1)$/;"	l
@@ -5826,6 +5830,7 @@ decimate_score_1x	libx264/src/common/aarch64/quant-a.S	/^decimate_score_1x 15$/;
 decimate_score_1x	libx264/src/common/aarch64/quant-a.S	/^decimate_score_1x 16$/;"	l
 def_duration	libx264/src/output/matroska_ebml.c	/^    int64_t def_duration;$/;"	m	struct:mk_writer	file:
 define	libx264/src/configure	/^define() {$/;"	f
+deinit	video_capture.h	/^	void deinit()$/;"	f	class:cameraBuffer
 deinterleave_rgb_shuf	libx264/src/common/x86/mc-a2.asm	/^deinterleave_rgb_shuf: db 0,3,6,9,1,4,7,10,2,5,8,11,-1,-1,-1,-1$/;"	d
 deinterleave_shuf	libx264/src/common/x86/mc-a2.asm	/^deinterleave_shuf: times 2 db 0,2,4,6,8,10,12,14,1,3,5,7,9,11,13,15$/;"	l
 deinterleave_shuf	libx264/src/common/x86/pixel-a.asm	/^deinterleave_shuf: db 0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15$/;"	d
@@ -5884,6 +5889,8 @@ dist_scale_factor	libx264/src/encoder/slicetype.c	/^    int dist_scale_factor;$/
 dist_scale_factor_buf	libx264/src/common/common.h	/^        int16_t dist_scale_factor_buf[2][2][X264_REF_MAX*2][4];$/;"	m	struct:x264_t::__anon69
 dither_image	libx264/src/filters/video/depth.c	/^static void dither_image( cli_image_t *out, cli_image_t *img, int16_t *error_buf )$/;"	f	file:
 do_bench	libx264/src/tools/checkasm.c	/^int do_bench = 0;$/;"	v
+do_release_socket	Rtsp.cpp	/^void do_release_socket()$/;"	f
+do_release_thread	Rtsp.cpp	/^void do_release_thread()$/;"	f
 do_search	libx264/src/encoder/slicetype.c	/^    int *do_search;$/;"	m	struct:__anon14	file:
 done	libx264/src/common/threadpool.c	/^    x264_sync_frame_list_t done;   \/* list of jobs that have finished processing *\/$/;"	m	struct:x264_threadpool_t	file:
 downscale_hpel_kernel	libx264/src/common/opencl.h	/^    cl_kernel   downscale_hpel_kernel;$/;"	m	struct:__anon82
@@ -6111,7 +6118,7 @@ fp	libx264/src/output/matroska_ebml.c	/^    FILE *fp;$/;"	m	struct:mk_writer	fil
 fpelcmp	libx264/src/common/pixel.h	/^    x264_pixel_cmp_t fpelcmp[8]; \/* either satd or sad for fullpel motion search *\/$/;"	m	struct:__anon87
 fpelcmp_x3	libx264/src/common/pixel.h	/^    x264_pixel_cmp_x3_t fpelcmp_x3[7];$/;"	m	struct:__anon87
 fpelcmp_x4	libx264/src/common/pixel.h	/^    x264_pixel_cmp_x4_t fpelcmp_x4[7];$/;"	m	struct:__anon87
-fps	Rtp.h	18;"	d
+fps	Rtp.h	19;"	d
 fps	libx264/src/encoder/ratecontrol.c	/^    double fps;$/;"	m	struct:x264_ratecontrol_t	file:
 fps_den	libx264/src/input/input.h	/^    uint32_t fps_den;$/;"	m	struct:__anon294
 fps_denominator	libx264/src/extras/avisynth_c.h	/^  unsigned fps_numerator, fps_denominator;$/;"	m	struct:AVS_VideoInfo
@@ -6149,7 +6156,7 @@ frame_type	libx264/src/encoder/ratecontrol.c	/^    int frame_type;$/;"	m	struct:
 frames	libx264/src/common/common.h	/^    } frames;$/;"	m	struct:x264_t	typeref:struct:x264_t::__anon67
 frames	libx264/src/encoder/slicetype.c	/^    x264_frame_t **frames;$/;"	m	struct:__anon14	file:
 free	libx264/src/filters/video/video.h	/^    void (*free)( hnd_t handle );$/;"	m	struct:cli_vid_filter_t
-free_buff	Rtp.h	/^	void free_buff(){$/;"	f	class:cameraBuffer
+free_buff	video_capture.h	/^	void free_buff(){$/;"	f	class:cameraBuffer
 free_filter	libx264/src/extras/avisynth_c.h	/^  void (AVSC_CC * free_filter)(AVS_FilterInfo *);$/;"	m	struct:AVS_FilterInfo
 free_filter	libx264/src/extras/avxsynth_c.h	/^  void (AVSC_CC * free_filter)(AVS_FilterInfo *);$/;"	m	struct:AVS_FilterInfo
 free_filter	libx264/src/filters/video/cache.c	/^static void free_filter( hnd_t handle )$/;"	f	file:
@@ -6487,8 +6494,8 @@ get_audio	libx264/src/extras/avxsynth_c.h	/^  int (AVSC_CC * get_audio)(AVS_Filt
 get_avs_version	libx264/src/input/avs.c	/^static float get_avs_version( avs_hnd_t *h )$/;"	f	file:
 get_bench	libx264/src/tools/checkasm.c	/^static bench_t* get_bench( const char *name, int cpu )$/;"	f	file:
 get_diff_limited_q	libx264/src/encoder/ratecontrol.c	/^static double get_diff_limited_q(x264_t *h, ratecontrol_entry_t *rce, double q, int frame_num)$/;"	f	file:
-get_empty_buffer	Rtp.h	/^	int get_empty_buffer(camera_buffer_t * buff)$/;"	f	class:cameraBuffer
-get_empty_index	Rtp.h	/^	int get_empty_index()$/;"	f	class:cameraBuffer
+get_empty_buffer	video_capture.h	/^	camera_buffer_t * get_empty_buffer()$/;"	f	class:cameraBuffer
+get_empty_index	video_capture.h	/^	int get_empty_index()$/;"	f	class:cameraBuffer
 get_filename_extension	libx264/src/x264cli.h	/^static inline char *get_filename_extension( char *filename )$/;"	f
 get_frame	libx264/src/extras/avisynth_c.h	/^  AVS_VideoFrame * (AVSC_CC * get_frame)(AVS_FilterInfo *, int n);$/;"	m	struct:AVS_FilterInfo
 get_frame	libx264/src/extras/avxsynth_c.h	/^  AVS_VideoFrame * (AVSC_CC * get_frame)(AVS_FilterInfo *, int n);$/;"	m	struct:AVS_FilterInfo
@@ -6512,8 +6519,8 @@ get_ref	libx264/src/common/mc.h	/^    pixel* (*get_ref)( pixel *dst, intptr_t *i
 get_ref_altivec	libx264/src/common/ppc/mc.c	/^static uint8_t *get_ref_altivec( uint8_t *dst,   intptr_t *i_dst_stride,$/;"	f	file:
 get_ref_neon	libx264/src/common/aarch64/mc-c.c	/^static uint8_t *get_ref_neon( uint8_t *dst,   intptr_t *i_dst_stride,$/;"	f	file:
 get_ref_neon	libx264/src/common/arm/mc-c.c	/^static uint8_t *get_ref_neon( uint8_t *dst,   intptr_t *i_dst_stride,$/;"	f	file:
-get_value_buffer	Rtp.h	/^	int get_value_buffer(camera_buffer_t *buff)$/;"	f	class:cameraBuffer
-get_value_index	Rtp.h	/^	int get_value_index()$/;"	f	class:cameraBuffer
+get_value_buffer	video_capture.h	/^	camera_buffer_t *get_value_buffer()$/;"	f	class:cameraBuffer
+get_value_index	video_capture.h	/^	int get_value_index()$/;"	f	class:cameraBuffer
 get_zone	libx264/src/encoder/ratecontrol.c	/^static x264_zone_t *get_zone( x264_t *h, int frame_num )$/;"	f	file:
 getopt	libx264/src/extras/getopt.c	/^getopt (argc, argv, optstring)$/;"	f
 getopt_long	libx264/src/extras/getopt.c	/^int getopt_long (argc, argv, optstring, long_options, opt_index)$/;"	f
@@ -7264,8 +7271,8 @@ i_zones	lib/mips/include/x264.h	/^        int         i_zones;        \/* number
 i_zones	lib/x86/include/x264.h	/^        int         i_zones;        \/* number of zone_t's *\/$/;"	m	struct:x264_param_t::__anon309
 i_zones	libx264/src/encoder/ratecontrol.c	/^    int i_zones;$/;"	m	struct:x264_ratecontrol_t	file:
 i_zones	libx264/src/x264.h	/^        int         i_zones;        \/* number of zone_t's *\/$/;"	m	struct:x264_param_t::__anon23
-id	Rtp.h	/^	char id;$/;"	m	struct:__cam_buffer
 id	libx264/src/output/matroska_ebml.c	/^    unsigned id;$/;"	m	struct:mk_context	file:
+id	video_capture.h	/^	char id;$/;"	m	struct:__cam_buffer
 idc	libx264/src/common/common.h	/^        int idc;$/;"	m	struct:__anon62::__anon63
 idct4x4dc	libx264/src/common/dct.c	/^static void idct4x4dc( dctcoef d[16] )$/;"	f	file:
 idct4x4dc	libx264/src/common/dct.h	/^    void (*idct4x4dc)( dctcoef d[16] );$/;"	m	struct:__anon55
@@ -7298,7 +7305,6 @@ img	libx264/src/x264.h	/^    x264_image_t img;$/;"	m	struct:__anon31
 in_frame	libx264/src/output/matroska_ebml.c	/^    char wrote_header, in_frame, keyframe, skippable;$/;"	m	struct:mk_writer	file:
 includedir	libx264/src/config.mak	/^includedir=${prefix}\/include$/;"	m
 index_file	libx264/src/input/input.h	/^    char *index_file;$/;"	m	struct:__anon293
-init	Rtp.h	/^	int init(int buff_size)$/;"	f	class:cameraBuffer
 init	libx264/src/filters/video/cache.c	/^static int init( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info, x264_param_t *param, char *opt_string )$/;"	f	file:
 init	libx264/src/filters/video/crop.c	/^static int init( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info, x264_param_t *param, char *opt_string )$/;"	f	file:
 init	libx264/src/filters/video/depth.c	/^static int init( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info,$/;"	f	file:
@@ -7307,6 +7313,7 @@ init	libx264/src/filters/video/resize.c	/^static int init( hnd_t *handle, cli_vi
 init	libx264/src/filters/video/select_every.c	/^static int init( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info, x264_param_t *param, char *opt_string )$/;"	f	file:
 init	libx264/src/filters/video/source.c	/^static int init( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info, x264_param_t *param, char *opt_string )$/;"	f	file:
 init	libx264/src/filters/video/video.h	/^    int (*init)( hnd_t *handle, cli_vid_filter_t *filter, video_info_t *info, x264_param_t *param, char *opt_string );$/;"	m	struct:cli_vid_filter_t
+init	video_capture.h	/^	int init(int buff_size)$/;"	f	class:cameraBuffer
 init_arg	libx264/src/common/threadpool.c	/^    void           *init_arg;$/;"	m	struct:x264_threadpool_t	file:
 init_camera	video_capture.c	/^static void init_camera(struct camera *cam)$/;"	f	file:
 init_func	libx264/src/common/threadpool.c	/^    void           (*init_func)(void *);$/;"	m	struct:x264_threadpool_t	file:
@@ -7470,9 +7477,10 @@ ip_offset	libx264/src/common/common.h	/^        int ip_offset; \/* Used by PIR t
 ip_offset	libx264/src/encoder/ratecontrol.c	/^    double ip_offset;$/;"	m	struct:x264_ratecontrol_t	file:
 is_arm_register	libx264/src/tools/gas-preprocessor.pl	/^sub is_arm_register {$/;"	s
 is_broadcast	libx264/src/common/win32thread.c	/^    volatile int is_broadcast;$/;"	m	struct:__anon51	file:
-is_empty	Rtp.h	/^	char is_empty;$/;"	m	struct:__cam_buffer
+is_empty	video_capture.h	/^	char is_empty;$/;"	m	struct:__cam_buffer
 is_exe	libx264/src/tools/test_x264.py	/^    def is_exe(fpath):$/;"	f	function:program_exists
 is_h264_coder_ok	libx264/src/h264encoder.c	/^int is_h264_coder_ok()$/;"	f
+is_status_ok	video_capture.h	/^	int is_status_ok()$/;"	f	class:cameraBuffer
 isfinite	libx264/src/common/osdep.h	61;"	d
 jmpbuf	libx264/src/common/cpu.c	/^static sigjmp_buf jmpbuf;$/;"	v	file:
 jpeghdr	Rtp.cpp	/^struct jpeghdr {$/;"	s	file:
@@ -7507,7 +7515,7 @@ left_b8	libx264/src/common/common.h	/^        int     left_b8[2];$/;"	m	struct:x
 left_index_table	libx264/src/common/common.h	/^        const x264_left_table_t *left_index_table;$/;"	m	struct:x264_t::__anon69
 left_indices	libx264/src/common/macroblock.c	/^static const x264_left_table_t left_indices[4] =$/;"	v	file:
 length	Rtp.cpp	/^    unsigned short length;$/;"	m	struct:jpeghdr_qtable	file:
-length	Rtp.h	/^  	int length;$/;"	m	struct:__cam_buffer
+length	video_capture.h	/^  	int length;$/;"	m	struct:__cam_buffer
 length	video_capture.h	/^    int length;$/;"	m	struct:buffer
 level_idc	lib/mips/include/x264.h	/^    int level_idc;$/;"	m	struct:__anon324
 level_idc	lib/x86/include/x264.h	/^    int level_idc;$/;"	m	struct:__anon311
@@ -7733,10 +7741,10 @@ mp4_output	libx264/src/output/mp4_lsmash.c	/^const cli_output_t mp4_output = { o
 mtx_broadcast	libx264/src/common/win32thread.c	/^    x264_pthread_mutex_t mtx_broadcast;$/;"	m	struct:__anon51	file:
 mtx_waiter_count	libx264/src/common/win32thread.c	/^    x264_pthread_mutex_t mtx_waiter_count;$/;"	m	struct:__anon51	file:
 multicompare	libx264/src/tools/digress/testing.py	/^    def multicompare(self, rev_a=None, rev_b=None, mode="waterfall"):$/;"	m	class:Fixture
-mutex	Rtp.h	/^	pthread_mutex_t mutex;$/;"	m	class:cameraBuffer
 mutex	libx264/src/common/common.h	/^    x264_pthread_mutex_t mutex;$/;"	m	struct:x264_t
 mutex	libx264/src/common/frame.h	/^    x264_pthread_mutex_t mutex;$/;"	m	struct:x264_frame
 mutex	libx264/src/common/frame.h	/^   x264_pthread_mutex_t     mutex;$/;"	m	struct:__anon73
+mutex	video_capture.h	/^	pthread_mutex_t mutex;$/;"	m	class:cameraBuffer
 muxer_names	libx264/src/x264.c	/^static const char * const muxer_names[] =$/;"	v	file:
 mv	libx264/src/common/common.h	/^        int16_t (*mv[2])[2];                \/* mb mv. set to 0 for intra mb *\/$/;"	m	struct:x264_t::__anon69
 mv	libx264/src/common/common.h	/^    uint8_t mv[4];$/;"	m	struct:x264_left_table_t
@@ -8334,6 +8342,7 @@ quant_trellis_cavlc	libx264/src/encoder/rdo.c	/^int quant_trellis_cavlc( x264_t 
 quantf	libx264/src/common/common.h	/^    x264_quant_function_t quantf;$/;"	m	struct:x264_t
 queue	libx264/src/common/opencl.h	/^    cl_command_queue queue;$/;"	m	struct:__anon82
 quiet	libx264/src/tools/checkasm.c	/^int quiet = 0;$/;"	v
+quit_handler	Rtsp.cpp	/^void quit_handler( int sig )$/;"	f
 quot	libx264/src/extras/inttypes.h	/^   intmax_t quot;$/;"	m	struct:__anon281
 range	libx264/src/filters/video/resize.c	/^    int range;$/;"	m	struct:__anon284	file:
 range_enum	libx264/src/x264cli.h	/^} range_enum;$/;"	t	typeref:enum:__anon1
@@ -8362,7 +8371,7 @@ read_frame	libx264/src/input/raw.c	/^static int read_frame( cli_pic_t *pic, hnd_
 read_frame	libx264/src/input/thread.c	/^static int read_frame( cli_pic_t *p_pic, hnd_t handle, int i_frame )$/;"	f	file:
 read_frame	libx264/src/input/timecode.c	/^static int read_frame( cli_pic_t *pic, hnd_t handle, int frame )$/;"	f	file:
 read_frame	libx264/src/input/y4m.c	/^static int read_frame( cli_pic_t *pic, hnd_t handle, int i_frame )$/;"	f	file:
-read_frame	video_capture.c	/^int read_frame(struct camera *cam,char *buffer,int *len\/*数据大小*\/)$/;"	f
+read_frame	video_capture.c	/^int read_frame(struct camera *cam,char *buffer,int max_len)$/;"	f
 read_frame_internal	libx264/src/input/lavf.c	/^static int read_frame_internal( cli_pic_t *p_pic, lavf_hnd_t *h, int i_frame, video_info_t *info )$/;"	f	file:
 read_frame_internal	libx264/src/input/raw.c	/^static int read_frame_internal( cli_pic_t *pic, raw_hnd_t *h, int bit_depth_uc )$/;"	f	file:
 read_frame_internal	libx264/src/input/y4m.c	/^static int read_frame_internal( cli_pic_t *pic, y4m_hnd_t *h, int bit_depth_uc )$/;"	f	file:
@@ -8414,7 +8423,7 @@ resizer_hnd_t	libx264/src/filters/video/resize.c	/^} resizer_hnd_t;$/;"	t	typere
 resolution	libx264/src/input/input.h	/^    char *resolution;$/;"	m	struct:__anon293
 ret	libx264/src/common/threadpool.c	/^    void *ret;$/;"	m	struct:__anon54	file:
 ret	libx264/src/common/win32thread.h	/^    void *ret;$/;"	m	struct:__anon52
-return_buffer	Rtp.h	/^	void return_buffer(camera_buffer_t * buff)$/;"	f	class:cameraBuffer
+return_buffer	video_capture.h	/^	void return_buffer(camera_buffer_t * buff)$/;"	f	class:cameraBuffer
 rev_parse	libx264/src/tools/digress/scm/git.py	/^def rev_parse(ref):$/;"	f
 revisions	libx264/src/tools/digress/scm/dummy.py	/^def revisions(rev_a, rev_b):$/;"	f
 revisions	libx264/src/tools/digress/scm/git.py	/^def revisions(rev_a, rev_b):$/;"	f
@@ -8433,7 +8442,7 @@ rtpClientPort	Rtp.h	/^		int rtpClientPort;$/;"	m	struct:RtpData
 rtpServerPort	Rtp.h	/^		int rtpServerPort;$/;"	m	struct:RtpData
 rtp_hdr_t	Rtp.cpp	/^}rtp_hdr_t;$/;"	t	typeref:struct:__anon304	file:
 rtp_tid	Rtsp.cpp	/^pthread_t rtp_tid=0;$/;"	v
-rtp_worker	Rtp.cpp	/^void * rtp_worker(void *p)$/;"	f
+rtp_worker	Rtp.cpp	/^void * rtp_worker(void *came)$/;"	f
 run	libx264/src/common/threadpool.c	/^    x264_sync_frame_list_t run;    \/* list of jobs that are queued for processing by the pool *\/$/;"	m	struct:x264_threadpool_t	file:
 run	libx264/src/tools/digress/testing.py	/^    def run(self):$/;"	m	class:Case
 run	libx264/src/tools/digress/testing.py	/^    def run(self, revision=None):$/;"	m	class:Fixture
@@ -8897,6 +8906,7 @@ seq_header_len	libx264/src/input/y4m.c	/^    int seq_header_len;$/;"	m	struct:__
 seq_num	Rtp.cpp	/^unsigned short seq_num = 0;$/;"	v
 sequence_number	libx264/src/extras/avisynth_c.h	/^  volatile long sequence_number;$/;"	m	struct:AVS_VideoFrameBuffer
 sequence_number	libx264/src/extras/avxsynth_c.h	/^  long sequence_number;$/;"	m	struct:AVS_VideoFrameBuffer
+serverFD	Rtsp.cpp	/^int serverFD,clientFD;\/\/Server and Client SocketID$/;"	v
 setFUHeader	Rtp.cpp	/^void setFUHeader(char *FrameStartIndex,bool start,bool end)$/;"	f
 setFUIndicator	Rtp.cpp	/^void setFUIndicator(char *FrameStartIndex)$/;"	f
 setMarker	Rtp.cpp	/^void setMarker(int marker)$/;"	f
@@ -8914,7 +8924,7 @@ set_param	libx264/src/output/mp4.c	/^static int set_param( hnd_t handle, x264_pa
 set_param	libx264/src/output/mp4_lsmash.c	/^static int set_param( hnd_t handle, x264_param_t *p_param )$/;"	f	file:
 set_param	libx264/src/output/output.h	/^    int (*set_param)( hnd_t handle, x264_param_t *p_param );$/;"	m	struct:__anon34
 set_param	libx264/src/output/raw.c	/^static int set_param( hnd_t handle, x264_param_t *p_param )$/;"	f	file:
-set_valid_buffer	Rtp.h	/^	int set_valid_buffer(camera_buffer_t * buff)$/;"	f	class:cameraBuffer
+set_valid_buffer	video_capture.h	/^	int set_valid_buffer(camera_buffer_t * buff)$/;"	f	class:cameraBuffer
 sf	libx264/src/extras/cl_platform.h	/^   __extension__ struct{ cl_char  x, y, z, w, __spacer4, __spacer5, __spacer6, __spacer7, __spacer8, __spacer9, sa, sb, sc, sd, se, sf; };$/;"	m	struct:__anon122::__anon123
 sf	libx264/src/extras/cl_platform.h	/^   __extension__ struct{ cl_double  x, y, z, w, __spacer4, __spacer5, __spacer6, __spacer7, __spacer8, __spacer9, sa, sb, sc, sd, se, sf; };$/;"	m	struct:__anon266::__anon267
 sf	libx264/src/extras/cl_platform.h	/^   __extension__ struct{ cl_float  x, y, z, w, __spacer4, __spacer5, __spacer6, __spacer7, __spacer8, __spacer9, sa, sb, sc, sd, se, sf; };$/;"	m	struct:__anon250::__anon251
@@ -8942,7 +8952,7 @@ size	libx264/src/extras/cl.h	/^    size_t                  size;$/;"	m	struct:_c
 skip	libx264/src/encoder/encoder.c	/^    int skip;$/;"	m	struct:__anon7	file:
 skipbp	libx264/src/common/common.h	/^        int8_t  *skipbp;                    \/* block pattern for SKIP or DIRECT (sub)mbs. B-frames + cabac only *\/$/;"	m	struct:x264_t::__anon69
 skippable	libx264/src/output/matroska_ebml.c	/^    char wrote_header, in_frame, keyframe, skippable;$/;"	m	struct:mk_writer	file:
-sleepTime	Rtp.h	19;"	d
+sleepTime	Rtp.h	20;"	d
 slice_rate	lib/mips/include/x264.h	/^    int slice_rate;  \/* ?? *\/$/;"	m	struct:__anon324
 slice_rate	lib/x86/include/x264.h	/^    int slice_rate;  \/* ?? *\/$/;"	m	struct:__anon311
 slice_rate	libx264/src/x264.h	/^    int slice_rate;  \/* ?? *\/$/;"	m	struct:__anon25
@@ -8986,8 +8996,8 @@ ssim_end4	libx264/src/common/pixel.c	/^static float ssim_end4( int sum0[5][4], i
 ssim_end4	libx264/src/common/pixel.h	/^    float (*ssim_end4)( int sum0[5][4], int sum1[5][4], int width );$/;"	m	struct:__anon87
 ssim_skip	libx264/src/common/arm/pixel-a.S	/^ssim_skip:$/;"	l
 ssrc	Rtp.cpp	/^        unsigned int ssrc;$/;"	m	struct:__anon304	file:
-start	Rtp.h	/^	char *start;$/;"	m	struct:__cam_buffer
 start	libx264/src/output/flv.c	/^    unsigned start;$/;"	m	struct:__anon46	file:
+start	video_capture.h	/^	char *start;$/;"	m	struct:__cam_buffer
 start	video_capture.h	/^    void *start;$/;"	m	struct:buffer
 start_capturing	video_capture.c	/^static void start_capturing(struct camera *cam)$/;"	f	file:
 start_seq	Rtp.cpp	/^int start_seq = 0;$/;"	v
@@ -8997,9 +9007,9 @@ stat	libx264/src/common/common.h	/^    } stat;$/;"	m	struct:x264_t	typeref:struc
 stat	libx264/src/encoder/encoder.c	/^    x264_frame_stat_t stat;$/;"	m	struct:__anon7	file:
 state	libx264/src/common/cabac.h	/^    uint8_t state[1024];$/;"	m	struct:__anon92
 static_mutex	libx264/src/common/win32thread.c	/^    x264_pthread_mutex_t static_mutex;$/;"	m	struct:__anon50	file:
-status	Rtp.h	/^	int status;$/;"	m	class:cameraBuffer
 status	libx264/src/h264encoder.c	/^	int status; \/\/ 1 ok , 0 no init , -1 error$/;"	m	struct:__anon18	file:
 status	libx264/src/input/thread.c	/^    int status;$/;"	m	struct:thread_input_arg_t	file:
+status	video_capture.h	/^	int status ;$/;"	m	class:cameraBuffer
 status	video_capture.h	/^    int status; \/\/ if status == -1 , return$/;"	m	struct:camera
 step_size	libx264/src/filters/video/select_every.c	/^    int step_size;$/;"	m	struct:__anon288	file:
 stereo_h_div	libx264/src/output/matroska.c	/^static const uint8_t stereo_h_div[STEREO_COUNT] = {1,1,2,1,2,1,1};$/;"	v	file:
@@ -9282,8 +9292,8 @@ v8	libx264/src/extras/cl_platform.h	/^    __cl_ulong8     v8[2];$/;"	m	union:__a
 v8	libx264/src/extras/cl_platform.h	/^    __cl_ushort8     v8;$/;"	m	union:__anon166
 v8	libx264/src/extras/cl_platform.h	/^    __cl_ushort8     v8[2];$/;"	m	union:__anon170
 val	libx264/src/extras/getopt.h	/^  int val;$/;"	m	struct:option
-valid_index_count	Rtp.h	/^	int valid_index_count;$/;"	m	class:cameraBuffer
-valid_index_list	Rtp.h	/^	int valid_index_list[BUFF_COUNT];$/;"	m	class:cameraBuffer
+valid_index_count	video_capture.h	/^	int valid_index_count;$/;"	m	class:cameraBuffer
+valid_index_list	video_capture.h	/^	int valid_index_list[BUFF_COUNT];$/;"	m	class:cameraBuffer
 var	libx264/src/common/pixel.h	/^    uint64_t (*var[4])( pixel *pix, intptr_t stride );$/;"	m	struct:__anon87
 var16_loop	libx264/src/common/arm/pixel-a.S	/^var16_loop:$/;"	l
 var2	libx264/src/common/pixel.h	/^    int (*var2[4])( pixel *pix1, intptr_t stride1,$/;"	m	struct:__anon87

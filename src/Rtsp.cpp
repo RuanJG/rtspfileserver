@@ -25,6 +25,9 @@ bool use_camera;
 
 pthread_t rtp_tid=0;
 pthread_t cam_tid=0;
+int serverFD,clientFD;//Server and Client SocketID
+
+int fps_time_us = 1000000/FPS;
 
 void Rtsp(int args,char *argv[])
 {
@@ -51,10 +54,27 @@ void Rtsp(int args,char *argv[])
 		log_msg("camera use pix= %dX%d\n",cam.width,cam.height);
 	}
 
+    if( cam.width == 0 || cam.height == 0){
+	    //set it by args
+    	cam.width         = CAM_WIDGH;
+    	cam.height        = CAM_HEIGHT;
+	log_msg("camera use %dX%d\n",cam.width,cam.height);
+    }
 
-	
+
+#ifdef USE_CAMERA_THREAD
+ 	//if( 0 >  cam.camBuff.init(cam.width*2*cam.height)){
+ 	if( 0 >  cam.camBuff.init(cam.width*cam.height)){
+		log_msg("cameraBuffer init failed\n");
+	}
+#endif	
+
+	signal(SIGINT,quit_handler);
+
 
 	//RtspSocket
+	serverFD = 0;
+	clientFD = 0;
 	createRtspSocket(&serverFD,&clientFD,&addrClient);
 
 	while(1)
@@ -62,12 +82,14 @@ void Rtsp(int args,char *argv[])
 		retVal = recv(clientFD,recvBuf,BUF_SIZE,0);
 		if(retVal == -1 || retVal == 0){
 			close(clientFD);//關閉Socket
+			clientFD = 0;
 			printf("Server is listening.....\n");
 			clientFD = accept(serverFD,(struct sockaddr*)&addrClient,&addrClientLen);
 			if(clientFD == -1){
 				perror("Accept failed!!\n");
 				close(serverFD);//關閉Socket
-				exit(0);
+				serverFD = 0;
+				break;
 			}else printf("succeed!!\n");
 			RtspCseqNumber = 2;
 			continue;
@@ -93,12 +115,14 @@ void Rtsp(int args,char *argv[])
 		else
 		{
 			close(clientFD);//關閉Socket
+			clientFD = 0;
 			printf("Server is listening.....\n");
 			clientFD = accept(serverFD,(struct sockaddr*)&addrClient,&addrClientLen);
 			if(clientFD == -1){
 				perror("Accept failed!!\n");
 				close(serverFD);//關閉Socket
-				exit(0);
+				serverFD = 0;
+				break;
 			}else printf("succeed!!\n");
 			RtspCseqNumber = 2;
 			continue;
@@ -106,6 +130,9 @@ void Rtsp(int args,char *argv[])
 		RtspCseqNumber++;
 		free(RequestType);	
 	}
+#ifdef USE_CAMERA_THREAD
+    cam.camBuff.deinit();
+#endif
 	system("pause");
 	exit(1);
 
@@ -127,12 +154,14 @@ void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)
 	if(bind(*serverFD,(sockaddr*)&addrServer,sizeof(addrServer)) == -1){
 		perror("Bind failed!\n");
 		close(*serverFD);//關閉Socket
+		*serverFD = 0;
 		exit(0);
 	}
 	//建立監聽
 	if(listen(*serverFD,10) == -1){
 		perror("Listen failed!!\n");
 		close(*serverFD);//關閉Socket
+		*serverFD = 0;
 		exit(0);
 	}
 	//接收客戶端請求
@@ -141,6 +170,8 @@ void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)
 	if(*clientFD == -1){
 		perror("Accept failed!!\n");
 		close(*serverFD);//關閉Socket
+		*serverFD = 0;
+		*clientFD = 0;
 		exit(0);
 	}
 	else printf("succeed!!\n");
@@ -180,14 +211,14 @@ void createRtpThread(char* fileName)
 	void *thread_result;
 
 	//cam.camBuff.status = -1;
-	if( use_camera )
+	if( use_camera ){
 #ifdef USE_CAMERA_THREAD
 		res = pthread_create(&cam_tid,NULL,camera_worker,(void*)&cam);
 		res = pthread_create(&rtp_tid,NULL,rtp_worker,(void*)&cam);
 #else
 		res = pthread_create(&tid,NULL,Rtp_camera,(void*)&cam);
 #endif
-	else
+	}else
 		res = pthread_create(&tid,NULL,Rtp,(void*)fileName);
 
 	if(res!=0){
@@ -411,6 +442,41 @@ void TEARDOWN_Reply(int clientFD)
 		exit(0);
 	}
 	lock = 0;
+#ifdef USE_CAMERA_THREAD
+	do_release_thread();
+#endif
 	bzero(sendBuf,BUF_SIZE);
 	bzero(recvBuf,BUF_SIZE);
+}
+
+void do_release_thread()
+{
+	lock = 0;
+	if( rtp_tid != 0 )
+		pthread_join(rtp_tid,NULL);
+	if( cam_tid != 0 )
+		pthread_join(cam_tid,NULL);
+
+	rtp_tid = 0;
+	cam_tid = 0;
+}
+void do_release_socket()
+{
+	if( clientFD != 0 )
+		close(clientFD);
+	if( serverFD != 0 )
+		close(serverFD);
+	clientFD = 0;
+	serverFD = 0;
+}
+void quit_handler( int sig )
+{
+	lock = 0;
+	do_release_thread();
+	do_release_socket();
+#ifdef USE_CAMERA_THREAD
+    cam.camBuff.deinit();
+#endif	
+    	log_msg("Ruan: exit rtspfileserver by kill\n");
+	exit(0);
 }
