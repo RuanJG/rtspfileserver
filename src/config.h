@@ -25,10 +25,15 @@
 #else
     #define dbug(x) 
 #endif
+
+#if 0
 #define log_msg(format, ...) fprintf(stderr, format, ## __VA_ARGS__)
+#else
+#define log_msg(format, ...)
+#endif
 
 #define MY_V4L2_BUFFER_COUNT 4
-//#define USE_X264_CODER
+#define USE_X264_CODER
 #define USE_CAMERA_THREAD
 #define FPS 30
 

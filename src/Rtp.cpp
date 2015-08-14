@@ -443,8 +443,8 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 			setMarker(1);
 			memcpy(sendBuf,RtpHeader,12);
 			//設定timestamp以(90000/fps)遞增
-			//(*timestamp) += (90000/fps);
-			(*timestamp) += convertToRTPTimestamp();
+			(*timestamp) += (90000/fps);
+			//(*timestamp) += convertToRTPTimestamp();
 			setTimestamp(*timestamp);
 		}
 		
@@ -537,8 +537,8 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 				usleep(sleepTime);
 				//printf("FrameStartIndex5=%X\n",*((int*)FrameStartIndex));
 				//設定timestamp以(90000/fps)遞增
-				//(*timestamp) += (90000/fps);
-				(*timestamp) += convertToRTPTimestamp();
+				(*timestamp) += (90000/fps);
+				//(*timestamp) += convertToRTPTimestamp();
 				setTimestamp(*timestamp);
 				//封包傳輸序列遞增
 				(*SequenceNumber)++;

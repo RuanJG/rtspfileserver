@@ -64,7 +64,7 @@ void Rtsp(int args,char *argv[])
 
 #ifdef USE_CAMERA_THREAD
  	//if( 0 >  cam.camBuff.init(cam.width*2*cam.height)){
- 	if( 0 >  cam.camBuff.init(cam.width*cam.height)){
+ 	if( 0 >  cam.camBuff.init(cam.width*2*cam.height)){
 		log_msg("cameraBuffer init failed\n");
 	}
 #endif	
