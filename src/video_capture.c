@@ -30,7 +30,7 @@
 /*辅助函数*/
 static  void errno_exit(const char *s)
 {
-    fprintf(stderr, "%s error %d, %s\n", s, errno, strerror(errno));
+    log_msg( "%s error %d, %s\n", s, errno, strerror(errno));
     exit(EXIT_FAILURE);
 }
 
@@ -49,19 +49,19 @@ static void open_camera(struct camera *cam)
     struct stat st;
 
     if (-1 == stat(cam->device_name, &st)) {
-        fprintf(stderr, "Cannot identify '%s': %d, %s\n", cam->device_name,errno, strerror(errno));
+        log_msg( "Cannot identify '%s': %d, %s\n", cam->device_name,errno, strerror(errno));
         exit(EXIT_FAILURE);
     }
 
     if (!S_ISCHR(st.st_mode)) {
-        fprintf(stderr, "%s is no device\n", cam->device_name);
+        log_msg( "%s is no device\n", cam->device_name);
         exit(EXIT_FAILURE);
     }
 
     cam->fd = open(cam->device_name, O_RDWR, 0); //  | O_NONBLOCK
 
     if (-1 == cam->fd) {
-        fprintf(stderr, "Cannot open '%s': %d, %s\n", cam->device_name, errno,strerror(errno));
+        log_msg( "Cannot open '%s': %d, %s\n", cam->device_name, errno,strerror(errno));
         exit(EXIT_FAILURE);
     }
 }
@@ -106,38 +106,38 @@ static void init_camera(struct camera *cam)
 
     if (-1 == xioctl(cam->fd, VIDIOC_QUERYCAP, cap)) {
         if (EINVAL == errno) {
-            fprintf(stderr, "%s is no V4L2 device\n", cam->device_name);
+            log_msg( "%s is no V4L2 device\n", cam->device_name);
             exit(EXIT_FAILURE);
         }else
             errno_exit("VIDIOC_QUERYCAP");
     }
 
     if (!(cap->capabilities & V4L2_CAP_VIDEO_CAPTURE)) {
-        fprintf(stderr, "%s is no video capture device\n", cam->device_name);
+        log_msg( "%s is no video capture device\n", cam->device_name);
         exit(EXIT_FAILURE);
     }
 
     if (!(cap->capabilities & V4L2_CAP_STREAMING)) {
-        fprintf(stderr, "%s does not support streaming i/o\n",cam->device_name);
+        log_msg( "%s does not support streaming i/o\n",cam->device_name);
         exit(EXIT_FAILURE);
     }
 #ifdef OUTPUT_CAMINFO
-    printf("VIDOOC_QUERYCAP\n");
-    printf("driver:\t\t%s\n",cap->driver);
-    printf("card:\t\t%s\n",cap->card);
-    printf("bus_info:\t%s\n",cap->bus_info);
-    printf("version:\t%d\n",cap->version);
-    printf("capabilities:\t%x\n",cap->capabilities);
+    log_msg("VIDOOC_QUERYCAP\n");
+    log_msg("driver:\t\t%s\n",cap->driver);
+    log_msg("card:\t\t%s\n",cap->card);
+    log_msg("bus_info:\t%s\n",cap->bus_info);
+    log_msg("version:\t%d\n",cap->version);
+    log_msg("capabilities:\t%x\n",cap->capabilities);
 #endif
     /*打印摄像头支持的格式*/
     fmtdesc->index = 0;
     fmtdesc->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 #ifdef OUTPUT_CAMINFO
-    printf("support format:\n");
+    log_msg("support format:\n");
 #endif
     while(ioctl(cam->fd,VIDIOC_ENUM_FMT,fmtdesc) != -1){
 #ifdef OUTPUT_CAMINFO
-        printf("\t%d,%s\n",fmtdesc->index+1,fmtdesc->description);
+        log_msg("\t%d,%s\n",fmtdesc->index+1,fmtdesc->description);
 #endif
         pos = find_string((char *)fmtdesc->description,"JPEG");
         if(pos != -1){
@@ -232,7 +232,7 @@ CON:
     
     if (-1 == xioctl(cam->fd, VIDIOC_REQBUFS, &req)) {
         if (EINVAL == errno) {
-            fprintf(stderr, "%s does not support "
+            log_msg( "%s does not support "
                     "memory mapping\n", cam->device_name);
             exit(EXIT_FAILURE);
         } else
@@ -240,14 +240,14 @@ CON:
     }
 
     if (req.count < 2) {
-        fprintf(stderr, "Insufficient buffer memory on %s\n", cam->device_name);
+        log_msg( "Insufficient buffer memory on %s\n", cam->device_name);
         exit(EXIT_FAILURE);
     }
 
     cam->buffers = (struct buffer *)calloc(req.count, sizeof(*(cam->buffers)));
 
     if (!cam->buffers) {
-        fprintf(stderr, "Out of memory\n");
+        log_msg( "Out of memory\n");
         exit(EXIT_FAILURE);
     }
     for(cam->n_buffers = 0;cam->n_buffers < req.count;cam->n_buffers++){
@@ -323,7 +323,9 @@ void v4l2_init(struct camera *cam)
 
     open_camera(cam);
     init_camera(cam);
+#ifdef USE_X264_CODER
     h264_compress_begin( cam->width, cam->height );
+#endif
     start_capturing(cam);
 }
 void v4l2_exit(struct camera *cam)
@@ -331,7 +333,9 @@ void v4l2_exit(struct camera *cam)
     stop_capturing(cam);
     exit_camera(cam);
     close_camera(cam);
+#ifdef USE_X264_CODER
     h264_compress_end();
+#endif
 
 
 }
@@ -362,7 +366,7 @@ int read_frame(struct camera *cam,char *buffer,int max_len)
         return -1;
     }
     if(0 == r){
-        fprintf(stderr,"select timeout");
+        log_msg("select timeout");
         return 0;
     }
     
@@ -382,7 +386,7 @@ int read_frame(struct camera *cam,char *buffer,int max_len)
 	len = max_len;
     }
     memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,len);
-    //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
+    //log_msg("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
         log_msg("VIDIOC_QBUF error ");
     dbug("video QBUF");
@@ -410,7 +414,7 @@ int read_encode_frame(struct camera *cam,char *buffer,int max_len)
         return -1;
     }
     if(0 == r){
-        fprintf(stderr,"select timeout\n");
+        log_msg("select timeout\n");
         return 0;
     }
     
@@ -444,7 +448,7 @@ int read_encode_frame(struct camera *cam,char *buffer,int max_len)
     memcpy(buffer,(unsigned char *)cam->buffers[buf.index].start,len);
 #endif
 
-    //printf("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
+    //log_msg("cam->n_buffers=%d\nbuf.index=%d\nbuf.bytesused=%d\n",cam->n_buffers,buf.index,buf.bytesused);
     if (-1 == xioctl(cam->fd, VIDIOC_QBUF, &buf))
         log_msg("VIDIOC_QBUF error , ignore?");
 

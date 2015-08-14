@@ -26,7 +26,7 @@ void *Rtp(void *fileName)
 	int FileSize;
 	int ret;
 
-	printf("I'm at Rtp()!\n");
+	log_msg("I'm at Rtp()!\n");
 	
 	//建立RtpSocket
 	createRtpSocket(&sockFD,&addrClient);
@@ -40,7 +40,7 @@ void *Rtp(void *fileName)
 	setTimestamp(timestamp);
 	setSSRC(ssrc);
 
-	printf("Rtplock=%d\n",lock);
+	log_msg("Rtplock=%d\n",lock);
 	for(int i=0;i<FileSize && lock;i++){
 		//H.264 StartCode 為00 00 00 01或00 00 01
 		if(*((int*)(FileTemp+i))==0x01000000){//轉型為4bytes
@@ -61,8 +61,8 @@ void *Rtp(void *fileName)
 		}
 		FrameLength++;
 	}
-	printf("Rtplock=%d\n",lock);
-	printf("End\n");
+	log_msg("Rtplock=%d\n",lock);
+	log_msg("End\n");
 	close(sockFD);//關閉Socket
 	free(FileTemp);
 	free(RtpHeader);
@@ -90,7 +90,7 @@ void *Rtp_camera(void *came)
 	int ret;
 	
 
-	printf("I'm at Rtp()!\n");
+	log_msg("I'm at Rtp()!\n");
 	
 	//建立RtpSocket
 	createRtpSocket(&sockFD,&addrClient);
@@ -112,7 +112,7 @@ void *Rtp_camera(void *came)
 	bigbuffer = (char *)malloc(bigbuffer_szie);
 
 	log_msg("the bigbuffer_szie=%d\n",bigbuffer_szie);
-	printf("Rtplock=%d\n",lock);
+	log_msg("Rtplock=%d\n",lock);
 	//for(int i=0;i<FileSize && lock;i++){
 	while(lock){
 		pic_len = 0;
@@ -134,10 +134,10 @@ void *Rtp_camera(void *came)
 		log_msg("read one data frome camera, size is %d, the bigbuffer_szie=%d\n",pic_len,bigbuffer_szie);
 		if( pic_len >0){
 			if( pic_len > bigbuffer_szie ){
-				printf("RUAN: get a picture size is %d, bigger than %d  !!!!!!!!!!! \n",pic_len,bigbuffer_szie);
+				log_msg("RUAN: get a picture size is %d, bigger than %d  !!!!!!!!!!! \n",pic_len,bigbuffer_szie);
 				pic_len = bigbuffer_szie; //should be error
 			}
-			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
+			log_msg("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
 #ifdef USE_X264_CODER
 			ret = RtpEncoder(sockFD,addrClient,bigbuffer,pic_len,&SequenceNumber,&timestamp);
 #else
@@ -150,8 +150,8 @@ void *Rtp_camera(void *came)
 		}
 
 	}
-	printf("Rtplock=%d\n",lock);
-	printf("End\n");
+	log_msg("Rtplock=%d\n",lock);
+	log_msg("End\n");
 
 	v4l2_exit(cam);
 
@@ -183,7 +183,7 @@ void * rtp_worker(void *came)
 	int ret;
 	
 
-	printf("I'm at Rtp()!\n");
+	log_msg("I'm at Rtp()!\n");
 	
 	//建立RtpSocket
 	createRtpSocket(&sockFD,&addrClient);
@@ -214,7 +214,7 @@ void * rtp_worker(void *came)
 
 		log_msg("read one data frome camera, size is %d, the bigbuffer_szie=%d\n",pic_len,bigbuffer_szie);
 		if( pic_len >0){
-			printf("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
+			log_msg("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
 #ifdef USE_X264_CODER
 			ret = RtpEncoder(sockFD,addrClient,bigbuffer,pic_len,&SequenceNumber,&timestamp);
 #else
@@ -230,8 +230,8 @@ void * rtp_worker(void *came)
 		camBuff->return_buffer(fram_buff);
 
 	}
-	printf("Rtplock=%d\n",lock);
-	printf("End\n");
+	log_msg("Rtplock=%d\n",lock);
+	log_msg("End\n");
 
 
 	close(sockFD);//關閉Socket
@@ -311,7 +311,7 @@ void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
 	addrClient->sin_addr.s_addr = RtpParameter.addrClient.sin_addr.s_addr;
 	addrClient->sin_port = htons(RtpParameter.rtpClientPort);
 
-	printf("PORT : rtp send frome S:%d to C:%d\n",RtpParameter.rtpServerPort,RtpParameter.rtpClientPort);
+	log_msg("PORT : rtp send frome S:%d to C:%d\n",RtpParameter.rtpServerPort,RtpParameter.rtpClientPort);
 
 	//printf("IP=%s\n",inet_ntoa(addrClient->sin_addr));
 	//printf("Port=%d\n",ntohs(addrClient->sin_port));
@@ -448,11 +448,17 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 			setTimestamp(*timestamp);
 		}
 		
-		if(sendto(sockFD,sendBuf,FrameLength+12,0,(sockaddr *)&addrClient,sizeof(addrClient)) == -1){
-			printf("Sent failed!!\n");
-			close(sockFD);//關閉Socket
-			free(sendBuf);
-			return -1;
+		//if(sendto(sockFD,sendBuf,FrameLength+12,0,(sockaddr *)&addrClient,sizeof(addrClient)) == -1){
+		ret = sendto(sockFD,sendBuf,FrameLength+12,0,(sockaddr *)&addrClient,sizeof(addrClient));
+		if( ret <= 0){
+			log_msg("Sent failed!!\n");
+			if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN)
+				ret = 0;
+			else{
+				close(sockFD);//關閉Socket
+				free(sendBuf);
+				return -1;
+			}
 		}
 		usleep(sleepTime);
 		//封包傳輸序列遞增
@@ -486,10 +492,17 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 				FrameStartIndex += 1390;//包含startCode(3 Bytes)和NALU(1 Byte)
 				//printf("FrameStartIndex3=%X\n",*((int*)FrameStartIndex));
 			}
-			if(sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient)) == -1){
-				printf("Sent failed!!\n");
-				close(sockFD);//關閉Socket
-				free(sendBuf);
+			//if(sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient)) == -1){
+			 ret = sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient));
+			if( ret <= 0){
+				log_msg("Sent failed!!\n");
+				if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN)
+					ret = 0;
+				else{
+					close(sockFD);//關閉Socket
+					free(sendBuf);
+					return -1;
+				}
 			}
 			usleep(sleepTime);
 			//封包傳輸序列遞增
@@ -507,12 +520,18 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 				FrameStartIndex +=1386;
 				//printf("FrameStartIndex4=%X\n",*((int*)FrameStartIndex));
 				log_msg("send one package to client, FrameLength=%d\n",FrameLength);
-				if(sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient)) <= 0){
-					printf("Sent failed!!\n");
-					close(sockFD);//關閉Socket
-					free(sendBuf);
-					FrameLength = 0;
-					return -1;
+				//if(sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient)) <= 0){
+				ret = sendto(sockFD,sendBuf,1400,0,(sockaddr *)&addrClient,sizeof(addrClient));
+				if( ret <= 0){
+					log_msg("Sent failed!!\n");
+					if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN)
+						ret = 0;
+					else{
+						close(sockFD);//關閉Socket
+						free(sendBuf);
+						FrameLength = 0;
+						return -1;
+					}
 				}
 				usleep(sleepTime);
 				//封包傳輸序列遞增
@@ -528,11 +547,17 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 				memcpy(sendBuf+13,FUHeader,1);//[FU header]
 				memcpy(sendBuf+14,FrameStartIndex,FrameLength);
 				log_msg("send last one package to client\n");
-				if(sendto(sockFD,sendBuf,FrameLength+14,0,(sockaddr *)&addrClient,sizeof(addrClient)) <=0){
-					printf("Sent failed!!\n");
-					close(sockFD);//關閉Socket
-					free(sendBuf);
-					return -1;
+				//if(sendto(sockFD,sendBuf,FrameLength+14,0,(sockaddr *)&addrClient,sizeof(addrClient)) <=0){
+				ret = sendto(sockFD,sendBuf,FrameLength+14,0,(sockaddr *)&addrClient,sizeof(addrClient));
+				if( ret <= 0 ){
+					log_msg("Sent failed!!\n");
+					if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN)
+						ret = 0;
+					else{
+						close(sockFD);//關閉Socket
+						free(sendBuf);
+						return -1;
+					}
 				}
 				usleep(sleepTime);
 				//printf("FrameStartIndex5=%X\n",*((int*)FrameStartIndex));
@@ -547,10 +572,9 @@ int RtpEncoder(int sockFD,struct sockaddr_in addrClient,char *frame_head,int len
 			free(sendBuf);
 		}
 	}	
-	return 0;
+	return ret;
 }
 
-int start_seq = 0;
 unsigned short seq_num = 0;
 unsigned int ts_current = 0;
 unsigned char extractQTable1[64];
@@ -602,7 +626,7 @@ static unsigned int convertToRTPTimestamp(/*struct timeval tv*/)
     unsigned int const rtpTimestamp = timestampIncrement;  
     return rtpTimestamp;
 }
-unsigned short SendFrame(unsigned short start_seq, 
+unsigned short SendFrame( 
                          unsigned int  ts,
                          unsigned int ssrc,
                          unsigned char *jpeg_data, 
@@ -624,8 +648,7 @@ unsigned short SendFrame(unsigned short start_seq,
 	unsigned char *ptr = NULL;
     unsigned int off = 0;
 	int bytes_left = len;
-	int seq = start_seq;
-	int pkt_len, data_len;
+	int pkt_len, data_len,ret;
 	/* Initialize RTP header
 	 */
 	rtphdr.version = 2;
@@ -705,10 +728,12 @@ unsigned short SendFrame(unsigned short start_seq,
         memcpy(packet_buf, &rtphdr, RTP_HDR_SZ);
         memcpy(ptr, jpeg_data + off, data_len);
 
-        //send(sockfd,packet_buf, (ptr - packet_buf) + data_len,0);
-        //send_sock(packet_buf,(ptr-packet_buf)+data_len);
-	if(sendto(sockfd,packet_buf,(ptr-packet_buf)+data_len,0,(sockaddr *)&addrClient,sizeof(addrClient)) <=0){
-		printf("Sent failed!!\n");
+	//if(sendto(sockfd,packet_buf,(ptr-packet_buf)+data_len,0,(sockaddr *)&addrClient,sizeof(addrClient)) <=0){
+	ret = sendto(sockfd,packet_buf,(ptr-packet_buf)+data_len,0,(sockaddr *)&addrClient,sizeof(addrClient));
+	if( ret <= 0){
+		log_msg("Sent failed!!\n");
+		if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN)
+			return 0;
 		close(sockfd);
 		return -1;
 	}
@@ -720,7 +745,7 @@ unsigned short SendFrame(unsigned short start_seq,
         rtphdr.seq = htons(++seq_num);
         
     }
-    return rtphdr.seq;
+    return ret;
 }
 
 static int RtpJpegEncoder(int sockfd, struct sockaddr_in addrClient,unsigned char *in,int outsize,int width,int height)
@@ -730,12 +755,10 @@ static int RtpJpegEncoder(int sockfd, struct sockaddr_in addrClient,unsigned cha
     unsigned char typespecmjpeg = 1;
     unsigned char drimjpeg = 0;
     unsigned char qmjpeg = 70;
+    int ret;
  //   extractQTable(in,outsize);
-    start_seq = SendFrame(start_seq,ts_current,10, in,outsize,typemjpeg,typespecmjpeg,width,height,drimjpeg,qmjpeg, sockfd , addrClient);
-    if( start_seq == -1 )
-	    return -1;
-
-	return 0;
+    ret = SendFrame(ts_current,10, in,outsize,typemjpeg,typespecmjpeg,width,height,drimjpeg,qmjpeg, sockfd , addrClient);
+    return ret;
 }
 
 void setFUIndicator(char *FrameStartIndex)

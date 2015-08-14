@@ -45,7 +45,7 @@ void Rtsp(int args,char *argv[])
 	if( args == 2 ){ 
 		use_camera = 0;
 		fileName = argv[args-1];
-		printf("fileName=%s\n",fileName);	
+		log_msg("fileName=%s\n",fileName);	
 	}
 	if( args == 3 ){
 		use_camera = 1;
@@ -83,14 +83,14 @@ void Rtsp(int args,char *argv[])
 		if(retVal == -1 || retVal == 0){
 			close(clientFD);//關閉Socket
 			clientFD = 0;
-			printf("Server is listening.....\n");
+			log_msg("Server is listening.....\n");
 			clientFD = accept(serverFD,(struct sockaddr*)&addrClient,&addrClientLen);
 			if(clientFD == -1){
 				perror("Accept failed!!\n");
 				close(serverFD);//關閉Socket
 				serverFD = 0;
 				break;
-			}else printf("succeed!!\n");
+			}else log_msg("succeed!!\n");
 			RtspCseqNumber = 2;
 			continue;
 		}
@@ -98,8 +98,8 @@ void Rtsp(int args,char *argv[])
 		strcpy(RequestType,recvBuf);
 		strtok(RequestType," ");
 		RtspUrl = strtok(NULL," ");
-		//printf("RequestType=%s,RtspUrl=%s\n",RequestType,RtspUrl);
-		//printf("RecvBuf :\n%s",recvBuf);
+		//log_msg("RequestType=%s,RtspUrl=%s\n",RequestType,RtspUrl);
+		//log_msg("RecvBuf :\n%s",recvBuf);
 		if(!strcmp(RequestType,"OPTIONS"))
 			OPTIONS_Reply(clientFD);
 		else if(!strcmp(RequestType,"DESCRIBE"))
@@ -116,14 +116,14 @@ void Rtsp(int args,char *argv[])
 		{
 			close(clientFD);//關閉Socket
 			clientFD = 0;
-			printf("Server is listening.....\n");
+			log_msg("Server is listening.....\n");
 			clientFD = accept(serverFD,(struct sockaddr*)&addrClient,&addrClientLen);
 			if(clientFD == -1){
 				perror("Accept failed!!\n");
 				close(serverFD);//關閉Socket
 				serverFD = 0;
 				break;
-			}else printf("succeed!!\n");
+			}else log_msg("succeed!!\n");
 			RtspCseqNumber = 2;
 			continue;
 		}
@@ -174,7 +174,7 @@ void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)
 		*clientFD = 0;
 		exit(0);
 	}
-	else printf("succeed!!\n");
+	else log_msg("succeed!!\n");
 }
 char *int2str(int i)
 {
@@ -193,13 +193,13 @@ string getRtpClientPort()
 	string retVal;
 	int begin,end;
 
-	printf("\n******getRtpClientPort******\n");
+	log_msg("\n******getRtpClientPort******\n");
 	temp.assign(recvBuf);
 	begin = temp.find("client_port=")+12;
 	end = begin + 11;
 
 	retVal.append(temp.begin()+begin,temp.begin()+end);
-	printf("retVal=%s\n",retVal.c_str());
+	log_msg("retVal=%s\n",retVal.c_str());
 
 	return retVal;
 }
@@ -231,7 +231,7 @@ void OPTIONS_Reply(int clientFD)
 	char *RtspPublic = "Public: DESCRIBE,SETUP,TEARDOWN,PLAY,PAUSE,GET_PARAMETER\r\n\r\n";
 	string temp;
 
-	printf("\n*****OPTIONS*****\n");
+	log_msg("\n*****OPTIONS*****\n");
 	temp.insert(0,RtspResponse);
 	temp.insert(strlen(temp.c_str()),RtspServer);
 	temp.insert(strlen(temp.c_str()),RtspContentLength);
@@ -241,11 +241,11 @@ void OPTIONS_Reply(int clientFD)
 	temp.insert(strlen(temp.c_str()),RtspPublic);
 	free(int2str(RtspCseqNumber));
 
-	//printf("Send Temp:\n%s",temp.c_str());
+	//log_msg("Send Temp:\n%s",temp.c_str());
 
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
-		printf("Sent failed1!!\n");
+		log_msg("Sent failed1!!\n");
 		close(clientFD);//關閉Socket
 		exit(0);
 	}
@@ -286,7 +286,7 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 
 	string temp;
 
-	printf("\n*****DESCRIBE*****\n");
+	log_msg("\n*****DESCRIBE*****\n");
 	temp.insert(0,RtspResponse);
 	temp.insert(strlen(temp.c_str()),RtspServer);
 	temp.insert(strlen(temp.c_str()),RtspContentType);
@@ -303,10 +303,10 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 	free(int2str(strlen(SDPFile)));
 	free(int2str(RtspCseqNumber));
 
-	//printf("Send temp:\n%s",temp.c_str());
+	//log_msg("Send temp:\n%s",temp.c_str());
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
-		printf("Sent failed2!!\n");
+		log_msg("Sent failed2!!\n");
 		close(clientFD);//關閉Socket
 		exit(0);
 	}
@@ -321,7 +321,7 @@ void SETUP_Reply(int clientFD)
 	string temp;
 
 	RtpClientPort = getRtpClientPort();
-	printf("\n*****SETUP*****\n");
+	log_msg("\n*****SETUP*****\n");
 	temp.insert(0,RtspResponse);
 	temp.insert(strlen(temp.c_str()),RtspServer);
 	temp.insert(strlen(temp.c_str()),RtspTransport);
@@ -338,11 +338,11 @@ void SETUP_Reply(int clientFD)
 	temp.insert(strlen(temp.c_str())-2,"4");
 	temp.insert(strlen(temp.c_str()),"\r\n");
 
-	//printf("Send temp:\n%s",temp.c_str());
+	//log_msg("Send temp:\n%s",temp.c_str());
 
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
-		printf("Sent failed3!!\n");
+		log_msg("Sent failed3!!\n");
 		close(clientFD);//關閉Socket
 		exit(0);
 	}
@@ -360,7 +360,7 @@ void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *f
 	//struct RtpData *RtpParameter;
 	//RtpParameter = (RtpData*)malloc(sizeof(RtpData));
 
-	printf("\n*****Play*****\n");
+	log_msg("\n*****Play*****\n");
 	temp.insert(0,RtspResponse);
 	temp.insert(strlen(temp.c_str()),RtspServer);
 	temp.insert(strlen(temp.c_str()),RTPInfo);
@@ -377,10 +377,10 @@ void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *f
 	temp.insert(strlen(temp.c_str()),"\r\n");
 	free(int2str(RtspCseqNumber));
 
-	//printf("Send temp:\n%s",temp.c_str());
+	//log_msg("Send temp:\n%s",temp.c_str());
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
-		printf("Sent failed4!!\n");
+		log_msg("Sent failed4!!\n");
 		close(clientFD);//關閉Socket
 		exit(0);
 	}
@@ -396,7 +396,7 @@ void GET_PARAMETER_Reply(int clientFD)
 {
 	string temp;
 
-	printf("\n*****GET_PARAMETER*****\n");
+	log_msg("\n*****GET_PARAMETER*****\n");
 
 	temp.insert(0,RtspResponse);
 	temp.insert(strlen(temp.c_str()),RtspServer);
@@ -409,10 +409,10 @@ void GET_PARAMETER_Reply(int clientFD)
 	temp.insert(strlen(temp.c_str()),"\r\n");
 	free(int2str(RtspCseqNumber));
 
-	//printf("Send temp:\n%s",temp.c_str());
+	//log_msg("Send temp:\n%s",temp.c_str());
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
-		printf("Sent failed0000!!\n");
+		log_msg("Sent failed0000!!\n");
 		close(clientFD);//關閉Socket
 		exit(0);
 	}
@@ -422,7 +422,7 @@ void TEARDOWN_Reply(int clientFD)
 {
 	string temp;
 
-	printf("\n*****TEARDOWN*****\n");
+	log_msg("\n*****TEARDOWN*****\n");
 	temp.insert(0,RtspResponse);
 	temp.insert(strlen(temp.c_str()),RtspServer);
 	temp.insert(strlen(temp.c_str()),RtspSession);
@@ -434,10 +434,10 @@ void TEARDOWN_Reply(int clientFD)
 	temp.insert(strlen(temp.c_str()),"\r\n");
 	free(int2str(RtspCseqNumber));
 
-	//printf("Send temp:\n%s",temp.c_str());
+	//log_msg("Send temp:\n%s",temp.c_str());
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
-		printf("Sent failed5!!\n");
+		log_msg("Sent failed5!!\n");
 		close(clientFD);//關閉Socket
 		exit(0);
 	}
