@@ -16,7 +16,6 @@
 	/*  PT       encoding    media type
 		96-127    dynamic         ?     */
 	#define PayloadType 96
-	#define fps 30
 	#define sleepTime 15000 
 	extern bool lock;
 	 struct RtpData{
