@@ -1,0 +1,32 @@
+#!/bin/sh 
+
+
+### BEGIN INIT INFO
+# Provides:          rtspfileserver
+# Required-Start:    $all
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start or stop the rtspfileserver.
+### END INIT INFO
+
+my_start_service() {
+	/bin/rtspfileserver.sh &
+}
+my_stop_service() {
+        echo "stop rtspfileserver server"
+        killall rtspfileserver.sh rtspfileserver
+}
+
+case "$1" in
+start)
+	my_start_service
+	;;
+
+stop)
+	my_stop_service
+	;;
+esac
+
+exit 0
+
