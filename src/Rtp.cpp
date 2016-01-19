@@ -166,13 +166,13 @@ void *Rtp_camera(void *came)
 			break;
 		}
 
-		log_msg("read one data frome camera, size is %d, the bigbuffer_szie=%d\n",pic_len,bigbuffer_szie);
+		//log_msg("read one data frome camera, size is %d, the bigbuffer_szie=%d\n",pic_len,bigbuffer_szie);
 		if( pic_len >0){
 			if( pic_len > bigbuffer_szie ){
 				log_msg("RUAN: get a picture size is %d, bigger than %d  !!!!!!!!!!! \n",pic_len,bigbuffer_szie);
 				pic_len = bigbuffer_szie; //should be error
 			}
-			log_msg("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
+			//log_msg("RUAN: get a pic_len = %d, Headeris %x\n",pic_len,*((int*)bigbuffer));
 #ifdef USE_X264_CODER
 			ret = RtpEncoder(sockFD,addrClient,bigbuffer,pic_len,&SequenceNumber,&timestamp);
 #else
