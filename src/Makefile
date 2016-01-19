@@ -16,7 +16,7 @@ CROSS_COMPILE=
 C_COMPILER =    $(CROSS_COMPILE)gcc
 AR_COMPILER =    $(CROSS_COMPILE)ar
 CPLUSPLUS_COMPILER =    $(CROSS_COMPILE)g++
-LIBS    = -lpthread -lx264 -lm -ldl
+LIBS    = -lpthread -lx264 -lm -ldl -lcamkit
 
 rtspfileserver:Main.cpp Rtsp.cpp Rtp.cpp Rtsp.h Rtp.h config.h video_capture.c video_capture.h h264encoder.h
 	$(CPLUSPLUS_COMPILER) -o $@ $?  -L. $(LIBS)

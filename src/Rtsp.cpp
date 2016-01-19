@@ -5,7 +5,7 @@
 
 using namespace std;
 
-//RTSP¶Ç¿é©Ò»İÀÉ®×
+//RTSPÂ¶Ã‡Â¿Ã©Â©Ã’Â»ÃÃ€Ã‰Â®Ã—
 char *RtspResponse = "RTSP/1.0 200 OK\r\n";
 char *RtspServer = "Server: VLC\r\n";
 char *RtspCachControl = "Cache-Control: no-cache\r\n";
@@ -17,7 +17,7 @@ int RtspCseqNumber = 2;
 //RTP Thread use
 bool lock;
 struct RtpData RtpParameter;
-//RTSPªº¶Ç¦¬BUFFER
+//RTSPÂªÂºÂ¶Ã‡Â¦Â¬BUFFER
 char recvBuf[BUF_SIZE];
 char sendBuf[BUF_SIZE];
 struct camera cam;
@@ -31,10 +31,10 @@ int fps_time_us = 1000000/FPS;
 
 void Rtsp(int args,char *argv[])
 {
-	//¦s©ñOPTIONS DESCRIBE SETUP PLAY TEARDOWNµ¥
+	//Â¦sÂ©Ã±OPTIONS DESCRIBE SETUP PLAY TEARDOWNÂµÂ¥
 	char *RequestType;
 	char *RtspUrl;
-	//TCP³s½u©Ò»İ
+	//TCPÂ³sÂ½uÂ©Ã’Â»Ã
 	int serverFD,clientFD;//Server and Client SocketID
 	struct sockaddr_in addrClient;
 	socklen_t addrClientLen = sizeof(addrClient);
@@ -81,13 +81,13 @@ void Rtsp(int args,char *argv[])
 	{
 		retVal = recv(clientFD,recvBuf,BUF_SIZE,0);
 		if(retVal == -1 || retVal == 0){
-			close(clientFD);//Ãö³¬Socket
+			close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 			clientFD = 0;
 			log_msg("Server is listening.....\n");
 			clientFD = accept(serverFD,(struct sockaddr*)&addrClient,&addrClientLen);
 			if(clientFD == -1){
 				perror("Accept failed!!\n");
-				close(serverFD);//Ãö³¬Socket
+				close(serverFD);//ÃƒÃ¶Â³Â¬Socket
 				serverFD = 0;
 				break;
 			}else log_msg("succeed!!\n");
@@ -114,13 +114,13 @@ void Rtsp(int args,char *argv[])
 			TEARDOWN_Reply(clientFD);
 		else
 		{
-			close(clientFD);//Ãö³¬Socket
+			close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 			clientFD = 0;
 			log_msg("Server is listening.....\n");
 			clientFD = accept(serverFD,(struct sockaddr*)&addrClient,&addrClientLen);
 			if(clientFD == -1){
 				perror("Accept failed!!\n");
-				close(serverFD);//Ãö³¬Socket
+				close(serverFD);//ÃƒÃ¶Â³Â¬Socket
 				serverFD = 0;
 				break;
 			}else log_msg("succeed!!\n");
@@ -143,33 +143,33 @@ void createRtspSocket(int *serverFD,int *clientFD,sockaddr_in *addrClient)
 	struct sockaddr_in addrServer;
 	socklen_t addrClientLen = sizeof(*addrClient);
 
-	//«Ø¥ßSocket
+	//Â«Ã˜Â¥ÃŸSocket
 	*serverFD = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	//Server Socket IP
 	addrServer.sin_family = AF_INET;
 	addrServer.sin_addr.s_addr = INADDR_ANY;
 	addrServer.sin_port = htons(RtspServerPort);
 
-	//¸j©wSocket
+	//Â¸jÂ©wSocket
 	if(bind(*serverFD,(sockaddr*)&addrServer,sizeof(addrServer)) == -1){
 		perror("Bind failed!\n");
-		close(*serverFD);//Ãö³¬Socket
+		close(*serverFD);//ÃƒÃ¶Â³Â¬Socket
 		*serverFD = 0;
 		exit(0);
 	}
-	//«Ø¥ßºÊÅ¥
+	//Â«Ã˜Â¥ÃŸÂºÃŠÃ…Â¥
 	if(listen(*serverFD,10) == -1){
 		perror("Listen failed!!\n");
-		close(*serverFD);//Ãö³¬Socket
+		close(*serverFD);//ÃƒÃ¶Â³Â¬Socket
 		*serverFD = 0;
 		exit(0);
 	}
-	//±µ¦¬«È¤áºİ½Ğ¨D
+	//Â±ÂµÂ¦Â¬Â«ÃˆÂ¤Ã¡ÂºÃÂ½ÃÂ¨D
 	log_msg("Server is listening %d .....",RtspServerPort);
 	*clientFD = accept(*serverFD,(sockaddr*)addrClient,&addrClientLen);
 	if(*clientFD == -1){
 		perror("Accept failed!!\n");
-		close(*serverFD);//Ãö³¬Socket
+		close(*serverFD);//ÃƒÃ¶Â³Â¬Socket
 		*serverFD = 0;
 		*clientFD = 0;
 		exit(0);
@@ -204,6 +204,258 @@ string getRtpClientPort()
 	return retVal;
 }
 
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <linux/videodev2.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#include <camkit.h>
+#ifdef __cplusplus
+}
+#endif
+
+#define MAX_RTP_SIZE 1420
+#define WIDTH 800
+#define HEIGHT 600
+#define FRAMERATE 15
+
+unsigned long get_current_ms()
+{
+	struct timeval t_start;
+	gettimeofday(&t_start, NULL); 
+	unsigned long start = ((long)t_start.tv_sec)*1000+(long)t_start.tv_usec/1000;
+	return start;
+}
+int get_s()
+{
+	struct timeval t_start;
+	gettimeofday(&t_start, NULL); 
+	return t_start.tv_sec;
+}
+unsigned long last_ms=0;
+int simple_demo(char * ip, int port)
+{
+	/*
+    if (argc < 3)
+    {
+        printf("Usage: #simple_demo ip port\n");
+        return  -1;
+    }
+    */
+
+	struct cap_handle *caphandle = NULL;
+	struct cvt_handle *cvthandle = NULL;
+	struct enc_handle *enchandle = NULL;
+	struct pac_handle *pachandle = NULL;
+    struct net_handle *nethandle = NULL;
+	struct cap_param capp;
+	struct cvt_param cvtp;
+	struct enc_param encp;
+	struct pac_param pacp;
+    struct net_param netp;
+
+	// set paraments
+	U32 vfmt = V4L2_PIX_FMT_YUYV;
+	U32 ofmt = V4L2_PIX_FMT_YUV420;
+
+	capp.dev_name = "/dev/video0";
+	capp.width = WIDTH;
+	capp.height = HEIGHT;
+	capp.pixfmt = vfmt;
+	capp.rate = FRAMERATE;
+
+	cvtp.inwidth = WIDTH;
+	cvtp.inheight = HEIGHT;
+	cvtp.inpixfmt = vfmt;
+	cvtp.outwidth = WIDTH;
+	cvtp.outheight = HEIGHT;
+	cvtp.outpixfmt = ofmt;
+
+	encp.src_picwidth = WIDTH;
+	encp.src_picheight = HEIGHT;
+	encp.enc_picwidth = WIDTH;
+	encp.enc_picheight = HEIGHT;
+	encp.chroma_interleave = 0;
+	encp.fps = FRAMERATE;
+	encp.gop = 12;//30;
+	encp.bitrate = 1000;//800;
+
+	pacp.max_pkt_len = MAX_RTP_SIZE - 20;
+	pacp.ssrc = 10;
+
+    netp.type = UDP;
+    //netp.serip = argv[1];
+    //netp.serport = atoi(argv[2]);
+    netp.serip = ip;
+    netp.serport = port;
+
+	caphandle = capture_open(capp);
+	if (!caphandle)
+	{
+		log_msg("--- Open capture failed\n");
+		return -1;
+	}
+
+	cvthandle = convert_open(cvtp);
+	if (!cvthandle)
+	{
+		log_msg("--- Open convert failed\n");
+		return -1;
+	}
+
+	enchandle = encode_open(encp);
+	if (!enchandle)
+	{
+		log_msg("--- Open encode failed\n");
+		return -1;
+	}
+
+	pachandle = pack_open(pacp);
+	if (!pachandle)
+	{
+		log_msg("--- Open pack failed\n");
+		return -1;
+	}
+
+    nethandle = net_open(netp);
+    if (!nethandle)
+    {
+        log_msg("--- Open network failed\n");
+        return -1;
+    }
+
+	// start stream loop
+	int ret;
+	void *cap_buf, *cvt_buf, *hd_buf, *enc_buf;
+	char *pac_buf = (char *) malloc(MAX_RTP_SIZE);
+	int cap_len, cvt_len, hd_len, enc_len, pac_len;
+	enum pic_t ptype;
+	unsigned long framecount = 0;
+
+	capture_start(caphandle);		// !!! need to start capture stream!
+
+	unsigned long now_ms;
+	int total_len = 0;
+
+	while (1)
+	{
+		now_ms = get_current_ms();
+		if( (now_ms - last_ms)>1000) {
+			log_msg("--last=%d,now=%d \n",last_ms,now_ms);
+			log_msg("------------ current frame count=%d,len=%d\n",framecount,total_len );
+			framecount = 0;
+			last_ms = now_ms;
+		}
+		ret = capture_get_data(caphandle, &cap_buf, &cap_len);
+		if (ret != 0)
+		{
+			if (ret < 0)		// error
+			{
+				log_msg("--- capture_get_data failed\n");
+				break;
+			}
+			else	// again
+			{
+				log_msg("recheck camera data\r\n");
+				usleep(10000);
+				continue;
+			}
+		}
+		if (cap_len <= 0)
+		{
+			log_msg("!!! No capture data\n");
+			continue;
+		}
+		log_msg("--get pic len = %d\n",cap_len);
+		// else
+
+		ret = convert_do(cvthandle, cap_buf, cap_len, &cvt_buf, &cvt_len);
+		if (ret < 0)
+		{
+			log_msg("--- convert_do failed\n");
+			break;
+		}
+		if (cvt_len <= 100)
+		{
+			log_msg("!!! No convert data\n");
+			continue;
+		}
+		log_msg("cvt_len=%d \n",cvt_len);
+		// else
+
+		// fetch h264 headers first!
+		while ((ret = encode_get_headers(enchandle, &hd_buf, &hd_len, &ptype))
+				== 1)
+		{
+            //fwrite(hd_buf, 1, hd_len, dumpfile);
+			pack_put(pachandle, hd_buf, hd_len);
+			while (pack_get(pachandle, pac_buf, MAX_RTP_SIZE, &pac_len) == 1)
+			{
+                ret = net_send(nethandle, pac_buf, pac_len);
+				if (ret != pac_len)
+				{
+					log_msg("send pack data failed, size: %d, err: %s\n", pac_len,
+							strerror(errno));
+				}
+			}
+		}
+
+		ret = encode_do(enchandle, cvt_buf, cvt_len, &enc_buf, &enc_len,
+				&ptype);
+		if (ret < 0)
+		{
+			log_msg("--- encode_do failed\n");
+			break;
+		}
+		if (enc_len <= 100)
+		{
+			log_msg("!!! No encode data\n");
+			continue;
+		}
+		// else
+
+		log_msg("-- send packet %d B\n",enc_len);
+		if( enc_len < 100 ) continue;
+        //fwrite(enc_buf, 1, enc_len, dumpfile);
+		// RTP pack and send
+		pack_put(pachandle, enc_buf, enc_len);
+		while (pack_get(pachandle, pac_buf, MAX_RTP_SIZE, &pac_len) == 1)
+		{
+            ret = net_send(nethandle, pac_buf, pac_len);
+			if (ret != pac_len)
+			{
+				log_msg("send pack failed, size: %d, err: %s\n", pac_len,
+						strerror(errno));
+			}
+		}
+
+		framecount++;
+		total_len+=enc_len;
+	}
+	capture_stop(caphandle);
+
+	free(pac_buf);
+    net_close(nethandle);
+	pack_close(pachandle);
+	encode_close(enchandle);
+	convert_close(cvthandle);
+	capture_close(caphandle);
+
+	return 0;
+}
+
+void *test_Rtp_camera(void *came)
+{
+	log_msg("start simple_demo :%s:%d\n",(char*)inet_ntoa(RtpParameter.addrClient.sin_addr),RtpParameter.rtpClientPort);
+	simple_demo((char*)inet_ntoa(RtpParameter.addrClient.sin_addr),RtpParameter.rtpClientPort );
+}
+
 void createRtpThread(char* fileName)
 {
 	int res;
@@ -216,7 +468,7 @@ void createRtpThread(char* fileName)
 		res = pthread_create(&cam_tid,NULL,camera_worker,(void*)&cam);
 		res = pthread_create(&rtp_tid,NULL,rtp_worker,(void*)&cam);
 #else
-		res = pthread_create(&tid,NULL,Rtp_camera,(void*)&cam);
+		res = pthread_create(&tid,NULL,test_Rtp_camera,(void*)&cam);
 #endif
 	}else
 		res = pthread_create(&tid,NULL,Rtp,(void*)fileName);
@@ -246,7 +498,7 @@ void OPTIONS_Reply(int clientFD)
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
 		log_msg("Sent failed1!!\n");
-		close(clientFD);//Ãö³¬Socket
+		close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 		exit(0);
 	}
 	bzero(sendBuf,BUF_SIZE);
@@ -256,33 +508,8 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 {
 	char *RtspContentType = "Content-type: application/sdp\r\n";
 
-#ifdef USE_X264_CODER
-	char *SDPFile = "v=0\r\no=- 15409869162442327530 15409869162442327530 IN IP4 ESLab-PC\r\n"
-					"s=Unnamed\r\ni=N/A\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.7\r\n"
-					"a=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://192.168.2.1:8554/trackID=0\r\nm=video 20000 RTP/AVP 96\r\n"
-					"b=RR:0\r\na=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1;profile-level-id=64001f;sprop-parameter-sets=Z2QAH6zZQFAFuwEQACi7EAmJaAjxgjlg,aOvjyyLA;\r\n"
-					"a=control:rtsp://192.168.2.1:8554/trackID=1\r\n";
-				    "Date: Wed, 15 May 2013 12:10:17 GMT\r\nContent-type: application/sdpContent-Base: rtsp://192.168.2.1:8554/\r\n"
-					"Content-length: 362Cache-Control: no-cache\r\nCseq: 3\r\n\r\n"
-					"v=0\r\no=- 15365712008849713956 15365712008849713956 IN IP4 User-PC\r\ns=Unnamed\r\ni=N/A\r\n"
-					"c=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.3\r\na=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://192.168.2.1:8554/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 96\r\nb=RR:0\r\n"
-					"a=rtpmap:96 H264/90000\r\na=fmtp:96 packetization-mode=1\r\na=control:rtsp://192.168.2.1:8554/trackID=1\r\n";
-#else
-	char *SDPFile = "v=0\r\no=- 15409869162442327530 15409869162442327530 IN IP4 ESLab-PC\r\n"
-					"s=Unnamed\r\ni=N/A\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.7\r\n"
-					"a=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://192.168.2.1:8554/trackID=0\r\nm=video 20000 RTP/AVP 26\r\n"
-					"b=RR:0\r\na=rtpmap:26 JPEG/90000\r\na=fmtp:26 packetization-mode=1;profile-level-id=64001f;sprop-parameter-sets=Z2QAH6zZQFAFuwEQACi7EAmJaAjxgjlg,aOvjyyLA;\r\n"
-					"a=control:rtsp://192.168.2.1:8554/trackID=1\r\n";
-				    "Date: Wed, 15 May 2013 12:10:17 GMT\r\nContent-type: application/sdpContent-Base: rtsp://192.168.2.1:8554/\r\n"
-					"Content-length: 362Cache-Control: no-cache\r\nCseq: 3\r\n\r\n"
-					"v=0\r\no=- 15365712008849713956 15365712008849713956 IN IP4 User-PC\r\ns=Unnamed\r\ni=N/A\r\n"
-					"c=IN IP4 0.0.0.0\r\nt=0 0\r\na=tool:vlc 2.0.3\r\na=recvonly\r\na=type:broadcast\r\na=charset:UTF-8\r\n"
-					"a=control:rtsp://192.168.2.1:8554/\r\na=framerate:25\r\nm=video 20000 RTP/AVP 26\r\nb=RR:0\r\n"
-					"a=rtpmap:26 JPEG/90000\r\na=fmtp:26 packetization-mode=1\r\na=control:rtsp://192.168.2.1:8554/trackID=1\r\n";
-#endif
+char *SDPFile = "m=video 2000 RTP/AVP 96\r\na=rtpmap:96 H264\r\na=framerate:15\r\nc=IN IP4 0.0.0.0\r\n";
+//char *SDPFile = "m=video 2000 RTP/AVP 26\r\na=rtpmap:26 JPEG\r\na=framerate:15\r\nc=IN IP4 0.0.0.0\r\n";
 
 	string temp;
 
@@ -307,7 +534,7 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
 		log_msg("Sent failed2!!\n");
-		close(clientFD);//Ãö³¬Socket
+		close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 		exit(0);
 	}
 	bzero(sendBuf,BUF_SIZE);
@@ -343,7 +570,7 @@ void SETUP_Reply(int clientFD)
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
 		log_msg("Sent failed3!!\n");
-		close(clientFD);//Ãö³¬Socket
+		close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 		exit(0);
 	}
 	//ZeroMemory(sendBuf,BUF_SIZE);
@@ -356,7 +583,7 @@ void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *f
 	char *rtptime = "rtptime=2217555422\r\n";
 	char *Range = "Range: npt=10-\r\n";
 	string temp;
-	//RTP©Ò»İ°Ñ¼Æ
+	//RTPÂ©Ã’Â»ÃÂ°Ã‘Â¼Ã†
 	//struct RtpData *RtpParameter;
 	//RtpParameter = (RtpData*)malloc(sizeof(RtpData));
 
@@ -381,12 +608,12 @@ void PLAY_Reply(int clientFD,struct sockaddr_in addrClient,char *RtspUrl,char *f
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
 		log_msg("Sent failed4!!\n");
-		close(clientFD);//Ãö³¬Socket
+		close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 		exit(0);
 	}
 	lock = 1;
 	bzero(sendBuf,BUF_SIZE);
-	//°e§¹PLAY_Reply«á¶}©l¶i¦æRTP¶Ç¿é
+	//Â°eÂ§Â¹PLAY_ReplyÂ«Ã¡Â¶}Â©lÂ¶iÂ¦Ã¦RTPÂ¶Ã‡Â¿Ã©
 	RtpParameter.addrClient = addrClient;
 	RtpParameter.rtpServerPort = 10000;
 	RtpParameter.rtpClientPort = str2int(RtpClientPort);
@@ -413,7 +640,7 @@ void GET_PARAMETER_Reply(int clientFD)
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
 		log_msg("Sent failed0000!!\n");
-		close(clientFD);//Ãö³¬Socket
+		close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 		exit(0);
 	}
 	bzero(sendBuf,BUF_SIZE);
@@ -438,7 +665,7 @@ void TEARDOWN_Reply(int clientFD)
 	strcpy(sendBuf,temp.c_str());
 	if(send(clientFD,sendBuf,strlen(sendBuf),0) == -1){
 		log_msg("Sent failed5!!\n");
-		close(clientFD);//Ãö³¬Socket
+		close(clientFD);//ÃƒÃ¶Â³Â¬Socket
 		exit(0);
 	}
 	lock = 0;
@@ -480,3 +707,4 @@ void quit_handler( int sig )
     	log_msg("Ruan: exit rtspfileserver by kill\n");
 	exit(0);
 }
+
