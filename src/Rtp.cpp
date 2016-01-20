@@ -335,7 +335,7 @@ void *camera_worker(void *came)
 }
 
 
-void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
+int createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
 {
 	struct sockaddr_in addrServer;
 	int addrClientLen = sizeof(addrClient);
@@ -343,8 +343,8 @@ void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
 	//建立Socket
 	*sockFD = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
 	if(*sockFD == -1){
-		perror("Socket failed!!\n");
-		exit(0);
+		log_msg("Socket failed!!\n");
+		return -1;
 	} 
 	//Server Socket 位址
 	addrServer.sin_family = AF_INET;
@@ -362,9 +362,10 @@ void createRtpSocket(int *sockFD,struct sockaddr_in *addrClient)
 	if(bind(*sockFD,(sockaddr*)&addrServer,sizeof(addrServer)) == -1){
 		perror("Bind failed!\n");
 		close(*sockFD);//關閉Socket
-		exit(0);
+		return -1;
 	}
 	log_msg("rtsp client : %s:%d,  server : %s:%d\n",inet_ntoa(addrClient->sin_addr) , ntohs(addrClient->sin_port) , inet_ntoa(addrServer.sin_addr) , ntohs(addrServer.sin_port) );
+	return 0;
 }
 int OpenVideoFile(char *fileName)
 {

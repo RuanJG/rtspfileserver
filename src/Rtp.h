@@ -28,7 +28,7 @@
 	void *Rtp_camera(void *came);
 void * rtp_worker(void *came);
 void * camera_worker(void *came);
-	void createRtpSocket(int *serverFD,sockaddr_in *addrClient);
+	int createRtpSocket(int *serverFD,sockaddr_in *addrClient);
 	int OpenVideoFile(char *fileName);
 	void createRtpHeader();
 	void setRtpVersion();

@@ -29,6 +29,7 @@ int serverFD,clientFD;//Server and Client SocketID
 
 int fps_time_us = 1000000/FPS;
 
+void *test_Rtp_camera(void *came);
 void Rtsp(int args,char *argv[])
 {
 	//¦s©ñOPTIONS DESCRIBE SETUP PLAY TEARDOWNµ¥
@@ -221,10 +222,11 @@ extern "C"
 #endif
 
 #define MAX_RTP_SIZE 1420
-#define WIDTH 800
-#define HEIGHT 600
-#define FRAMERATE 15
+#define WIDTH 320
+#define HEIGHT 240 
+#define FRAMERATE 25
 
+#define USE_MY_NET 0
 unsigned long get_current_ms()
 {
 	struct timeval t_start;
@@ -260,6 +262,13 @@ int simple_demo(char * ip, int port)
 	struct pac_param pacp;
     struct net_param netp;
 
+
+// Ruan
+	int sockFD;
+	struct sockaddr_in addrClient;
+// end
+
+
 	// set paraments
 	U32 vfmt = V4L2_PIX_FMT_YUYV;
 	U32 ofmt = V4L2_PIX_FMT_YUV420;
@@ -284,16 +293,18 @@ int simple_demo(char * ip, int port)
 	encp.chroma_interleave = 0;
 	encp.fps = FRAMERATE;
 	encp.gop = 12;//30;
-	encp.bitrate = 1000;//800;
+	encp.bitrate = 800;//1000;
 
 	pacp.max_pkt_len = MAX_RTP_SIZE - 20;
-	pacp.ssrc = 10;
+	pacp.ssrc = 1234;
 
     netp.type = UDP;
     //netp.serip = argv[1];
     //netp.serport = atoi(argv[2]);
     netp.serip = ip;
     netp.serport = port;
+
+    log_msg("client ip:port = %s:%d\r\n",ip,port);
 
 	caphandle = capture_open(capp);
 	if (!caphandle)
@@ -323,28 +334,51 @@ int simple_demo(char * ip, int port)
 		return -1;
 	}
 
+#if USE_MY_NET
+	int SequenceNumber = 26074;
+	unsigned int timestamp = 2785272748;
+	unsigned int ssrc = 0xc630ebd7;
+	if( 0 > createRtpSocket(&sockFD,&addrClient) ){
+        	log_msg("!!!! Open network failed\n");
+		lock =0;
+	}
+	createRtpHeader();
+	setRtpVersion(); 
+	setRtpPayloadType();
+	setSequenceNumber(SequenceNumber);
+	setTimestamp(timestamp);
+	setSSRC(ssrc);
+#else
     nethandle = net_open(netp);
     if (!nethandle)
     {
         log_msg("--- Open network failed\n");
-        return -1;
+	lock =0;
+        //return -1;
     }
-
+#endif
 	// start stream loop
 	int ret;
 	void *cap_buf, *cvt_buf, *hd_buf, *enc_buf;
 	char *pac_buf = (char *) malloc(MAX_RTP_SIZE);
 	int cap_len, cvt_len, hd_len, enc_len, pac_len;
 	enum pic_t ptype;
-	unsigned long framecount = 0;
 
-	capture_start(caphandle);		// !!! need to start capture stream!
+	struct timeval ctime, ltime;
+	unsigned long fps_counter = 0;
+	int sec, usec;
+	double stat_time = 0;
 
 	unsigned long now_ms;
 	int total_len = 0;
 
+	capture_start(caphandle);		// !!! need to start capture stream!
+	gettimeofday(&ltime, NULL);
+
+	//while (1==lock)
 	while (1)
 	{
+		/*
 		now_ms = get_current_ms();
 		if( (now_ms - last_ms)>1000) {
 			log_msg("--last=%d,now=%d \n",last_ms,now_ms);
@@ -352,6 +386,29 @@ int simple_demo(char * ip, int port)
 			framecount = 0;
 			last_ms = now_ms;
 		}
+		*/
+		if (1)		// print fps
+		{
+			gettimeofday(&ctime, NULL);
+			sec = ctime.tv_sec - ltime.tv_sec;
+			usec = ctime.tv_usec - ltime.tv_usec;
+			if (usec < 0)
+			{
+				sec--;
+				usec = usec + 1000000;
+			}
+			stat_time = (sec * 1000000) + usec;		// diff in microsecond
+
+			if (stat_time >= 1000000)    // >= 1s
+			{
+				printf("\n-------------------- > FPS: %ld,,len=%d\n", fps_counter,total_len);
+				fps_counter = 0;
+				total_len = 0;
+				ltime = ctime;
+			}
+			
+		}
+
 		ret = capture_get_data(caphandle, &cap_buf, &cap_len);
 		if (ret != 0)
 		{
@@ -372,35 +429,344 @@ int simple_demo(char * ip, int port)
 			log_msg("!!! No capture data\n");
 			continue;
 		}
-		log_msg("--get pic len = %d\n",cap_len);
+		//log_msg("--get pic len = %d\n",cap_len);
 		// else
 
-		ret = convert_do(cvthandle, cap_buf, cap_len, &cvt_buf, &cvt_len);
-		if (ret < 0)
+		// convert
+		if (capp.pixfmt == V4L2_PIX_FMT_YUV420)    // no need to convert
 		{
-			log_msg("--- convert_do failed\n");
+			cvt_buf = cap_buf;
+			cvt_len = cap_len;
+		}
+		else	// do convert: YUYV => YUV420
+		{
+			ret = convert_do(cvthandle, cap_buf, cap_len, &cvt_buf, &cvt_len);
+			if (ret < 0)
+			{
+				log_msg("--- convert_do failed\n");
+				break;
+			}
+			if (cvt_len <= 0)
+			{
+				log_msg("!!! No convert data\n");
+				continue;
+			}
+		}
+
+#if 0
+		while( encode_get_headers(enchandle, &hd_buf, &hd_len, &ptype) == 1 ){
+				log_msg("encode_get_headers ==1 \n");
+		}
+		{
+			ret = encode_do(enchandle, cvt_buf, cvt_len, &enc_buf, &enc_len, &ptype) ;
+			if (ret < 0)
+			{
+				log_msg("--- encode_do failed\n");
+				continue;
+			}
+			if (enc_len <= 100)
+			{
+				log_msg("!!! No encode data\n");
+				continue;
+			}
+		}
+		ret = RtpEncoder(sockFD,addrClient,(char*)enc_buf,enc_len,&SequenceNumber,&timestamp);
+		if( ret < 0 ){
+			log_msg("!!! send encode data, failed\n");
 			break;
 		}
-		if (cvt_len <= 100)
-		{
-			log_msg("!!! No convert data\n");
-			continue;
-		}
-		log_msg("cvt_len=%d \n",cvt_len);
-		// else
-
+		
+#else
+		/*
 		// fetch h264 headers first!
-		while ((ret = encode_get_headers(enchandle, &hd_buf, &hd_len, &ptype))
-				== 1)
+		while ((ret = encode_get_headers(enchandle, &hd_buf, &hd_len, &ptype)) == 1)
 		{
             //fwrite(hd_buf, 1, hd_len, dumpfile);
 			pack_put(pachandle, hd_buf, hd_len);
 			while (pack_get(pachandle, pac_buf, MAX_RTP_SIZE, &pac_len) == 1)
 			{
-                ret = net_send(nethandle, pac_buf, pac_len);
+				log_msg("send header packet,len=%d\n",hd_len);
+#if USE_MY_NET
+				ret = sendto(sockFD,pac_buf,pac_len,0,(sockaddr *)&addrClient,sizeof(addrClient));
+				if( ret <= 0){
+					if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN){
+						log_msg("Network not stablize Sent failed!!\n");
+					}else{
+						log_msg("Network error, Sent failed!!\n");
+					}
+				}else{
+					total_len+=pac_len;
+				}
+#else
+                		ret = net_send(nethandle, pac_buf, pac_len);
 				if (ret != pac_len)
 				{
 					log_msg("send pack data failed, size: %d, err: %s\n", pac_len,
+							strerror(errno));
+				}
+#endif
+			}
+		}
+		*/
+
+		ret = encode_do(enchandle, cvt_buf, cvt_len, &enc_buf, &enc_len,&ptype);
+		if (ret < 0)
+		{
+			log_msg("!!! encode_do failed\n");
+			break;
+		}
+		if (enc_len <= 100)
+		{
+			log_msg("!!! No encode data\n");
+			continue;
+		}
+		//log_msg("-- send packet %d B\n",enc_len);
+		if( enc_len < 100 ) continue;
+		// RTP pack and send
+		pack_put(pachandle, enc_buf, enc_len);
+		while (pack_get(pachandle, pac_buf, MAX_RTP_SIZE, &pac_len) == 1)
+		{
+#if USE_MY_NET
+			ret = sendto(sockFD,pac_buf,pac_len,0,(sockaddr *)&addrClient,sizeof(addrClient));
+			if( ret <= 0){
+				if( ret == EINTR || ret == EWOULDBLOCK || ret == EAGAIN){
+					log_msg("!!! Network not stablize Sent failed!!\n");
+				}else{
+					log_msg("!!! Network error, Sent failed!!\n");
+				}
+			}else{
+				total_len+=pac_len;
+			}
+#else
+            		ret = net_send(nethandle, pac_buf, pac_len);
+			if (ret != pac_len)
+			{
+				log_msg("!!! send pack failed, size: %d, err: %s\n", pac_len,
+						strerror(errno));
+			}else{
+				total_len+=pac_len;
+			}
+#endif
+		}
+
+
+#endif
+		fps_counter++;
+
+	}
+	capture_stop(caphandle);
+
+	free(pac_buf);
+#if USE_MY_NET
+	close(sockFD);
+#else
+    	net_close(nethandle);
+#endif
+	pack_close(pachandle);
+	encode_close(enchandle);
+	convert_close(cvthandle);
+	capture_close(caphandle);
+
+	return 0;
+}
+
+int ck_demo(char * ip, int port)
+{
+	struct cap_handle *caphandle = NULL;
+	struct cvt_handle *cvthandle = NULL;
+	struct enc_handle *enchandle = NULL;
+	struct pac_handle *pachandle = NULL;
+	struct net_handle *nethandle = NULL;
+	struct cap_param capp;
+	struct cvt_param cvtp;
+	struct enc_param encp;
+	struct pac_param pacp;
+	struct net_param netp;
+	int stage = 15;
+
+	U32 vfmt = V4L2_PIX_FMT_YUYV;
+	U32 ofmt = V4L2_PIX_FMT_YUV420;
+
+	// set default values
+	capp.dev_name = "/dev/video0";
+	capp.width = WIDTH;
+	capp.height = HEIGHT;
+	capp.pixfmt = vfmt;
+	capp.rate = FRAMERATE;
+
+	cvtp.inwidth = WIDTH;
+	cvtp.inheight = HEIGHT;
+	cvtp.inpixfmt = vfmt;
+	cvtp.outwidth = WIDTH;
+	cvtp.outheight = HEIGHT;
+	cvtp.outpixfmt = ofmt;
+
+	encp.src_picwidth = WIDTH;
+	encp.src_picheight = HEIGHT;
+	encp.enc_picwidth = WIDTH;
+	encp.enc_picheight = HEIGHT;
+	encp.chroma_interleave = 0;
+	encp.fps = FRAMERATE;
+	encp.gop = 12; // can not too small
+	encp.bitrate = 800;//1000; // more high the pic more clear
+
+	pacp.max_pkt_len = 1400;
+	pacp.ssrc = 1234;
+
+	netp.serip = ip;
+	netp.serport = port;
+	netp.type = UDP;
+
+
+	caphandle = capture_open(capp);
+	if (!caphandle)
+	{
+		log_msg("--- Open capture failed\n");
+		return -1;
+	}
+
+	//if ((stage & 0b00000001) != 0)
+	{
+		cvthandle = convert_open(cvtp);
+		if (!cvthandle)
+		{
+			log_msg("--- Open convert failed\n");
+			return -1;
+		}
+	}
+
+	//if ((stage & 0b00000010) != 0)
+	{
+		enchandle = encode_open(encp);
+		if (!enchandle)
+		{
+			log_msg("--- Open encode failed\n");
+			return -1;
+		}
+	}
+
+	//if ((stage & 0b00000100) != 0)
+	{
+		pachandle = pack_open(pacp);
+		if (!pachandle)
+		{
+			log_msg("--- Open pack failed\n");
+			return -1;
+		}
+	}
+
+	//if ((stage & 0b00001000) != 0)
+	{
+		if (netp.serip == NULL || netp.serport == -1)
+		{
+			log_msg(
+					"--- Server ip and port must be specified when using network\n");
+			return -1;
+		}
+
+		nethandle = net_open(netp);
+		if (!nethandle)
+		{
+			log_msg("--- Open network failed\n");
+			return -1;
+		}
+	}
+
+	// start capture encode loop
+	int ret;
+	void *cap_buf, *cvt_buf, *hd_buf, *enc_buf;
+	char *pac_buf = (char *) malloc(MAX_RTP_SIZE);
+	int cap_len, cvt_len, hd_len, enc_len, pac_len;
+	enum pic_t ptype;
+	struct timeval ctime, ltime;
+	unsigned long fps_counter = 0;
+	int sec, usec;
+	double stat_time = 0;
+	unsigned long total_len = 0;
+
+	capture_start(caphandle);		// !!! need to start capture stream!
+	gettimeofday(&ltime, NULL);
+	while (1==lock)
+	{
+		if (1)		// print fps
+		{
+			gettimeofday(&ctime, NULL);
+			sec = ctime.tv_sec - ltime.tv_sec;
+			usec = ctime.tv_usec - ltime.tv_usec;
+			if (usec < 0)
+			{
+				sec--;
+				usec = usec + 1000000;
+			}
+			stat_time = (sec * 1000000) + usec;		// diff in microsecond
+
+			if (stat_time >= 1000000)    // >= 1s
+			{
+				log_msg("\n*** FPS: %ld, %ld Byte\n", fps_counter,total_len);
+				total_len = 0;
+				fps_counter = 0;
+				ltime = ctime;
+			}
+		}
+
+		ret = capture_get_data(caphandle, &cap_buf, &cap_len);
+		if (ret != 0)
+		{
+			if (ret < 0)		// error
+			{
+				log_msg("--- capture_get_data failed\n");
+				break;
+			}
+			else	// again
+			{
+				usleep(10000);
+				continue;
+			}
+		}
+		if (cap_len <= 0)
+		{
+			log_msg("!!! No capture data\n");
+			continue;
+		}
+
+
+		// convert
+		if (capp.pixfmt == V4L2_PIX_FMT_YUV420)    // no need to convert
+		{
+			cvt_buf = cap_buf;
+			cvt_len = cap_len;
+		}
+		else	// do convert: YUYV => YUV420
+		{
+			ret = convert_do(cvthandle, cap_buf, cap_len, &cvt_buf, &cvt_len);
+			if (ret < 0)
+			{
+				log_msg("--- convert_do failed\n");
+				break;
+			}
+			if (cvt_len <= 0)
+			{
+				log_msg("!!! No convert data\n");
+				continue;
+			}
+		}
+
+		// encode
+		// fetch h264 headers first!
+		while ((ret = encode_get_headers(enchandle, &hd_buf, &hd_len, &ptype))
+				!= 0)
+		{
+			// pack headers
+			pack_put(pachandle, hd_buf, hd_len);
+			while (pack_get(pachandle, pac_buf, MAX_RTP_SIZE, &pac_len) == 1)
+			{
+
+				// network
+				log_msg("send a pack head \r\n");
+				ret = net_send(nethandle, pac_buf, pac_len);
+				if (ret != pac_len)
+				{
+					log_msg("send pack failed, size: %d, err: %s\n", pac_len,
 							strerror(errno));
 				}
 			}
@@ -413,47 +779,50 @@ int simple_demo(char * ip, int port)
 			log_msg("--- encode_do failed\n");
 			break;
 		}
-		if (enc_len <= 100)
+		if (enc_len <= 0)
 		{
 			log_msg("!!! No encode data\n");
 			continue;
 		}
-		// else
 
-		log_msg("-- send packet %d B\n",enc_len);
-		if( enc_len < 100 ) continue;
-        //fwrite(enc_buf, 1, enc_len, dumpfile);
-		// RTP pack and send
+
+		// pack
 		pack_put(pachandle, enc_buf, enc_len);
 		while (pack_get(pachandle, pac_buf, MAX_RTP_SIZE, &pac_len) == 1)
 		{
-            ret = net_send(nethandle, pac_buf, pac_len);
+			// network
+			ret = net_send(nethandle, pac_buf, pac_len);
 			if (ret != pac_len)
 			{
 				log_msg("send pack failed, size: %d, err: %s\n", pac_len,
 						strerror(errno));
+			}else{
+				total_len += pac_len;
 			}
 		}
-
-		framecount++;
-		total_len+=enc_len;
+		fps_counter++;
 	}
 	capture_stop(caphandle);
 
 	free(pac_buf);
-    net_close(nethandle);
-	pack_close(pachandle);
-	encode_close(enchandle);
-	convert_close(cvthandle);
+	if ((stage & 0b00001000) != 0)
+		net_close(nethandle);
+	if ((stage & 0b00000100) != 0)
+		pack_close(pachandle);
+	if ((stage & 0b00000010) != 0)
+		encode_close(enchandle);
+	if ((stage & 0b00000001) != 0)
+		convert_close(cvthandle);
 	capture_close(caphandle);
 
 	return 0;
 }
-
 void *test_Rtp_camera(void *came)
 {
 	log_msg("start simple_demo :%s:%d\n",(char*)inet_ntoa(RtpParameter.addrClient.sin_addr),RtpParameter.rtpClientPort);
-	simple_demo((char*)inet_ntoa(RtpParameter.addrClient.sin_addr),RtpParameter.rtpClientPort );
+	//simple_demo((char*)inet_ntoa(RtpParameter.addrClient.sin_addr),RtpParameter.rtpClientPort );
+	//ck_demo("192.168.0.178",2000);
+	ck_demo((char*)inet_ntoa(RtpParameter.addrClient.sin_addr),RtpParameter.rtpClientPort );
 }
 
 void createRtpThread(char* fileName)
@@ -469,6 +838,7 @@ void createRtpThread(char* fileName)
 		res = pthread_create(&rtp_tid,NULL,rtp_worker,(void*)&cam);
 #else
 		res = pthread_create(&tid,NULL,test_Rtp_camera,(void*)&cam);
+		//res = pthread_create(&tid,NULL,Rtp_camera,(void*)&cam);
 #endif
 	}else
 		res = pthread_create(&tid,NULL,Rtp,(void*)fileName);
@@ -508,7 +878,7 @@ void DESCRIBE_Reply(int clientFD,char *RtspContentBase)
 {
 	char *RtspContentType = "Content-type: application/sdp\r\n";
 
-char *SDPFile = "m=video 2000 RTP/AVP 96\r\na=rtpmap:96 H264\r\na=framerate:15\r\nc=IN IP4 0.0.0.0\r\n";
+char *SDPFile = "m=video 2000 RTP/AVP 96\r\na=rtpmap:96 H264\r\na=framerate:25\r\nc=IN IP4 0.0.0.0\r\n";
 //char *SDPFile = "m=video 2000 RTP/AVP 26\r\na=rtpmap:26 JPEG\r\na=framerate:15\r\nc=IN IP4 0.0.0.0\r\n";
 
 	string temp;
