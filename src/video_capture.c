@@ -139,7 +139,7 @@ static void init_camera(struct camera *cam)
 #ifdef OUTPUT_CAMINFO
         log_msg("\t%d,%s\n",fmtdesc->index+1,fmtdesc->description);
 #endif
-        pos = find_string((char *)fmtdesc->description,"JPEG");
+        pos = find_string((char *)fmtdesc->description,"MJPEG");
         if(pos != -1){
             cam->support_fmt |= FMT_JPEG;
             goto CON;
@@ -312,7 +312,8 @@ static void stop_capturing(struct camera *cam)
 /*外界接口*/
 void v4l2_init(struct camera *cam)
 {
-    cam->device_name   = strdup(CAM_DEVICE);
+    if( cam->device_name == NULL )
+	    cam->device_name   = strdup(CAM_DEVICE);
     cam->buffers       = NULL;
     cam->display_depth = 5;
     cam->support_fmt   = 0;//

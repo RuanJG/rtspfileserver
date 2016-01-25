@@ -9,7 +9,6 @@
  #define _RTSP_H
 
 	#define BUF_SIZE 1024
-	#define RtspServerPort 8554
 	#define RtpServerPort 50000
 	void Rtsp(int args,char *argv[]);
 	void OPTIONS_Reply(int clientFD);

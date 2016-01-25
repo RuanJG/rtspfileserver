@@ -11,7 +11,8 @@
 ### END INIT INFO
 
 my_start_service() {
-	/bin/rtspfileserver.sh &
+	/bin/rtspfileserver.sh /dev/video0 8554 &
+	/bin/rtspfileserver.sh /dev/video1 8556 &
 }
 my_stop_service() {
         echo "stop rtspfileserver server"

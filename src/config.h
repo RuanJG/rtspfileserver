@@ -13,8 +13,8 @@
 
 
 /******************摄像头信息***************************/
-#define CAM_WIDGH 1280 //640
-#define CAM_HEIGHT  720 //480
+#define CAM_WIDGH 320 //640
+#define CAM_HEIGHT  240//480
 // height widgh
 #define CAM_DEVICE "/dev/video0"
 
@@ -34,8 +34,22 @@
 #endif
 
 #define MY_V4L2_BUFFER_COUNT 4
-#define USE_X264_CODER
-//#define USE_CAMERA_THREAD
+
+#if 0 ////////////use tow thread for rtsp
+
+#define USE_CAMERA_THREAD
+//#define USE_X264_CODER
+
+#else ////////////use one thread for rtsp
+
+#if 1 //------- camkit 
+#define USE_CAMKIT_264_CODER
+#else////use mpeg coder
+//#define USE_X264_CODER
+#endif//------- camkit
+
+#endif////////////use tow thread for rtsp
+
 #define FPS 30
 
 
