@@ -465,7 +465,15 @@ int ck_demo(char * ip, int port)
 		if (ret < 0)
 		{
 			log_msg("--- encode_do failed\n");
-			break;
+			encode_close(enchandle);
+			enchandle = encode_open(encp);
+			if (!enchandle)
+			{
+				log_msg("--- Open encode failed\n");
+				break;
+			}
+			//break;
+			continue;
 		}
 		if (enc_len <= 0)
 		{
