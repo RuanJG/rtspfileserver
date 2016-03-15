@@ -19,15 +19,17 @@ CPLUSPLUS_COMPILER =    $(CROSS_COMPILE)g++
 LIBS    = -lpthread -lx264 -lm -ldl -lcamkit
 
 rtspfileserver:Main.cpp Rtsp.cpp Rtp.cpp Rtsp.h Rtp.h config.h video_capture.c video_capture.h h264encoder.h
-	$(CPLUSPLUS_COMPILER) -o $@ $?  -L. $(LIBS)
+	$(CPLUSPLUS_COMPILER) -o $@ $?  -L. $(LIBS) -I camkit_h
 
 install:
 	sudo cp ../files/rtspfileserver.sh /bin/rtspfileserver.sh
 	sudo cp ../files/rtspfileserverd /etc/init.d/rtspfileserverd
+	sudo cp ./libcamkit.so /usr/lib/libcamkit.so
 	sudo cp ./rtspfileserver  /bin/rtspfileserver
 	sudo chmod 0777 /bin/rtspfileserver
 	sudo chmod 0777 /bin/rtspfileserver.sh
 	sudo update-rc.d rtspfileserverd  defaults
+	sudo ldconfig
 uninstall:
 	sudo update-rc.d -f rtspfileserverd remove
 

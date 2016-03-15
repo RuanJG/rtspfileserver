@@ -42,7 +42,7 @@
 
 #else ////////////use one thread for rtsp
 
-#if 1 //------- camkit 
+#if 0 //------- camkit 
 #define USE_CAMKIT_264_CODER
 #else////use mpeg coder
 //#define USE_X264_CODER
